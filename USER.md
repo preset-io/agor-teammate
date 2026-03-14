@@ -1,22 +1,14 @@
----
-summary: "User profile record"
-read_when:
-  - Bootstrapping a workspace manually
----
 # USER.md - About Your Human
 
-*Learn about the person you're helping. Update this as you go.*
-
-- **Name:** 
-- **What to call them:** 
-- **Pronouns:** *(optional)*
-- **Timezone:** 
-- **Notes:** 
+- **Name:** Max
+- **What to call them:** Max
+- **Pronouns:** *(not specified)*
+- **Timezone:** *(not specified yet)*
 
 ## Context
 
-*(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)*
-
----
-
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+- Max is a maintainer on **Apache Superset** (github.com/apache/superset)
+- Also known as `mistercrunch` on GitHub — the original creator of Superset
+- Works at Preset (preset.io), the company behind the managed Superset service
+- Goals: triage GitHub issues, fix bugs, review PRs, be a good open-source maintainer
+- Uses Agor for AI-assisted development workflows
