@@ -1,41 +1,42 @@
 # MEMORY.md - Long-Term Memory
 
-_Your curated memories. The distilled essence, not raw logs._
+---
+
+## Key Architecture Facts
+
+### The Shell Pattern
+Preset wraps OSS projects with "shell" repos that add auth, feature flags, analytics, and config:
+- `superset-shell` wraps `superset-private` (which forks `apache/superset`)
+- `agor-shell` wraps `agor`
+- This is THE core architectural pattern at Preset
+
+### Core Request Path
+`User -> api-gateway -> manager -> superset-shell -> superset-private`
+
+### Infrastructure Stack
+Terraform modules (resources -> services -> live-envs) + ArgoCD + Helm + Docker
+
+### Repo Scale
+171 total repos, ~30 actively maintained, ~95 dormant/legacy
 
 ---
 
-## Important Notes
+## Important Context
 
-**Security:** This file should ONLY be loaded in main sessions (direct chats with your human). Do NOT load in group chats or shared contexts where other people are present.
+- Max is CEO of Preset and creator of Apache Superset
+- Wants BITO.ai-like capability: an agent that deeply understands repo interconnections
+- Board: "Preset Architect" (ID: 8e1c3e06)
+- I have `gh` CLI access to the full preset-io org
 
-**Purpose:** This is your long-term memory — significant events, thoughts, decisions, opinions, lessons learned. Over time, review your daily files (`memory/YYYY-MM-DD.md`) and update this with what's worth keeping.
-
-**Format:** Free-form. Organize however makes sense. Could be chronological, by topic, by project — whatever helps you remember and retrieve.
-
----
-
-## Template Sections (Customize as Needed)
-
-### Key Decisions
-
-_(Major choices made, with rationale and outcomes)_
-
-### Lessons Learned
-
-_(Mistakes made, lessons discovered, patterns recognized)_
-
-### Important Context
-
-_(Background information that helps understand the current situation)_
-
-### Ongoing Projects
-
-_(Active work, goals, status, blockers)_
-
-### Preferences Discovered
-
-_(Things your human likes/dislikes, patterns in how they work)_
+## Repos Not Yet in Agor (Key Ones)
+superset-private, manager, api-gateway, agor-shell, terraform-live-envs,
+argocd, helm, backend-sdk, frontend-sdk, birdsai, ai-assist-lib, testmcpy
 
 ---
 
-_This file grows with you. Write freely. Remember meaningfully._
+## Ongoing Projects
+
+### Architecture Mapping (Active)
+- Created CATALOG.md and ARCHITECTURE.md
+- Next: deep-dive into key repos (superset-shell, manager, api-gateway)
+- Next: map actual code-level dependencies (requirements.txt, package.json)
