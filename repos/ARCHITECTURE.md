@@ -80,9 +80,11 @@ Code Change
     v
 [terraform-live-envs] --- Environment-specific config
     |
-    +--> SaaS (multi-tenant K8s clusters)
+    +--> SaaS (Preset-managed multi-tenant K8s clusters)
     |
-    +--> PCS (customer-managed via preset-pcs + mpc-init)
+    +--> MPC (Preset-managed clusters in customer's cloud, via mpc-init)
+    |
+    +--> PCS (customer self-managed, via preset-pcs Helm charts)
 ```
 
 ---
@@ -115,9 +117,10 @@ api-clients   --- Public-facing Python SDK for Preset API
 superset-sup  --- CLI built on api-clients
 ```
 
-### 4. PCS vs SaaS
+### 4. Three Deployment Models
 - **SaaS:** Multi-tenant, Preset-managed K8s clusters, deployed via ArgoCD
-- **PCS:** Customer-managed infra, initialized via `mpc-init`, releases via `preset-pcs`, optional FIPS (`pcs-superset-fips`)
+- **MPC (Managed Private Cloud):** Preset manages clusters inside the *customer's* cloud account (onboarded via `mpc-init`, provisioned via `terraform-live-envs`). MPC clients include: flywire, rivian, wealthsimple, koa, hmetrix, beam, etc.
+- **PCS (Private Cloud Superset):** Customer self-manages; Preset provides Helm charts (`preset-pcs`), optional FIPS images (`pcs-superset-fips`, `pcs-ivanti`), and scaffolding (`pcs-superset-shell`)
 
 ---
 

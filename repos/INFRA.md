@@ -7,11 +7,35 @@
 
 ## Overview
 
-Preset has **23 infrastructure-related repos** spanning IaC, deployment pipelines, container images, monitoring, PCS (private cloud), and DR. Here's the full picture.
+Preset has **23 infrastructure-related repos** spanning IaC, deployment pipelines, container images, monitoring, cloud deployments (SaaS, MPC, PCS), and DR.
+
+### Cloud Deployment Models
+- **SaaS** — Multi-tenant, Preset-managed K8s clusters (the main product)
+- **MPC (Managed Private Cloud)** — Preset manages infra deployed in the *customer's* cloud (flywire, rivian, wealthsimple, etc.)
+- **PCS (Private Cloud Superset)** — Customer self-manages; Preset provides Helm charts, Docker images, and tooling
 
 ---
 
-## 1. The Terraform Stack (3-Tier Architecture)
+## 1. The Terraform Stack (3-Tier Architecture + Legacy)
+
+### `infra` — The Original Monolith (DEPRECATED but important to understand)
+- **Purpose:** The original, all-in-one Terraform + modules repo. Now deprecated in favor of the 3-tier split.
+- **Tech:** Terraform 0.12.x, AWS, Atlantis, SOPS + KMS, aws-okta
+- **157 directories, 7 environments:** development, devops, master, production, qa, sandbox, staging, superset-public
+- **Key module: `app-stack`** — THE central module that provisions a complete Superset cluster:
+  - **EKS cluster** (VPC, subnets, worker ASGs, IAM)
+  - **RDS PostgreSQL** (Superset metadata DB + examples DB, with Datadog monitoring user)
+  - **ElastiCache Redis** (2 instances: one for Celery broker `ss`, one for cache `sc`)
+  - **S3 buckets** (query results + thumbnails, encrypted, 15-day lifecycle)
+  - **VPC peering** (to DevOps VPN VPC + DevOps EKS VPC)
+  - **IAM** (Superset service user, RDS backup, Datadog, CI)
+- **`global` module** — Canonical source of truth for:
+  - All environment names: development, devops, master, production, staging, sandbox
+  - DNS domains: `preset.io` (public), `preset.zone` (private), `preset.net`
+  - App domains: `app-dev.preset.io`, `app-stg.preset.io`, `app.preset.io`, `app-sdx.preset.io`
+  - VPC CIDR allocations: All under `10.0.0.0/8` (K8s) and `172.16.0.0/12` (general/VPN)
+  - CIDR map: dev=10.0.0.0/18, staging=10.8.0.0/18, production=10.16.0.0/18, devops=10.25.0.0/18, sandbox=10.33.0.0/18
+- **Why it matters:** Even though deprecated, this repo documents the original architecture. The `app-stack` module shows exactly what "a Superset cluster" means in infrastructure terms. The newer `terraform-live-envs` has its own `app_stack` module that evolved from this.
 
 ### terraform-modules-resources (Bottom Tier — DEPRECATED)
 - **Purpose:** Atomic, single-purpose Terraform modules (one resource = one module)
@@ -151,45 +175,61 @@ helm → chart versions + per-cluster config
 
 ---
 
-## 4. PCS (Private Cloud Service)
+## 4. Cloud Deployment Models (MPC + PCS)
 
-### preset-pcs
+Preset has two private deployment models beyond SaaS:
+- **MPC (Managed Private Cloud):** Preset manages infra inside the customer's own cloud account
+- **PCS (Private Cloud Superset):** Customer self-manages; Preset provides artifacts (Helm charts, images, tooling)
+
+### MPC Repos
+
+#### mpc-init
+- **Purpose:** Customer-facing tooling for granting Preset IAM access to customer's cloud
+- **Tech:** Terraform (GCP IAM module), Shell scripts, AWS IAM YAML
+- **Two options:** Terraform module (for IaC shops) or shell script (quick setup)
+- **Both methods are idempotent**
+- **Creates:** `PresetMPCAdminV2` custom role + `preset-mpc-sa` service account
+- **After setup:** Preset manages infra via `terraform-live-envs` (MPC client dirs: flywire, koa, rivian, wealthsimple, hmetrix, beam, cargosense, ippen, komgo, workiva-dev, tencent, preset2)
+
+### PCS Repos
+
+#### preset-pcs
 - **Purpose:** Central release registry for PCS product. Customers pull tagged releases (MAJOR.MINOR.PATCH.BUILD)
 - **Tech:** Go Template (Helm charts), Docker, K8s
 - **Contents:** `helm/superset/` (Chart.yaml, values.yaml, templates, bundled postgresql + redis sub-charts), `docker/`, `builds/`, `changelogs/`
 - **Canonical source of truth for PCS versions**
 
-### pcs-superset-fips
+#### pcs-superset-fips
 - **Purpose:** FIPS 140-3 compliant Superset Docker images on Red Hat UBI 9
 - **Tech:** Docker, RHEL UBI 9, Python 3.11 (compiled from source), OpenSSL FIPS provider
 - **Two-tier build:** FIPS Python base image + full Superset image
 - **Validation:** 6 compliance checks at startup; container refuses to start if any fail
 - **Uses `superset-oss` submodule from preset-pcs releases**
 
-### pcs-ivanti
+#### pcs-ivanti
 - **Purpose:** Chainguard-based FIPS Superset images specifically for the Ivanti customer
 - **Tech:** Docker, Chainguard base, FIPS (SHA256)
 - **Hard dependency:** preset-pcs v6.0.0.1+ (MD5 → SHA256 switch)
 
-### pcs-superset-shell
+#### pcs-superset-shell
 - **Purpose:** Shell wrapper for Superset deployment delivered to PCS customers
 - **Status:** Minimal/thin repo — mostly customer-facing scaffolding
 
-### mpc-init
-- **Purpose:** Customer-facing tooling for setting up IAM permissions in customer's cloud for MPC
-- **Tech:** Terraform (GCP IAM module), Shell scripts, AWS IAM YAML
-- **Two options:** Terraform module (for IaC shops) or shell script (quick setup)
-- **Both methods are idempotent**
-- **Creates:** `PresetMPCAdminV2` custom role + `preset-mpc-sa` service account
-
+### How the deployment models connect
 ```
-mpc-init → customer runs to grant Preset access
+=== MPC Flow ===
+mpc-init → customer grants Preset IAM access
     |
-terraform-live-envs → provisions MPC cluster in customer's cloud
+terraform-live-envs → Preset provisions cluster in CUSTOMER's cloud
     |
-preset-pcs → Helm chart installed in customer cluster
+argocd + helm → Preset deploys Superset to customer cluster
+
+=== PCS Flow ===
+preset-pcs → customer pulls Helm chart + images
     |
 pcs-superset-fips / pcs-ivanti → FIPS images if required
+    |
+pcs-superset-shell → customer deploys to their own infra
 ```
 
 ---
@@ -266,20 +306,20 @@ pcs-superset-fips / pcs-ivanti → FIPS images if required
 ## The Full Infra Flow
 
 ```
-[Customer] ──mpc-init──> [IAM Setup]
-                              |
-[release-maker] ──────> [Release Branch]
+=== SaaS / MPC Infrastructure ===
+
+[release-maker] ──────> [Release Branch (superset-private + superset-shell)]
                               |
                               v
-[docker-images] ──────> [Container Images]
-[eks-image-builder] ───> [Node AMIs]
+[docker-images] ──────> [Container Images (15+ custom)]
+[eks-image-builder] ───> [Node AMIs (shared to 4 AWS accounts)]
                               |
                               v
 [terraform-modules-services] ──> [terraform-live-envs] ──Atlantis──> [AWS/GCP Infrastructure]
-                                                                          |
-                                                                          v
-                                                                    [K8s Clusters]
-                                                                          |
+                                        |                                    |
+                                        |                                    v
+                                  [cloudformation/]                    [K8s Clusters]
+                                  (MPC templates)                           |
                                                             [helm] ──> [ArgoCD] ──> [Deployed Apps]
                                                                           |
                                           [service-deploy-pipeline] ──> [manager, api-gateway, ...]
@@ -288,4 +328,43 @@ pcs-superset-fips / pcs-ivanti → FIPS images if required
                                           [celery-prometheus-exporter] ──> [Monitoring]
                                           [devops-tools] ──> [Operations]
                                           [disaster-recovery-plans] ──> [Runbooks]
+
+=== MPC Customer Onboarding ===
+
+[Customer] ──mpc-init──> [IAM Setup in customer cloud]
+                              |
+                              v
+                    [terraform-live-envs/environments/<env>/<cloud>/regions/<region>/mpc-<client>/]
+                              |
+                              v
+                    [ArgoCD deploys Superset to customer cluster]
+
+=== PCS (Customer Self-Managed) ===
+
+[preset-pcs] ──> Helm charts + images (tagged releases)
+[pcs-superset-fips] ──> FIPS images (RHEL UBI 9)
+[pcs-ivanti] ──> FIPS images (Chainguard, customer-specific)
+[pcs-superset-shell] ──> Deployment scaffolding
 ```
+
+---
+
+## What "A Superset Cluster" Means (from `infra/app-stack`)
+
+Each Superset cluster (SaaS or MPC) provisions:
+
+| Component | Resource | Details |
+|-----------|----------|---------|
+| Compute | EKS cluster | VPC, 3 AZs, worker ASGs, IAM |
+| Metadata DB | RDS PostgreSQL | `superset` database |
+| Examples DB | RDS PostgreSQL | `examples` database (sample data) |
+| Broker | ElastiCache Redis | `ss` — Celery broker for async tasks |
+| Cache | ElastiCache Redis | `sc` — Result/filter cache |
+| Storage | S3 (encrypted) | Query results (15-day expiry) |
+| Storage | S3 (encrypted) | Thumbnails (15-day expiry) |
+| Networking | VPC peering | To DevOps VPN + DevOps EKS |
+| Monitoring | Datadog users | On both Postgres instances |
+| DNS | Route53 | Public + private zones per env |
+| IAM | Superset user | S3 access, service permissions |
+
+This is what `app-stack` in both `infra` (legacy) and `terraform-live-envs` (current) provision.
