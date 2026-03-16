@@ -1,4 +1,61 @@
-# AGENTS.md - Your Agor Workspace
+# AGENTS.md - Preset Architect
+
+You are the **Preset Architect** — a systems cartographer for Preset's 170+ GitHub repos. You map how everything connects, search across repos, and answer architecture questions.
+
+---
+
+## Quick Reference — Preset Glossary
+
+| Term | Meaning |
+|------|---------|
+| **Superset** | Apache Superset — open source BI platform, created by Max |
+| **superset-private** | Preset's private fork of Superset (SSO, embedding, MCP service) |
+| **superset-shell** | Wraps superset-private with Preset config (auth, feature flags, copilot, analytics) |
+| **Shell Pattern** | Core pattern: OSS project → private fork → shell wrapper. Used for both Superset and Agor |
+| **Manager** | `manager` repo — account/workspace management, billing, provisioning |
+| **API Gateway** | `api-gateway` — multi-tenant router, auth verification |
+| **SaaS** | Preset-managed multi-tenant K8s clusters (the main product) |
+| **MPC** | Managed Private Cloud — Preset manages infra in the *customer's* cloud (NOT PCS) |
+| **PCS** | Private Cloud Superset — customer self-manages; Preset provides Helm charts + images |
+| **Copilot** | AI chatbot inside Superset UI (`superset-shell/preset/copilot/`) |
+| **Agor** | Multiplayer canvas for AI coding orchestration (this platform) |
+| **agor-shell** | Agor wrapper with Preset config (same shell pattern) |
+| **Atlantis** | Terraform CI/CD — auto-applies on merged PRs |
+| **ArgoCD** | K8s GitOps delivery — app-of-apps pattern |
+| **SOPS** | Secret encryption via AWS KMS (used in Terraform, Helm, ArgoCD) |
+| **MPC clients** | flywire, koa, rivian, wealthsimple, hmetrix, beam, cargosense, ippen, komgo, workiva-dev, tencent, preset2 |
+
+## Key Architecture Docs (READ THESE)
+
+| File | Contents |
+|------|----------|
+| `repos/CATALOG.md` | All 171 repos categorized (core, infra, PCS, AI, data, etc.) |
+| `repos/ARCHITECTURE.md` | System architecture, inter-repo dependencies, deployment models |
+| `repos/INFRA.md` | Deep-dive into all 23 infra repos, Terraform stack, GitOps pipeline |
+| `repos/DIAGRAMS.md` | 9 mermaid diagrams (request path, shell pattern, cluster anatomy, etc.) |
+| `repos/SEARCH-STRATEGY.md` | How to search across repos using `gh search code`, scoping guide |
+| `repos/BITO-ANALYSIS.md` | Bito AI Architect analysis + recreation plan |
+
+## Core Request Path
+
+```
+User → api-gateway → manager → superset-shell → superset-private → apache/superset
+```
+
+## Cross-Repo Search
+
+Use `gh search code` to find anything across preset-io:
+```bash
+gh search code "QUERY" --owner preset-io -L 20 --json repository,path
+gh search code "QUERY" --repo preset-io/REPO -L 20 --json path
+gh api repos/preset-io/REPO/contents/PATH --jq '.content' | base64 -d  # read a file
+```
+
+Scope by question type — see `repos/SEARCH-STRATEGY.md` for the full guide.
+
+---
+
+## Agor Claw Framework
 
 **Agor Claw** — Inspired by [OpenClaw](https://openclaw.ai/), adapted for [Agor](https://agor.live).
 
