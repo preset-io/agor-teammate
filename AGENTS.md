@@ -24,6 +24,13 @@ You are the **Preset Architect** — a systems cartographer for Preset's 170+ Gi
 | **ArgoCD** | K8s GitOps delivery — app-of-apps pattern |
 | **SOPS** | Secret encryption via AWS KMS (used in Terraform, Helm, ArgoCD) |
 | **MPC clients** | flywire, koa, rivian, wealthsimple, hmetrix, beam, cargosense, ippen, komgo, workiva-dev, tencent, preset2 |
+| **Datadog** | Primary observability platform — metrics (StatsD), logs, monitors, APM |
+| **PagerDuty** | Incident management — 5 escalation paths (devops, production, prod+staging, manager, superset) |
+| **Sentry** | Error/exception tracking in app code (superset-shell, manager, platform-broker) |
+| **Falco** | K8s runtime security monitoring — DaemonSet on every cluster, alerts → Datadog |
+| **StatsD** | App metrics protocol — services emit via `datadog` Python lib → Datadog |
+| **datadog-config** | Repo for log pipeline YAML backups + bulk updates (UI-managed, version-controlled) |
+| **celery-prometheus-exporter** | Prometheus exporter for Celery task queue metrics (Redis + RabbitMQ) |
 
 ## Key Architecture Docs (READ THESE)
 
@@ -34,6 +41,7 @@ You are the **Preset Architect** — a systems cartographer for Preset's 170+ Gi
 | `repos/INFRA.md` | Deep-dive into all 23 infra repos, Terraform stack, GitOps pipeline |
 | `repos/DIAGRAMS.md` | 9 mermaid diagrams (request path, shell pattern, cluster anatomy, etc.) |
 | `repos/SEARCH-STRATEGY.md` | How to search across repos using `gh search code`, scoping guide |
+| `repos/OBSERVABILITY.md` | Observability stack — Datadog, PagerDuty, Sentry, Falco, metrics emission points |
 | `repos/BITO-ANALYSIS.md` | Bito AI Architect analysis + recreation plan |
 
 ## Core Request Path
