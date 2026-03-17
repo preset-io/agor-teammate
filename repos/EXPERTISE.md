@@ -1,8 +1,21 @@
 # Preset Expertise Map
 
-**Source:** GitHub contributor data (`gh api repos/preset-io/REPO/contributors`) + CODEOWNERS files
-**Last updated:** 2026-03-16
-**Note:** Contribution counts are all-time. Some people may have left Preset — this reflects historical + current knowledge.
+**Source:** GitHub contributor data, CODEOWNERS files, GitHub Teams API
+**Last updated:** 2026-03-17
+**Note:** Contribution counts are all-time. People marked 🟢 are current; 🔵 are advisors/alumni with institutional knowledge.
+
+## Current GitHub Teams
+
+| Team | Members |
+|------|---------|
+| **admins** | mistercrunch, dpgaspar, eschutho, preset-machine, slemena-preset, briandinapo |
+| **developers** | mistercrunch, rusackas, betodealmeida, rebenitez1802, dpgaspar, aminghadersohi, eschutho, yousoph, kgabryje, gabotorresruiz, Antonio-RiveroMartnez, sadpandajoe, EnxDev, geido, garciajrx, Vitor-Avila, ASolarers-Rodriguez |
+| **infra** | betodealmeida, dpgaspar, aminghadersohi, eschutho, Antonio-RiveroMartnez, garciajrx, ASolarers-Rodriguez, vitor-mechanic |
+| **platform** | dpgaspar, eschutho, Antonio-RiveroMartnez, sadpandajoe |
+| **qa** | rebecagbenevides, sadpandajoe, rebecanogueira-preset, drivaspreset |
+| **data-team** | briandinapo |
+| **product** | yousoph |
+| **marketing** | slemena-preset, briandinapo |
 
 ---
 
@@ -11,13 +24,13 @@
 | Person | Primary Domain | Signal |
 |--------|---------------|--------|
 | **mistercrunch** (Max) | Superset core, Agor, data | #1 in superset-private (2,385), agor (1,228), dataeng (#2) |
-| **craig-rueda** | Infra/DevOps (everything) | #1 in 10+ repos: helm, manager, service-deploy-pipeline, api-gateway, docker-images, platform-broker, devops-tools, mpc-init, ephemeral-env-pipeline |
-| **dpgaspar** | Platform/Infra | #1 in argocd, superset-shell, birdsai, cronjobs; #2 in helm, manager, docker-images |
-| **betodealmeida** | Python SDK/API layer | #1 in backend-sdk, superset-sup; #5 superset-private |
-| **sadpandajoe** | QA/Testing/Releases | #1 in e2e-automation (412), release-maker (49) |
-| **stevepisani** | Data engineering | #1 in dataeng (288) — owns the data pipeline |
-| **thiagorossener** | Marketing website | #1 in preset-marketing-website (599) |
-| **geido** | AI/Copilot + Frontend | #1 in ai-assist-lib; CODEOWNERS for frontend components |
+| 🔵 **craig-rueda** | Infra/DevOps (alumni) | Historical #1 in 10+ repos. Left ~18mo ago, available as advisor on Slack |
+| 🟢 **dpgaspar** (Daniel) | Platform/Infra lead | Longest tenure in infra/devops. Now primary owner of ArgoCD, Helm, superset-shell, manager, Docker. Well-backed by infra team |
+| 🟢 **betodealmeida** | Python SDK/API layer + Infra | #1 in backend-sdk, superset-sup; now also on infra team |
+| 🟢 **sadpandajoe** | QA/Testing/Releases | #1 in e2e-automation (412), release-maker (49) |
+| 🔵 **stevepisani** | Data engineering (alumni) | Left ~2yr ago. Max (mistercrunch) now owns dataeng at ~10% capacity |
+| 🔵 **thiagorossener** | Marketing website (alumni) | Historical #1 in preset-marketing-website (599) |
+| 🟢 **geido** | AI/Copilot + Frontend | #1 in ai-assist-lib; CODEOWNERS for frontend components |
 
 ---
 
@@ -27,7 +40,7 @@
 
 | Person | Key Repos |
 |--------|-----------|
-| **mistercrunch** | superset-private (#1, 2385), agor/agor-shell (#1, 1228), dataeng (#2, 225), superset-sup (#3). CODEOWNERS: migrations, Helm, GH actions, E2E |
+| **mistercrunch** | superset-private (#1, 2385), agor/agor-shell (#1, 1228), dataeng (now primary owner, ~10% time), superset-sup (#3). CODEOWNERS: migrations, Helm, GH actions, E2E |
 
 ---
 
@@ -35,8 +48,8 @@
 
 | Person | Key Repos | Notes |
 |--------|-----------|-------|
-| **craig-rueda** | helm (#1, 1061), manager (#1, 642), service-deploy-pipeline (#1), api-gateway (#1), docker-images (#1), devops-tools (#1), platform-broker (#1), ephemeral-env-pipeline (#1), mpc-init (#1), argocd (#2) | Most critical infra engineer — touches everything |
-| **dpgaspar** | argocd (#1, 183), superset-shell (#1, 298), helm (#2, 650), manager (#2), api-gateway (#2), docker-images (#2), birdsai (#1), cronjobs (#1) | Second most prolific — ArgoCD primary owner |
+| 🔵 **craig-rueda** | helm (#1, 1061), manager (#1, 642), service-deploy-pipeline (#1), api-gateway (#1), docker-images (#1), devops-tools (#1), platform-broker (#1), ephemeral-env-pipeline (#1), mpc-init (#1), argocd (#2) | **Alumni/advisor** — left ~18mo ago, available on Slack. Historical top contributor |
+| 🟢 **dpgaspar** (Daniel) | argocd (#1, 183), superset-shell (#1, 298), helm (#2, 650), manager (#2), api-gateway (#2), docker-images (#2), birdsai (#1), cronjobs (#1) | **Current infra/devops lead** — longest tenure, has taken ownership of craig's domains |
 | **henryyeh** | helm (#3, 354), devops-tools (#3), docker-images (#5), release-maker (#3) | Helm specialist |
 | **innovia** | helm (#4, 224), argocd (#4), docker-images (#3), api-gateway (#3) | Infra generalist |
 | **garciajrx** | argocd (#3, 99), api-gateway (#4), mpc-init (#2) | ArgoCD + MPC |
@@ -120,9 +133,11 @@
 
 | Person | Key Repos | Notes |
 |--------|-----------|-------|
-| **stevepisani** | dataeng (#1, 288) | Data engineering lead (sole primary owner) |
-| **todd-dawson** | dataeng (#3, 80) | Data engineer |
+| 🟢 **mistercrunch** | dataeng (current primary owner) | Took over from stevepisani ~2yr ago; ~10% of time keeps things DAGgin' |
+| 🔵 **stevepisani** | dataeng (#1 historical, 288) | Alumni — left ~2yr ago |
+| 🔵 **todd-dawson** | dataeng (#3, 80) | Alumni |
 | **suddjian** | dataeng (#4, 14) | Cross-cutting (also frontend) |
+| 🟢 **briandinapo** | data-team member | Current data-team on GitHub |
 
 ---
 
@@ -136,17 +151,17 @@
 
 ---
 
-## Risk Observations
+## Risk Observations (Updated)
 
-1. **craig-rueda is a single point of failure for infra** — #1 contributor in 10+ repos. If he's unavailable, Helm, service-deploy-pipeline, docker-images, devops-tools, ephemeral-env-pipeline, and mpc-init have no close second.
+**Mitigated risks:**
+1. ~~craig-rueda single point of failure~~ — Craig left ~18mo ago; Daniel (dpgaspar) has successfully taken ownership, backed by a solid infra team (8 members including betodealmeida, aminghadersohi, eschutho, garciajrx, Antonio-RiveroMartnez, ASolarers-Rodriguez, vitor-mechanic). Craig remains available as advisor on Slack.
+2. ~~stevepisani owns dataeng solo~~ — Steve left ~2yr ago; Max (mistercrunch) now owns the data pipeline at ~10% capacity. Things are DAGgin' fine.
 
-2. **stevepisani owns dataeng solo** — 288 commits vs 80 for #2. The data pipeline depends heavily on one person.
-
-3. **betodealmeida owns the SDK layer** — backend-sdk and superset-sup are almost entirely his work.
-
-4. **dpgaspar is the second most critical person** — touches ArgoCD, Helm, superset-shell, manager, Docker. Strong complement to craig-rueda.
-
-5. **Marketing website is siloed** — thiagorossener + marcomiduri have zero overlap with platform engineering.
+**Current observations:**
+3. **betodealmeida owns the SDK layer** — backend-sdk and superset-sup are heavily his work. Vitor-Avila is #2 and growing.
+4. **dpgaspar is the most critical infra person** — touches ArgoCD, Helm, superset-shell, manager, Docker. Well-backed by team but high bus factor.
+5. **Infra team is well-staffed (8 people)** — includes betodealmeida, aminghadersohi, eschutho, Antonio-RiveroMartnez, garciajrx — good cross-coverage.
+6. **QA team has grown** — 4 members (rebecagbenevides, sadpandajoe, rebecanogueira-preset, drivaspreset).
 
 ---
 
