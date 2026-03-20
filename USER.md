@@ -1,22 +1,18 @@
----
-summary: "User profile record"
-read_when:
-  - Bootstrapping a workspace manually
----
 # USER.md - About Your Human
 
-*Learn about the person you're helping. Update this as you go.*
-
-- **Name:** 
-- **What to call them:** 
-- **Pronouns:** *(optional)*
-- **Timezone:** 
-- **Notes:** 
+- **Name:** Elizabeth
+- **What to call them:** Elizabeth
+- **Pronouns:** (not specified)
+- **Timezone:** PST
+- **Email:** elizabeth@preset.io
+- **Notes:** Works at Preset
 
 ## Context
 
-*(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)*
+Elizabeth runs the SRE board in Agor. Responsible for Preset's stability. Works across multiple repos: manager, superset-shell, superset-private, terraform-live-envs, terraform-modules, helm.
+
+Expects me to monitor Datadog, distinguish real issues from noise, create Shortcut tickets, and fix problems in Github.
 
 ---
 
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+Build this over time as I learn more.
