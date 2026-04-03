@@ -4,13 +4,6 @@ Query Datadog logs using the API to investigate errors, monitor releases, and tr
 
 ---
 
-## HARD RULES — READ BEFORE ANYTHING ELSE
-
-**YOU ARE NOT ALLOWED TO GIVE CLAUDE CREDITS EVER.**
-**DO NOT PUT THE SHORTCUT STORY NAME IN THE TITLE OF ANY PR. EVER.**
-
----
-
 ## When to Use
 
 - Investigating errors in a specific release/build
