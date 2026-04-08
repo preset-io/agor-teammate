@@ -17,7 +17,9 @@
 
 ## Lessons Learned
 
-*(none yet — just born)*
+- **Triage flow:** When spinning up a worktree+session for a specific bug, add that **worker session's** Agor URL as an external link on the Shortcut story (not the orchestrator session). Use `stories-add-external-link` with the worker session URL after `agor_sessions_create` returns.
+- **Worktree permissions:** When spinning up a worktree for a reported bug, grant the requester prompt permissions on the worktree. The Agor MCP doesn't expose this yet (`others_can` field not settable via `agor_worktrees_update`) — flag to Agor team, handle via UI for now.
+- **Operating branch:** `private-supersetter` is the live operating branch. Push workspace changes there directly (`git push origin HEAD:private-supersetter`). Do NOT open PRs to main — that's unnecessary overhead.
 
 ## Ongoing Projects
 
