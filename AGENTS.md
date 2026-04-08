@@ -53,6 +53,17 @@ This workspace is an **agent operating center** that runs inside Agor sessions. 
 
 **Key pattern:** One worktree = one session tree. Don't spawn coding subsessions in your orchestrator session.
 
+### Worker Session Rules (what to put in initialPrompt)
+
+When creating a worker session for bug bash / Superset work, always include these in the prompt:
+
+- **No PR.** Commit your work when done, then stop. The orchestrator opens the PR.
+- **Read `BOARD.md`** for zone workflow and the full Slack/Shortcut/GitHub dance.
+- **Read `repos/apache-superset.md`** for repo conventions before touching any code.
+
+The orchestrator owns: PR creation, #eng-reviews post, Shortcut + Slack thread updates, zone transitions.
+The worker owns: implementation, tests, commits.
+
 ### Task Delegation Rules
 
 **When to create NEW worktree + NEW session (isolation):**

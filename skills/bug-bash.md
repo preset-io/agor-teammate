@@ -3,55 +3,63 @@
 ## When to Use
 When a bug is reported on Slack (#bug-reporting), found in Shortcut, or mentioned by Max.
 
+> **Full workflow with all zone transitions and Slack/Shortcut/GitHub touchpoints is in BOARD.md.**
+> Read it. This skill is a quick reference.
+
+---
+
 ## The Flow
 
 ### 1. Find the Bug
 ```
-- Search Slack: slack_search_public_and_private(query, in:#bug-reporting)
-- Read thread: slack_read_thread(channel_id, message_ts, response_format="detailed")
-  → Gets text, file metadata (name, ID, type, size), and replies
-- File search: slack_search_public_and_private(content_types="files", type:images)
-  → Gets image metadata/permalinks (can't view actual images)
+- Read thread: slack_read_thread(channel_id, message_ts)
+  → Gets text, file metadata. Can't view image content — ask reporter to describe in thread.
+- Check for existing SC ticket: stories-search(name="keyword", isDone=false)
 ```
 
-### 2. Check Shortcut
+### 2. Triage in Shortcut
 ```
-- Search: stories-search(name="keyword", isDone=false)
-- If exists: get story details, check if assigned
-- If missing: create story
-  → name, type="bug", epic=101517, workflow=500020181
-  → Include Slack thread link in description
-```
-
-### 3. Assign & Update
-```
-- Assign to Max: stories-update(storyPublicId, owner_ids=["5d8c4eae-..."])
-- Move to Implementing: workflow_state_id=500020185
-- Add external links (PR URLs) as they come
+- If missing, create:
+  stories-create(name, type="bug", epic=101517, workflow=500020181, team="5fc58cd7")
+  stories-update(storyId, workflow_state_id=500020245)  # Triage
+- Note the SC story URL: https://app.shortcut.com/preset/story/<ID>
 ```
 
-### 4. Create Worktree + Session
+### 3. Spin Up Worktree + Session
 ```
-- Worktree: agor_worktrees_create(repoId, worktreeName, createBranch=true, boardId)
-- Update metadata: agor_worktrees_update(worktreeId, notes, issueUrl)
-- Session: agor_sessions_create(worktreeId, agenticTool="claude-code", initialPrompt)
-- Place in zone: agor_worktrees_set_zone(worktreeId, "zone-in-progress")
-```
-
-### 5. Thread on Slack
-```
-- Reply on original message with BOTH links:
-  "Tracked in Shortcut: https://app.shortcut.com/preset/story/XXXXX
-   Agent working on it: https://agor.sandbox.preset.zone/ui/b/supersetter/SESSION_ID"
+- agor_worktrees_create(repoId="4903fa88-...", boardId="d623c9f3-...", worktreeName, createBranch=true)
+- agor_worktrees_update(worktreeId, notes, issueUrl=<SC story URL>)
+- agor_sessions_create(worktreeId, "claude-code", initialPrompt)
+  ↳ ALWAYS include in prompt: "DO NOT open a PR. Commit your work and stop."
+- agor_worktrees_set_zone(worktreeId, "zone-in-progress")
+- stories-update(storyId, workflow_state_id=500020185)  # Implementing
 ```
 
-### 6. Follow Up
+### 4. Reply in Slack Thread
 ```
-- Check session status: agor_sessions_get(sessionId)
-- When done: move worktree to zone-open-pr
-- Update Shortcut with PR link: stories-add-external-link
-- Thread PR link on Slack too
+"Tracked: <SC story URL>  |  Agent: <Agor session URL>"
 ```
+
+### 5. When Worker is Done (worktree moves to zone-open-pr)
+See **PR Opening Dance** in BOARD.md:
+```
+- gh pr create (orchestrator opens PR, not worker)
+- Post in #eng-reviews with one-liner
+- Link PR in Shortcut + Slack thread
+- agor_worktrees_set_zone(worktreeId, "zone-human-review")
+```
+
+### 6. After Max Merges
+See **Post-Merge Dance** in BOARD.md:
+```
+- stories-get-by-external-link(url=<PR URL>) → find SC story
+- stories-update(workflow_state_id=500020392)  # Merged/Done
+- agor_worktrees_set_zone(worktreeId, "zone-done")
+- Reply in Slack thread: "Merged ✓"
+- agor_environment_stop(worktreeId)
+```
+
+---
 
 ## Key IDs (Cheat Sheet)
 
@@ -64,12 +72,15 @@ When a bug is reported on Slack (#bug-reporting), found in Shortcut, or mentione
 | State: Triage | `500020245` |
 | State: Implementing | `500020185` |
 | State: Merged/Done | `500020392` |
-| Max's Shortcut User ID | `5d8c4eae-e5b1-4662-ab9b-a6f106e573df` |
+| SC Team (Producks) | `5fc58cd7` |
+| Max's SC User ID | `5d8c4eae-e5b1-4662-ab9b-a6f106e573df` |
 | Slack #bug-reporting | `C0AGRNNURGX` |
+| Slack #eng-reviews | `C09KSS4NVLL` |
 
 ## Notes
 
-- Slack MCP returns text only — no image content. Use `read_thread` for file metadata.
-- Always include Agor session link in Slack thread (not just Shortcut).
-- Check if Shortcut story already exists before creating duplicates.
-- Check if PR #39173 or other recent PRs already addressed the issue.
+- Slack MCP: text only, no image content. Ask reporter to describe in thread.
+- Always include Agor session URL in Slack reply (not just SC link).
+- Workers commit but DO NOT open PRs — orchestrator handles that.
+- Tiny/easy PRs: mark with ✨ in #eng-reviews post.
+- #eng-reviews: unfurling unreliable — always add a one-liner alongside the URL.
