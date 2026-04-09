@@ -107,7 +107,7 @@ This is the complete sequence from bug report to done. Every touchpoint matters.
 ```
 1. Open PR on apache/superset (gh pr create)
 2. agor_worktrees_update(worktreeId, pullRequestUrl=<PR URL>)
-3. stories-add-external-link(storyId, url=<PR URL>)
+3. stories-add-external-link(storyId, externalLink=<PR URL>)   # param is "externalLink", NOT "url"
 4. Post in #eng-reviews:
    "<PR URL>
    One-liner description. Mark easy/tiny ones with ✨"
@@ -142,6 +142,21 @@ This is the complete sequence from bug report to done. Every touchpoint matters.
 | Max's SC User ID | `5d8c4eae-e5b1-4662-ab9b-a6f106e573df` |
 | Slack #bug-reporting | `C0AGRNNURGX` |
 | Slack #eng-reviews | `C09KSS4NVLL` |
+
+---
+
+## Shortcut MCP Gotchas
+
+**There is no `epics-get-stories` tool.** To get all stories in an epic, use one of:
+- `iterations-get-stories` if stories are in an active/upcoming iteration
+- `labels-get-stories` if the epic has a corresponding label
+- `projects-get-stories` for a specific project
+- `stories-search` with keywords — but it returns top 25 only, doesn't filter by epicId server-side. Paginate or use specific terms.
+- Fallback: check the epic directly in Shortcut UI. The epic ID 101517 is at https://app.shortcut.com/preset/epic/101517
+
+**`stories-add-external-link` param is `externalLink` (singular string), NOT `url`.** Using `url` gives a "Required" error.
+
+**`stories-create` uses `workflow`, NOT `team`.** Passing `team` alongside `epic` causes a 400. Use `workflow=500020181`.
 
 ---
 
