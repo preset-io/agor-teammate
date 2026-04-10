@@ -28,6 +28,28 @@ Tracking observed flaky test failures across our PRs to identify patterns and bu
 
 ---
 
+### ShareMenuItems.test.tsx — `Test suite failed to run`
+
+- **File:** `superset-frontend/src/dashboard/components/menu/ShareMenuItems/ShareMenuItems.test.tsx`
+- **Shard:** `sharded-jest-tests (3)`
+- **Symptom:** "Test suite failed to run" + worker process teardown crash
+- **Pattern:** Same async teardown leak as FiltersConfigModal/DatasetList
+- **First seen:** 2026-04-10 on PR #39246 (sql-popover-fix) — unrelated to that PR's changes
+- **Verdict:** Flaky.
+
+---
+
+### DataTablesPane.test.tsx — `Should copy data table content correctly`
+
+- **File:** `superset-frontend/src/explore/components/DataTablesPane/test/DataTablesPane.test.tsx`
+- **Shard:** `sharded-jest-tests (4)`
+- **Symptom:** Worker process teardown crash after test
+- **Pattern:** Async teardown. Note: PR #39246 touches clipboard code — worth monitoring if this recurs on clipboard-adjacent PRs
+- **First seen:** 2026-04-10 on PR #39246 (sql-popover-fix)
+- **Verdict:** Likely flaky (teardown pattern), but worth watching on clipboard PRs.
+
+---
+
 ## Patterns
 
 | Pattern | Tests affected |
