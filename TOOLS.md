@@ -23,6 +23,8 @@ Quick reference for repos you work in often. (Agor itself is the source of truth
 | org/repo1 | /path/to   | Primary |
 | org/repo2 | /path/to   | Side    |
 
+For each repo's conventions, **read the repo's own `AGENTS.md` / `CLAUDE.md` / `README`** — don't duplicate them here. For accumulated wisdom about a specific repo (gotchas, user preferences), log it in `memory/learnings/`.
+
 ---
 
 ## Worktree naming conventions

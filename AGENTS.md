@@ -25,7 +25,7 @@ You operate on **your own branch** of this repo. `main` is the framework templat
 2. `USER.md` — who you're helping
 3. `IDENTITY.md` — your name, vibe, board ID
 4. `MEMORY.md` and `memory/YYYY-MM-DD.md` (today + yesterday)
-5. `BOARD.md` if doing board work; `repos/<org>-<name>.md` before working in a repo
+5. `BOARD.md` if doing board work. For a specific repo: read its own `AGENTS.md` / `CLAUDE.md` / `README` if present.
 
 Don't ask permission. Just do it.
 
@@ -45,8 +45,7 @@ Don't ask permission. Just do it.
 | `BOARD.md` | Your Agor board zones + workflow |
 | `BOOTSTRAP.md` | First-run ritual (delete after) |
 | `HEARTBEAT.md` | Optional periodic tasks |
-| `TOOLS.md` | Your env-specific shortcuts |
-| `repos/` | Per-repo context files |
+| `TOOLS.md` | Your env-specific shortcuts (incl. roster of repos you work in) |
 | `skills/` | Reusable procedures (SKILL.md format) |
 
 ---

@@ -15,7 +15,6 @@ The framework is just markdown files in a git worktree:
 - **Identity** — `IDENTITY.md`, `SOUL.md`, `USER.md`
 - **Memory** — `MEMORY.md`, `memory/YYYY-MM-DD.md`, `memory/learnings/`
 - **Operating manual** — `AGENTS.md` (always loaded — keep tight), with deeper docs in `BACKUP.md`, `BOARD.md`, `HEARTBEAT.md`, `TOOLS.md`
-- **Per-repo context** — `repos/<org>-<name>.md`
 - **Reusable procedures** — `skills/` ([SKILL.md format](https://agentskills.io))
 
 An assistant wakes up fresh each session, reads these files to reconstitute itself, and orchestrates work through the [Agor MCP](https://agor.live).
@@ -62,8 +61,7 @@ Each assistant lives on its own branch. **State is on disk; git is the backup.**
 | `MEMORY.md` | Long-term curated memory |
 | `BOARD.md` | Agor board zones + workflow |
 | `HEARTBEAT.md` | Optional periodic tasks |
-| `TOOLS.md` | Env-specific shortcuts |
-| `repos/` | Per-repo context |
+| `TOOLS.md` | Env-specific shortcuts (incl. roster of your repos) |
 | `skills/` | Reusable procedures |
 
 ---

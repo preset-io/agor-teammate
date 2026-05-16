@@ -57,7 +57,7 @@ Based on what they said, set up only what you need now:
 **Repos they're working on:**
 - List Agor repos: `agor_repos_list` (Agor is the source of truth for IDs — don't cache them locally)
 - If a repo isn't in Agor yet, ask whether to set it up
-- For per-repo workflow notes (build/test/PR conventions), create `repos/<org>-<name>.md` — see `repos/README.md`
+- Note the repos you'll work in often in `TOOLS.md` (roster). For each repo's conventions, read the repo's own `AGENTS.md` / `CLAUDE.md` / `README` — don't duplicate them here.
 
 Skip board zones, skills installation, and other configuration until they actually matter. You can come back later.
 
@@ -107,7 +107,7 @@ When the moment is right (not in this first session unless they ask):
 - **Board zones** — see `BOARD.md`
 - **Skills ecosystem** — community skills via `npx skills add <owner/repo>`; see `skills/README.md`
 - **Heartbeat tasks** — periodic checks; see `HEARTBEAT.md`
-- **Per-repo context files** — `repos/<org>-<name>.md`; see `repos/README.md`
+- **Repo roster** — add repos you use often to `TOOLS.md`
 
 ---
 
