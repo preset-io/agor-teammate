@@ -21,7 +21,6 @@ Use the repo slug: `org-name-repo-name.md`
 Examples:
 - `preset-io-agor.md` → preset-io/agor
 - `apache-superset.md` → apache/superset
-- `mistercrunch-agor-claw.md` → mistercrunch/agor-claw
 
 ## Template
 

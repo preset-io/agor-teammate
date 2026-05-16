@@ -1,173 +1,73 @@
-# BOARD.md - Your Agor Board Configuration
+# BOARD.md — Your Agor board
 
-**Purpose:** Document your board structure, zones, and workflow expectations so agents understand how to organize work spatially.
-
----
-
-## Board Information
-
-- **Board ID:** `[Your board ID from IDENTITY.md]`
-- **Board Name:** `[Your board name]`
-- **Board URL:** `[Agor board URL]`
+Document your board's structure, zones, and workflow expectations so you (and other agents) know how to organize work spatially.
 
 ---
 
-## Zones and Workflow
+## Board info
 
-**Why zones matter:** Zones represent workflow states. The zone a worktree is IN determines its true status—this is your spatial organization of work.
+- **Board ID:** `[from IDENTITY.md]`
+- **Board Name:** `[your board name]`
+- **Board URL:** `https://agor.live/board/[board_id]`
 
-### Zone Definitions
+---
 
-Document each zone on your board:
+## Zones
+
+Zones represent workflow states. The zone a worktree is in **is** its status.
+
+Zone info is included in every worktree response as `zone_id` and `zone_label` (no position calculations needed). Trust `zone_label` as the source of truth.
+
+Document each zone below:
 
 ```markdown
 ### [Zone Name]
 
 - **Zone ID:** zone-xxxxx
-- **Purpose:** [What this zone represents]
-- **Workflow State:** [e.g., "planning", "in-progress", "review", "done"]
-- **Agent Behavior:**
-  - [What should agents do when worktrees are in this zone?]
-  - [Any automated actions to take?]
-  - [When to move worktrees out of this zone?]
-
-**Zone Trigger:** [If configured]
-- Behavior: [always_new / show_picker]
-- Agent: [claude-code / codex / gemini]
-- Prompt Template: [What prompt gets triggered]
+- **Workflow state:** planning / in-progress / review / done
+- **What you do here:** [actions when worktrees land here]
+- **When to move out:** [criteria for transition]
+- **Trigger (if any):** always_new / show_picker + agent + prompt template
 ```
 
 ---
 
-## Example Zone Configuration
+## Example zones (delete or adapt)
 
-### Design!
-
-- **Zone ID:** zone-1770152859108
-- **Purpose:** Planning and design phase before implementation
-- **Workflow State:** planning
-- **Agent Behavior:**
-  - Focus on research, exploration, and design decisions
-  - Don't start coding until design is approved
-  - Update worktree notes with design decisions
-  - Move to "In Progress" when ready to implement
+### Design
+Planning before implementation. Don't code yet. Move to "In Progress" when design is approved.
 
 ### In Progress
-
-- **Zone ID:** zone-1770152859362
-- **Purpose:** Active development work
-- **Workflow State:** in-progress
-- **Agent Behavior:**
-  - Actively work on implementation
-  - Run tests frequently
-  - Update worktree metadata with progress
-  - Move to "Open a PR" when work is complete
+Active development. Run tests frequently. Move to "Open a PR" when complete.
 
 ### Open a PR
+Create PR if missing, link `pull_request_url` on the worktree, ensure CI passes, then move to review.
 
-- **Zone ID:** zone-1770152859410
-- **Purpose:** Work ready for pull request creation
-- **Workflow State:** ready-for-pr
-- **Agent Behavior:**
-  - Create pull request if not exists
-  - Link PR URL to worktree metadata
-  - Ensure CI passes
-  - Move to "Codex review" or "Human review" after PR created
+### Review
+Wait for human or AI review. Don't take automated actions.
 
-### Codex review
+### Done
+Mark completed in memory. Archive from active tracking. Stop reporting in heartbeat.
 
-- **Zone ID:** zone-1770152859458
-- **Purpose:** Code review by AI agent
-- **Workflow State:** ai-review
-- **Agent Behavior:**
-  - Spawn code review session
-  - Check for common issues
-  - Update PR with review comments
-  - Move to "Human review" after AI review complete
+### Trash
+Abandoned work. Stop tracking.
 
-### Human review / Trash
-
-- **Zone ID:** zone-1770152859506
-- **Purpose:** Terminal states (awaiting human or discarded)
-- **Workflow State:** terminal
-- **Agent Behavior:**
-  - Don't take automated actions
-  - Mark as completed/archived in memory
-  - Only touch if explicitly asked by human
-
-### Done: PR merged or worktree abandoned
-
-- **Zone ID:** zone-1770152859554
-- **Purpose:** Completed work
-- **Workflow State:** done
-- **Agent Behavior:**
-  - Mark as completed in memory
-  - Archive from active tracking
-  - Clean up if worktree is stale
-  - Don't report in heartbeat checks
+**Typical flow:** Design → In Progress → Open a PR → Review → Done (or Trash)
 
 ---
 
-## Workflow Transitions
+## Working with zones via MCP
 
-Document how worktrees move between zones:
+- `agor_worktrees_list` — every worktree includes `zone_id`, `zone_label`, `board_id`
+- `agor_worktrees_set_zone` — move a worktree
+- `agor_boards_get` — full board with all zone definitions
 
-```
-Design! → In Progress → Open a PR → Codex review → Human review → Done
-                ↓                          ↓
-              Trash ←──────────────────────┘
-```
-
----
-
-## Agent Instructions
-
-**For heartbeat checks:**
-
-Zone information is now **directly available** in worktree MCP responses as `zone_id` and `zone_label` fields (no position calculations needed):
-
-```
-Use agor_worktrees_list to get all worktrees.
-Each worktree includes zone_id and zone_label fields automatically.
-
-Take actions based on zone_label:
-- "Done: PR merged or worktree abandoned" → Mark completed in memory, archive
-- "Ready for PR" + missing pull_request_url → Create PR
-- "In Progress" + stale last_updated → Flag for attention
-```
-
-**Key points:**
-- Zone info is automatically included in `agor_worktrees_get` and `agor_worktrees_list`
-- No need to manually match positions or call `agor_boards_get`
-- Trust `zone_label` as source of truth for workflow state
-- Use `agor_worktrees_set_zone` to move worktrees between zones
-
-**For new work:**
-1. Create worktree with required `boardId` (use `agor_worktrees_create`)
-2. Use `agor_worktrees_set_zone` to place in appropriate starting zone
-3. Zone triggers may auto-start sessions (if configured)
-
----
-
-## Setup Notes
-
-**During bootstrap:**
-- Agent should help set up board structure
-- Create zones for common workflow states
-- Configure zone triggers if desired
-- Document zone purposes in this file
-
-**As you evolve:**
-- Update zone definitions when workflow changes
-- Add new zones as needed
-- Document agent behavior expectations
-- Keep this file synchronized with actual board
+For heartbeat patterns based on `zone_label`, see `HEARTBEAT.md`.
 
 ---
 
 ## Notes
 
-- This file should be updated whenever board structure changes
-- Zone IDs are stable, but positions/sizes may change
-- Agent behavior should adapt to your workflow, not dictate it
-- Empty template by default—fill in during bootstrap or as needed
+- Update this file when board structure changes.
+- Zone IDs are stable; positions/sizes may drift.
+- Adapt the zones to your workflow, not the other way around.

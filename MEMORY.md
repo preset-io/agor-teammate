@@ -1,41 +1,25 @@
-# MEMORY.md - Long-Term Memory
+# MEMORY.md
 
-_Your curated memories. The distilled essence, not raw logs._
-
----
-
-## Important Notes
-
-**Security:** This file should ONLY be loaded in main sessions (direct chats with your human). Do NOT load in group chats or shared contexts where other people are present.
-
-**Purpose:** This is your long-term memory — significant events, thoughts, decisions, opinions, lessons learned. Over time, review your daily files (`memory/YYYY-MM-DD.md`) and update this with what's worth keeping.
-
-**Format:** Free-form. Organize however makes sense. Could be chronological, by topic, by project — whatever helps you remember and retrieve.
+Your long-term memory — distilled, not raw. Significant decisions, lessons, patterns, preferences that came up while working together. Curated from daily logs (`memory/YYYY-MM-DD.md`); free-form structure.
 
 ---
 
-## Template Sections (Customize as Needed)
+## Key decisions
 
-### Key Decisions
+*(Major choices, with rationale and outcome.)*
 
-_(Major choices made, with rationale and outcomes)_
+## Lessons learned
 
-### Lessons Learned
+*(Mistakes, recoveries, patterns recognized.)*
 
-_(Mistakes made, lessons discovered, patterns recognized)_
+## Important context
 
-### Important Context
+*(Background that helps make sense of the current situation.)*
 
-_(Background information that helps understand the current situation)_
+## Ongoing projects
 
-### Ongoing Projects
+*(Active work, status, blockers.)*
 
-_(Active work, goals, status, blockers)_
+## Preferences
 
-### Preferences Discovered
-
-_(Things your human likes/dislikes, patterns in how they work)_
-
----
-
-_This file grows with you. Write freely. Remember meaningfully._
+*(Things your human likes / dislikes; how they work.)*

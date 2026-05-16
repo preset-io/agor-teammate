@@ -1,16 +1,11 @@
-# Agor Claw Workspace - Git Ignore
+# agor-assistant workspace — .gitignore
+#
+# Reminder: git IS the backup mechanism (see BACKUP.md). Your identity,
+# memory, and learnings are MEANT to be committed and pushed to your
+# branch. If your branch lives on a public remote, move to a private
+# repo rather than ignoring files.
 
-# === Sensitive / Private Files ===
-# Never commit personal data or secrets
-
-# Filled identity/user files (keep templates only)
-# Uncomment these lines after bootstrap if you want to keep personal data private:
-# IDENTITY.md
-# USER.md
-# MEMORY.md
-# memory/**/*.md
-
-# Environment and secrets
+# === Secrets ===
 .env
 .env.local
 *.pem
@@ -21,13 +16,7 @@ config.json
 secrets.*
 .claude/settings.json
 
-# === Agor-Specific ===
-# Agor state tracking (optional - can commit if useful for continuity)
-memory/agor-state/*.json
-
-# === OpenClaw / Agent Runtime ===
-# Agent runtime files (if running locally)
-.openclaw/
+# === Runtime ===
 node_modules/
 dist/
 build/
@@ -44,13 +33,8 @@ Thumbs.db
 .idea/
 *.sublime-*
 
-# === Temporary / Cache ===
+# === Temp / Cache ===
 *.log
 *.tmp
 .cache/
 tmp/
-
-# === Optional: Keep Private ===
-# If you want to version control your workspace but keep personal data private,
-# uncomment the sections above for IDENTITY.md, USER.md, MEMORY.md, etc.
-# Otherwise, keep everything versioned for continuity across machines.

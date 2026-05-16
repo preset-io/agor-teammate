@@ -1,226 +1,88 @@
-# Skill: Task Management in Agor
+# Skill: Task management in Agor
 
-**When to use:** When Max assigns tasks that require independent worktrees and sessions
+**When to use:** the user asks for work that needs its own worktree and session.
 
-**Purpose:** Track and manage multi-worktree tasks from end to end, ensuring nothing falls through the cracks.
+**Purpose:** spin up an isolated worktree + session cleanly, capture the *why*, and close the loop when done.
 
 ---
 
 ## Prerequisites
 
-- [ ] Main board identified (in `IDENTITY.md`)
-- [ ] Repo is configured in Agor
-- [ ] Memory tracking system initialized (`memory/agor-state/`)
+- [ ] Main board ID in `IDENTITY.md`
+- [ ] Repo registered in Agor
 
 ---
 
 ## Steps
 
-### 1. Create a Worktree
+### 1. Create a worktree
 
-For each independent task:
-
-```typescript
-const worktree = await agor.worktrees.create({
-  repoId: REPO_ID,
-  worktreeName: 'descriptive-task-name',  // kebab-case, clear purpose
-  createBranch: true,
-  sourceBranch: 'main',  // or appropriate base branch
-  pullLatest: true,
-  boardId: MAIN_BOARD_ID,  // Place on main board
-});
+```
+agor_worktrees_create
+  repoId:        <repo>
+  worktreeName:  <kebab-case-descriptive-name>
+  createBranch:  true
+  sourceBranch:  main
+  pullLatest:    true
+  boardId:       <main-board>   # required
 ```
 
-**Naming convention:**
-- Use kebab-case
-- Be descriptive but concise
-- Include context: `agor-mcp-repo-creation`, `superset-fix-chart-bug`
+Naming: kebab-case, descriptive but concise — e.g. `superset-fix-chart-bug`, `agor-add-zone-trigger`.
 
-### 2. Spawn a Session in the Worktree
+### 2. Spawn a session in it
 
-```typescript
-const session = await agor.sessions.spawn({
-  prompt: `[Clear task description with context and goals]
-
-  Context:
-  - [Relevant background]
-
-  Goals:
-  - [Specific objectives]
-  - [Expected deliverables]
-
-  Success criteria:
-  - [How to know when done]`,
-  enableCallback: true,  // Get notified when done
-  includeLastMessage: true,  // Include results in callback
-  title: 'Brief task title',
-});
+```
+agor_sessions_create
+  worktreeId:     <from step 1>
+  agenticTool:    claude-code
+  initialPrompt:  <full brief: context, goals, success criteria>
 ```
 
-### 3. Track in Memory
+A good brief includes:
+- Relevant background
+- Specific objectives
+- What "done" looks like
 
-**Update `memory/agor-state/worktrees.json`:**
+### 3. Log the *why*
 
-```json
-{
-  "active_worktrees": [
-    {
-      "worktree_id": "[worktree_id]",
-      "name": "task-name",
-      "repo": "repo-slug",
-      "purpose": "Brief description of task",
-      "created": "2026-02-03T18:30:00Z",
-      "status": "in_progress",
-      "session_id": "[session_id]",
-      "expected_outcome": "PR for X / Investigation results / etc."
-    }
-  ],
-  "last_synced": "[timestamp]"
-}
-```
+Agor tracks IDs, status, parent/child, timestamps, zone, PR URL. Query MCP when you need them — don't duplicate.
 
-**Update `memory/agor-state/sessions.json`:**
-
-```json
-{
-  "tracked_sessions": [
-    {
-      "session_id": "[session_id]",
-      "purpose": "Task description",
-      "parent": "[parent_session_id or null]",
-      "worktree_id": "[worktree_id]",
-      "status": "running",
-      "created": "[timestamp]"
-    }
-  ],
-  "last_synced": "[timestamp]"
-}
-```
-
-**Log in daily memory (`memory/YYYY-MM-DD.md`):**
+Agor doesn't track **why**. Put that in today's daily log:
 
 ```markdown
-### Task Created: [Task Name]
+### Task: <name>
 
-- **Worktree:** [name] (ID: [worktree_id])
-- **Session:** [session_id]
-- **Repo:** [repo-slug]
-- **Goal:** [Brief description]
-- **Board:** [board-name]
-- **Created:** [timestamp]
+- Worktree: <name> (<worktree_id>)
+- Session:  <session_id>
+- Goal:     <why this exists, what success looks like>
+- Outcome:  <expected: PR / investigation / etc.>
 ```
 
-### 4. Monitor Progress
+### 4. Monitor
 
-**Via callbacks:**
-- Sessions spawned with `enableCallback: true` will notify on completion
-- Results appear in the parent session
+- Callbacks (if `enableCallback: true`) fire when the child session ends
+- Otherwise check via `agor_sessions_get` / `agor_worktrees_get`
+- Or watch the board — zone changes signal progress
 
-**Manual checks:**
-```typescript
-// Check session status
-const session = await agor.sessions.get({ sessionId: SESSION_ID });
+### 5. Close the loop
 
-// Check worktree state
-const worktree = await agor.worktrees.get({ worktreeId: WORKTREE_ID });
-```
+When the task ends:
 
-### 5. Close the Loop
-
-When task completes:
-
-**Update tracking files:**
-- Mark worktree as `completed` in `worktrees.json`
-- Mark session as `completed` in `sessions.json`
-- Log outcome in daily memory
-
-**Log learnings:**
-```markdown
-# memory/learnings/YYYY-MM-DD.md
-
-## Task: [name]
-
-**What worked:**
-- [Successes]
-
-**What didn't:**
-- [Failures/challenges]
-
-**Lessons:**
-- [Key takeaways]
-
-**Should contribute to main:**
-- [ ] Framework improvement X
-- [ ] Skill update Y
-```
-
-**Clean up (when appropriate):**
-- Archive old worktrees (not immediately - keep for reference)
-- Move completed tasks to "Done" zone on board
-- Update `MEMORY.md` if significant
+- Move the worktree to the right zone (`agor_worktrees_set_zone`)
+- Note the outcome in today's daily log
+- If you learned something reusable → `memory/learnings/`
+- Curate any standout signal into `MEMORY.md`
 
 ---
 
-## Outputs
+## Error handling
 
-- Worktree created and visible on board
-- Session spawned and executing task
-- Complete tracking in memory system
-- Daily log entry created
-- Clear path to close the loop
+- **Worktree create fails:** verify repoId, boardId, branch name uniqueness
+- **Session spawn fails:** verify worktreeId, prompt is well-formed
+- **Lost track of a worktree:** `agor_worktrees_list` — Agor knows
 
 ---
 
-## Error Handling
+## Framework improvements
 
-**Worktree creation fails:**
-- Check if repo exists in Agor
-- Verify board ID is correct
-- Check if worktree name already exists
-
-**Session spawn fails:**
-- Verify worktree ID is correct
-- Check if prompt is well-formed
-- Ensure MCP token is valid
-
-**Tracking gets out of sync:**
-- Re-sync by listing all worktrees/sessions via MCP
-- Update JSON files with current state
-- Log discrepancies in daily memory
-
----
-
-## Related Skills
-
-- `worktree-cleanup.md` (future) - Archiving old worktrees
-- `session-orchestration.md` (future) - Complex multi-session coordination
-- `pr-management.md` (future) - From worktree to merged PR
-
----
-
-## Contributing Improvements to Main
-
-When working in `first-session` (or other experimental branches), identify improvements that should go to `main`:
-
-**Framework improvements (contribute to main):**
-- New skills (like this one)
-- Updates to AGENTS.md, SOUL.md, etc.
-- Memory system improvements
-- Workflow refinements
-
-**Working state (stay in branch):**
-- Daily logs
-- Active worktree tracking
-- Session state
-- Personal notes
-
-**Process:**
-1. Note improvements in `memory/learnings/`
-2. Periodically review with Max
-3. Create PR from working branch → main with just framework updates
-4. Keep template clean and generally applicable
-
----
-
-**Last Updated:** 2026-02-03
-**Created By:** Darryl (bootstrap session)
+If you spot something worth fixing in the framework itself, see `BACKUP.md`: assistants don't PR their own branches. Surface the idea to your human and let them open a clean PR against `main`.
