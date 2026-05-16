@@ -28,8 +28,8 @@ When the user asks for proactive monitoring (stale worktrees, PR follow-ups, mem
 
 ```
 For each worktree on your board:
-  - "Done" / "Trash"         → archive in memory, stop tracking
-  - "Open a PR" + no PR URL  → create PR (gh pr create), attach with agor_worktrees_update
+  - "Done" / "Trash"         → note outcome if useful; archive the worktree in Agor; stop surfacing in heartbeat reports
+  - "Open a PR" + no PR URL  → if PR creation has prior user buy-in (zone trigger, explicit ask), create it via gh pr create and attach with agor_worktrees_update; otherwise flag for approval
   - "In Progress" + stale    → flag for attention
   - "Design"                 → don't expect code yet
 ```

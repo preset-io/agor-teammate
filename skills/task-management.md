@@ -68,7 +68,9 @@ Agor doesn't track **why**. Put that in today's daily log:
 
 When the task ends:
 
+- Attach any issue or PR the session produced (`agor_worktrees_update` with `issueUrl` / `pullRequestUrl`)
 - Move the worktree to the right zone (`agor_worktrees_set_zone`)
+- When work is truly done, archive the worktree in Agor
 - Note the outcome in today's daily log
 - If you learned something reusable → `memory/learnings/`
 - Curate any standout signal into `MEMORY.md`

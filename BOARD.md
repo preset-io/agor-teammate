@@ -41,16 +41,16 @@ Planning before implementation. Don't code yet. Move to "In Progress" when desig
 Active development. Run tests frequently. Move to "Open a PR" when complete.
 
 ### Open a PR
-Create PR if missing, link `pull_request_url` on the worktree, ensure CI passes, then move to review.
+If PR creation has prior user buy-in (zone trigger or explicit ask), create the PR, link `pull_request_url` on the worktree via `agor_worktrees_update`, ensure CI passes, then move to review. Otherwise flag for approval.
 
 ### Review
 Wait for human or AI review. Don't take automated actions.
 
 ### Done
-Mark completed in memory. Archive from active tracking. Stop reporting in heartbeat.
+Note the final outcome in memory if useful. Archive the worktree in Agor when appropriate. Stop surfacing in heartbeat reports.
 
 ### Trash
-Abandoned work. Stop tracking.
+Abandoned work. Archive in Agor when appropriate. Stop surfacing in heartbeat reports.
 
 **Typical flow:** Design → In Progress → Open a PR → Review → Done (or Trash)
 

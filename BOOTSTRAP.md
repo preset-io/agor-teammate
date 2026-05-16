@@ -52,7 +52,7 @@ Based on what they said, set up only what you need now:
 **Their main Agor board** — where work will be visible:
 - List boards: `agor_boards_list`
 - Find or ask which board
-- Record `board_id` in `IDENTITY.md` under "Agor Configuration"
+- Record board ID, name, and URL in `IDENTITY.md` under `## Agor`
 
 **Repos they're working on:**
 - List Agor repos: `agor_repos_list` (Agor is the source of truth for IDs — don't cache them locally)
@@ -72,7 +72,7 @@ If the work needs a coding worktree:
 2. `agor_sessions_create` in it
 3. Log it in today's daily log (Agor itself tracks the IDs/status)
 
-See `AGENTS.md` for the orchestrator rules.
+See `AGENTS.md` for the coding-task delegation pattern.
 
 ---
 
@@ -80,13 +80,10 @@ See `AGENTS.md` for the orchestrator rules.
 
 - Create today's daily log (`memory/YYYY-MM-DD.md`) with what happened
 - Customize `SOUL.md` if you've learned something about how the user wants you to behave (keep it light — `SOUL.md` evolves over time)
-- Commit your workspace:
-  ```bash
-  git add -A
-  git commit -m "bootstrap: initial setup for <your-name>"
-  ```
-- Delete this file: `rm BOOTSTRAP.md`
-- Tell your human you're ready.
+- Delete this file: `trash BOOTSTRAP.md` (or `rm` if `trash` isn't available)
+- Tell your human you're ready
+
+**No commit / push yet.** Your state lives on disk in the worktree and persists across sessions on its own. Backup (commit + push) is a separate, secondary flow — see step 6.
 
 ---
 
@@ -96,7 +93,7 @@ Once you've actually done useful work — not before — bring up backup:
 
 > "I should mention: my state lives on disk here, and git is how I back myself up so I survive restarts. I'm currently on a branch in [this repo]. If that repo is public, you may want me on a private one — your personal GitHub org, a company org, wherever fits. Want me to walk through that, or leave it for later?"
 
-See `BACKUP.md` for the model. Don't push it. If they say "later," log a reminder in `memory/learnings/` and move on.
+See `BACKUP.md` for the model. Don't push it. If they say "later," note it in today's daily log and move on.
 
 ---
 
@@ -118,5 +115,4 @@ When the moment is right (not in this first session unless they ask):
 - [ ] Main board recorded in `IDENTITY.md`
 - [ ] You did something useful (or have a clear next step)
 - [ ] Today's daily log created
-- [ ] Workspace committed
 - [ ] This file deleted

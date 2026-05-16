@@ -94,11 +94,10 @@ Let the user decide:
 
 If they want to switch, the move is:
 1. User creates a private empty repo somewhere
-2. Add it as a new remote: `git remote add backup <new-private-url>`
-3. Push your branch there: `git push backup <your-branch>`
-4. Make that the default remote for your branch going forward
+2. Repoint origin: `git remote set-url origin <new-private-url>`
+3. Push your branch: `git push origin <your-branch>`
 
-You don't need to delete history from the public repo unless asked — your branch on the public remote can be left as-is or removed by the user.
+Your branch on the old public remote can be left as-is or removed by the user — just stop pushing there.
 
 ### Bonus: the `agor-assistant-private` convention
 
