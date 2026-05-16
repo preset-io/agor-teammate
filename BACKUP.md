@@ -100,6 +100,12 @@ If they want to switch, the move is:
 
 You don't need to delete history from the public repo unless asked — your branch on the public remote can be left as-is or removed by the user.
 
+### Bonus: the `agor-assistant-private` convention
+
+If the private repo happens to be named `<your-org>/agor-assistant-private`, Agor uses it as the **template when creating new assistants** in your instance. Your backup repo doubles as your org's customized template — its `main` becomes the vanilla starting point for future assistants, free to drift from this public reference implementation.
+
+This is convention, not requirement. Skip it if you don't want the coupling.
+
 ---
 
 ## What `main` is for
