@@ -31,6 +31,34 @@ Apache Superset is a modern data exploration and visualization platform. 60k+ st
 - CI runs on GitHub Actions
 - Tests: `pytest` for backend, `npm run test` for frontend
 
+## Opening PRs on apache/superset
+
+**All PRs must go to apache/superset — never to superset-private or any other fork.**
+
+Two tokens are in the environment — use the right one for each step:
+
+| Operation | Token | Why |
+|-----------|-------|-----|
+| `git push` to fork | `GITHUB_TOKEN` (default) | fine-grained PAT, push access to preset-io org |
+| `gh pr create` on apache/superset | `GITHUB_TOKEN_WRITE` | classic PAT with `public_repo` scope |
+
+```bash
+# 1. Push branch to preset-io/superset (not yousoph/superset — it 403s)
+git remote add preset-io-public https://github.com/preset-io/superset.git  # if not already set
+git push preset-io-public <branch-name>
+
+# 2. Create PR on apache/superset
+GH_TOKEN=$GITHUB_TOKEN_WRITE gh pr create \
+  --repo apache/superset \
+  --head "preset-io:<branch-name>" \
+  --base master \
+  --title "..." \
+  --body "..."
+```
+
+**Do not use `yousoph/superset`** — push fails (403) as of 2026-06-11.
+**Do not use `GITHUB_TOKEN` for `gh pr create`** — fine-grained PAT lacks `createPullRequest` permission on apache org.
+
 ## Patterns & Conventions
 
 *(To be filled in as I learn)*
