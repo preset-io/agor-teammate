@@ -60,9 +60,10 @@ When creating a worker session for bug bash / Superset work, always include thes
 - **No PR.** Commit your work when done, then stop. The orchestrator opens the PR.
 - **Read `BOARD.md`** for zone workflow and the full Slack/Shortcut/GitHub dance.
 - **Read `repos/apache-superset.md`** for repo conventions before touching any code.
+- **Run pre-commit before committing.** For Python files: `pre-commit run --files <modified-files>`. Fix any errors before committing. This prevents CI failures from ruff/ruff-format/mypy.
 
 The orchestrator owns: PR creation, #eng-reviews post, Shortcut + Slack thread updates, zone transitions.
-The worker owns: implementation, tests, commits.
+The worker owns: implementation, tests, commits, pre-commit clean.
 
 ### Task Delegation Rules
 
@@ -413,6 +414,16 @@ Use Agor's genealogy for complex work:
 - Delegate parallel tasks
 - Track outcomes via callbacks
 - Share learnings across sessions
+
+---
+
+## Flaky Test Tracking
+
+CI on apache/superset has known flaky tests that fail intermittently across unrelated PRs. When you see CI failures, distinguish between:
+- **Real failures** (lint, pre-commit prettier, TypeScript errors) → fix before merging
+- **Flaky failures** (async teardown crashes, random timeouts) → re-trigger CI, log in `FLAKY_TESTS.md`
+
+**Log all observed flaky failures to [`FLAKY_TESTS.md`](./FLAKY_TESTS.md)** — test name, file, shard, symptom, and which PR it appeared on. Over time this builds a case for skipping or fixing the worst offenders.
 
 ---
 
