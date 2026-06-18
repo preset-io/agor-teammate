@@ -42,14 +42,35 @@
 ### Open a PR
 
 - **Zone ID:** `zone-open-pr`
-- **Purpose:** Work is committed — orchestrator opens the PR, then runs the QA gate. The branch stays here until QA passes.
+- **Purpose:** Work is committed — orchestrator opens the PR, then hands off to Auto Review.
 - **Agent Behavior (orchestrator):**
   - Open PR on apache/superset
   - Link PR URL in branch metadata (`agor_branches_update(pullRequestUrl=...)`)
   - Add PR link as external link in Shortcut story
-  - Reply in original Slack thread with PR link (note that QA is running)
-  - **Do NOT post to #eng-reviews yet.** Posting happens only after the QA gate passes — see below.
-  - Run the QA Gate (Dance B2): CI green + automated review feedback addressed + QAgor PASS. Stay in this zone until it passes, then post to #eng-reviews and move worktree to "Needs Max's Review".
+  - Reply in original Slack thread: "PR up: <PR URL> — running CI + QA before posting for review"
+  - Move worktree to zone-auto-review and proceed to Dance B2
+- **Zone Trigger:** `show_picker`
+
+### Auto Review
+
+- **Zone ID:** `zone-auto-review`
+- **Purpose:** CI running + Copilot and bot reviewers commenting; address all feedback before QAgor
+- **Agent Behavior (orchestrator):**
+  - Request GitHub Copilot review on the PR
+  - Poll CI until green (re-trigger flaky failures once)
+  - Read Copilot + bot reviewer comments; fix valid points or reply with reason
+  - Move to QAgor zone when CI green + all feedback addressed
+- **Zone Trigger:** `show_picker`
+
+### QAgor
+
+- **Zone ID:** `zone-qagor`
+- **Purpose:** Automated review done — QAgor runs end-to-end QA in an isolated Docker env
+- **Agent Behavior (orchestrator):**
+  - Create QAgor card + kick off session immediately
+  - Poll for QAgor verdict (ticket comment + card zone)
+  - PASS → post to #eng-reviews + move to "Ready to stamp!"
+  - FAIL → spawn fix worker, loop back to Auto Review (zone-auto-review)
 - **Zone Trigger:** `show_picker`
 
 ### PR Reviews
@@ -112,7 +133,7 @@ This is the complete sequence from bug report to done. Every touchpoint matters.
 2. Check Shortcut: stories-search for existing ticket
    - If exists: note the story ID, check status
    - If missing: stories-create(type="bug", epic=101517, workflow=500020181, team=5fc58cd7)
-     → stories-update(workflow_state_id=500020245)  # Triage state
+     → stories-update(workflow_state_id=500020245, owner_ids=["5fbd5291-9d17-435b-be62-e741150064b3"])  # Triage + assign Sophie
 3. Create worktree: agor_worktrees_create(repoId, boardId, worktreeName, createBranch=true)
 4. agor_branches_update(branchId, issueUrl=<SC story URL>)   # immediately — makes ticket clickable in branch header
 5. Create session: agor_sessions_create(worktreeId, "claude-code", initialPrompt)
@@ -129,55 +150,69 @@ This is the complete sequence from bug report to done. Every touchpoint matters.
 
 ### B. PR Opening Dance (when worktree moves to zone-open-pr)
 
-The PR is opened here, but **#eng-reviews is NOT posted yet** — that's gated behind QA (Dance B2).
+The PR is opened here, then handed off to Auto Review (Dance B2).
 
 ```
 1. Open PR on apache/superset (gh pr create)
 2. agor_branches_update(branchId, pullRequestUrl=<PR URL>)   # immediately — makes PR clickable in branch header
 3. stories-add-external-link(storyId, externalLink=<PR URL>)   # param is "externalLink", NOT "url"
 4. Reply in original Slack thread: "PR up: <PR URL> — running CI + QA before posting for review"
-5. Leave the worktree in zone-open-pr and proceed straight to the QA Gate (Dance B2).
-   → Do NOT post to #eng-reviews. Do NOT move to zone-human-review yet.
+5. Move worktree to zone-auto-review and proceed to Dance B2 (Auto Review).
 ```
 
-### B2. QA Gate (must fully pass BEFORE posting to #eng-reviews)
+### B2. Auto Review Dance (when worktree moves to zone-auto-review)
 
-**The gate. ALL must be true before the PR is surfaced for review:**
+**Exit criteria — ALL must be true before moving to QAgor:**
 - CI is green (all required checks pass; known flaky tests re-triggered once before counting as failures)
 - No lint/pre-commit failures (prettier, mypy, flake8)
 - No TypeScript errors in changed files
-- **Automated PR review feedback addressed** (bot reviewers, e.g. Korbit/CodeRabbit/Cursor — fix valid points or reply on the thread explaining why not)
-- **QAgor verdict = PASS**
+- All bot reviewer feedback addressed (Copilot, Korbit, CodeRabbit, Cursor)
 - Tests exist covering the fix
 - PR description is filled out
 
 ```
-1. Poll `gh pr checks <PR URL>` until all checks pass (or fail hard).
-2. Address automated review feedback:
+1. Request Copilot review:
+   `gh pr edit <PR URL> --add-reviewer "copilot"`
+   (Note: exact reviewer handle may vary — verify on first use)
+2. Poll `gh pr checks <PR URL>` until all checks pass (or fail hard).
+   - Known flaky tests: re-trigger once before counting as a real failure
+3. Address automated review feedback:
    - `gh pr view <PR URL> --comments` and review threads (`gh api repos/apache/superset/pulls/<n>/comments`)
    - For each valid point: fix in a new commit, push to the fork, re-check CI
    - For points you intentionally skip: reply on the thread with the reason
-3. Trigger QAgor — create a card in its Incoming zone (THE reliable auto-trigger):
-   agor_cards_create(boardId="046dc8b6-1447-4b0e-9c43-48ed629562b9", zoneId="zone-incoming",
-                     title="SC-XXXXX", url=<PR URL>, description=<area of change + bug summary>)
-   - QAgor's heartbeat (weekdays, ~07:33/08:33/11:33 America/Sao_Paulo) does card-based intake from
-     its Incoming zone. It does NOT scan Shortcut tickets by state, so setting "Reviewing" alone will
-     NOT auto-trigger it — the card is what makes QAgor run unattended.
+4. Once CI green + all bot feedback addressed:
+   → move worktree to zone-qagor and proceed to Dance B3
+```
+
+### B3. QAgor Dance (when worktree moves to zone-qagor)
+
+```
+1. Trigger QAgor — create card(s) AND kick off a session immediately:
+   a. Create a card in the Ready for QA zone (actual active intake zone, confirmed 2026-06-17):
+      agor_cards_create(boardId="046dc8b6-1447-4b0e-9c43-48ed629562b9", zoneId="zone-1774904426448",
+                        title="SC-XXXXX", url=<PR URL>, description=<area of change + bug summary>)
+      - For OSS PRs with no Shortcut ticket: use OSS Incoming zone (zone-1780318367054)
+      - NOTE: BOARD.md previously said zoneId="zone-incoming" — that zone is stale/inactive
+   b. After creating card(s), immediately start a QAgor session — do NOT wait for the heartbeat:
+      agor_sessions_create(branchId="8114e2cf-b0eb-43dd-8468-22f653d466c0", agenticTool="claude-code",
+                           initialPrompt="Run the QA heartbeat. Read HEARTBEAT.md and execute the
+                           full cycle: health check, intake, triage, dispatch, reporting, cleanup.",
+                           mcpServerIds=["66be6b4c-013e-42ff-ae45-0b629360c93d",
+                                         "e74ff08b-f00d-4e67-8dcc-1bc714508816"],
+                           enableCallback=true, callbackSessionId=<your session ID>)
+      - `agor_schedules_run_now` on QAgor's schedule requires ownership — can't be used here
    - Also set stories-update(storyId, workflow_state_id=500020186)  # Reviewing — for tracking only
-   - For OSS PRs with no Shortcut ticket: card goes in the OSS Incoming zone (zone-1780318367054)
-     with PR URL, FMEA risk level, and area classification.
-4. Poll for QAgor's verdict (ticket comment via stories-get-by-id, and/or the card's zone moving to
+2. Poll for QAgor's verdict (ticket comment via stories-get-by-id, and/or the card's zone moving to
    zone-pass / zone-fail):
    → Comment header format: "## QA Verification — SC-{id}: {title} — PASS/FAIL/BLOCKED"
    → PASS ✅ — ONLY NOW surface the PR for review:
-      a. Post in #eng-reviews:
-         "<PR URL>
-          One-liner description. Mark easy/tiny ones with ✨"
+      a. Post in #eng-reviews (plain URL — bot already messages the reviewer directly, no need to ping):
+         "<PR URL>"
       b. Reply in Slack thread: "QA passed ✓ — PR posted for review"
       c. agor_worktrees_set_zone(worktreeId, "zone-human-review")
    → FAIL ❌ or BLOCKED:
       - Read QAgor's full comment for findings
-      - If fixable: spawn new worker session with QAgor's findings, loop back to B2 (stay in zone-open-pr)
+      - If fixable: spawn new worker session with QAgor's findings, loop back to B2 (move worktree to zone-auto-review)
       - If needs your call: ping Max in Slack with summary of what QAgor flagged
    → No comment + card in QAgor zone-human-required:
       - This is the "Human Required" path — QAgor hit something it can't test autonomously
@@ -187,7 +222,7 @@ The PR is opened here, but **#eng-reviews is NOT posted yet** — that's gated b
 **QAgor environment:** spins up its own isolated Docker env — does NOT test against 2cad staging.
 **QAgor trigger is card-based, not state-based:** QAgor's heartbeat reads cards from its Incoming
 zones (`zone-incoming` for SC tickets, `zone-1780318367054` for OSS). Setting a Shortcut ticket to
-"Reviewing" does NOT make it run — always create the card (B2 step 3). This is why QAgor previously
+"Reviewing" does NOT make it run — always create the card (B3 step 1). This is why QAgor previously
 only ran when prompted manually.
 
 ### C. Post-Merge Dance (after Max merges)
@@ -223,6 +258,7 @@ only ran when prompted manually.
 | SC State: Merged/Done | `500020392` |
 | SC Team (Producks) | `5fc58cd7` |
 | Max's SC User ID | `5d8c4eae-e5b1-4662-ab9b-a6f106e573df` |
+| Sophie's SC User ID | `5fbd5291-9d17-435b-be62-e741150064b3` |
 | Slack #bug-reporting | `C0AGRNNURGX` |
 | Slack #eng-reviews | `C09KSS4NVLL` |
 | QAgor Board | `046dc8b6-1447-4b0e-9c43-48ed629562b9` |
@@ -259,12 +295,15 @@ only ran when prompted manually.
       ↓ (Bug Triage Dance)
 zone-triage → zone-in-progress
                     ↓ (worker commits, no PR)
-               zone-open-pr ──────────────────────────────┐
-                    │ (PR opened — NOT posted yet)         │
-                    ↓ (QA Gate: CI + review feedback + QAgor)
-              QAgor: zone-fail → fix → loop back to QA Gate ┘
+               zone-open-pr
+                    ↓ (Dance B: PR opened)
+            zone-auto-review  ←──────────────────────┐
+                    ↓ (Dance B2: CI + Copilot + bots) │
+               zone-qagor                             │
+                    ↓ (Dance B3: QAgor)               │
+              QAgor: zone-fail → fix ─────────────────┘
               QAgor: zone-pass
-                    ↓ (NOW post #eng-reviews + Post-Review Dance)
+                    ↓ (post #eng-reviews)
              zone-human-review  ←── zone-pr-review
                     ↓ (Post-Merge Dance)
                zone-done
