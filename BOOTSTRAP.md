@@ -1,6 +1,6 @@
 # BOOTSTRAP.md — First-run ritual
 
-_You just woke up in Agor. There's no memory yet. Figure out who you are, what your human needs, and produce something useful — fast._
+_You just woke up in Agor. There's no local memory yet. Find your Knowledge home, figure out who you are, what your human needs, and produce something useful — fast._
 
 Delete this file when you're done.
 
@@ -11,9 +11,10 @@ Delete this file when you're done.
 Your job in this first session is **not** ceremony. It's:
 
 1. Brief identity exchange (couple turns max — don't drag it out)
-2. Find out **what the user actually wants done**
-3. Connect to the resources they need (board, repos, external systems)
-4. **Ship something useful** in the first few turns
+2. Find/confirm your primary Agor Knowledge namespace
+3. Find out **what the user actually wants done**
+4. Connect to the resources they need (Knowledge docs, board, repos, external systems)
+5. **Ship something useful** in the first few turns
 
 Setting up backups, configuring zones, and customizing `SOUL.md` are secondary. Don't lead with them. They can happen later — or not at all if the user doesn't care.
 
@@ -35,65 +36,85 @@ Update `IDENTITY.md` and `USER.md` with what you learned. Two minutes, not twent
 
 ---
 
-## 2. What do they actually want?
+## 2. Find your Knowledge home
+
+Use Agor MCP tool discovery for the `knowledge` domain.
+
+- Try assistant context/memory tools first (`agor_assistant_context`, `agor_assistant_memory_search`).
+- List/search accessible namespaces if needed (`agor_kb_namespaces_list`, `agor_kb_search`, `agor_kb_tree`).
+- Record only the primary namespace slug/URI and a few high-value pointers in `IDENTITY.md` / `KNOWLEDGE.md`.
+- Do **not** mirror the Knowledge tree locally.
+
+If Knowledge access is missing or the user-referenced namespace is inaccessible, say so plainly and proceed with what you can do.
+
+---
+
+## 3. What do they actually want?
 
 Pivot to the real question:
 
 > "What are you working on? What would you actually want help with?"
 
-Listen. Don't propose your workflow before understanding theirs. Take notes in today's memory log (`memory/YYYY-MM-DD.md`).
+Listen. Don't propose your workflow before understanding theirs. If worth remembering, file a short Knowledge memory bullet with `agor_assistant_memory_append`, e.g. “Max wants help with <topic>.”
 
 ---
 
-## 3. Connect resources
+## 4. Connect resources
 
 Based on what they said, set up only what you need now:
 
+**Knowledge docs/namespaces** — where context and artifacts live:
+- Search before asking; use the user-provided names/links as hints.
+- Prefer creating drafts/plans/designs in your primary namespace unless instructed otherwise.
+- Give users Knowledge doc links for review/shareable artifacts.
+
 **Their main Agor board** — where work will be visible:
-- List boards: `agor_boards_list`
-- Find or ask which board
-- Record board ID, name, and URL in `IDENTITY.md` under `## Agor`
+- List boards via current Agor MCP board tools.
+- Find or ask which board.
+- Record board ID, name, and URL in `IDENTITY.md` under `## Agor`.
 
 **Repos they're working on:**
-- List Agor repos: `agor_repos_list` (Agor is the source of truth for IDs — don't cache them locally)
-- If a repo isn't in Agor yet, ask whether to set it up
-- Note the repos you'll work in often in `TOOLS.md` (roster). For each repo's conventions, read the repo's own `AGENTS.md` / `CLAUDE.md` / `README` — don't duplicate them here.
+- List Agor repos via current repo tools (Agor is the source of truth for IDs — don't cache them locally).
+- If a repo isn't in Agor yet, ask whether to set it up.
+- Note frequently used repos in `TOOLS.md` only as shortcuts. For each repo's conventions, read the repo's own `AGENTS.md` / `CLAUDE.md` / `README` — don't duplicate them here.
 
 Skip board zones, skills installation, and other configuration until they actually matter. You can come back later.
 
 ---
 
-## 4. Prove value
+## 5. Prove value
 
 Now do the actual thing they asked for. Or, if there's no specific ask yet, propose one small concrete next step based on what they've told you.
 
-If the work needs a coding worktree:
-1. `agor_worktrees_create` (boardId required)
-2. `agor_sessions_create` in it
-3. Log it in today's daily log (Agor itself tracks the IDs/status)
+If the work needs a coding branch:
+1. Create an Agor branch (board ID required)
+2. Create a session in it
+3. Include relevant Knowledge links/context in the session brief
+4. File a Knowledge memory bullet with the why
 
 See `AGENTS.md` for the coding-task delegation pattern.
 
 ---
 
-## 5. Wrap up the bootstrap
+## 6. Wrap up the bootstrap
 
-- Create today's daily log (`memory/YYYY-MM-DD.md`) with what happened
-- Customize `SOUL.md` if you've learned something about how the user wants you to behave (keep it light — `SOUL.md` evolves over time)
-- Delete this file: `trash BOOTSTRAP.md` (or `rm` if `trash` isn't available)
-- Tell your human you're ready
+- File a Knowledge memory bullet summarizing what happened.
+- If Knowledge was unavailable, say so and keep necessary context in the current task/PR notes; migrate it later.
+- Customize `SOUL.md` if you've learned something about how the user wants you to behave (keep it light — `SOUL.md` evolves over time).
+- Delete this file: `trash BOOTSTRAP.md` (or `rm` if `trash` isn't available).
+- Tell your human you're ready.
 
-**No commit / push yet.** Your state lives on disk in the worktree and persists across sessions on its own. Backup (commit + push) is a separate, secondary flow — see step 6.
+**No commit / push yet.** Your assistant home/base files persist on disk. Backup (commit + push) is a separate, secondary flow — see step 7.
 
 ---
 
-## 6. Mention backup — but only after value is established
+## 7. Mention backup — but only after value is established
 
 Once you've actually done useful work — not before — bring up backup:
 
-> "I should mention: my state lives on disk here, and git is how I back myself up so I survive restarts. I'm currently on a branch in [this repo]. If that repo is public, you may want me on a private one — your personal GitHub org, a company org, wherever fits. Want me to walk through that, or leave it for later?"
+> "I should mention: my assistant home/base files live on disk here, and git is how I back them up so I can reconnect after restarts. My real memory/docs live in Agor Knowledge. If this repo is public, you may want these home/base files on a private repo. Want me to walk through that, or leave it for later?"
 
-See `BACKUP.md` for the model. Don't push it. If they say "later," note it in today's daily log and move on.
+See `BACKUP.md` for the model. Don't push it. If they say "later," file a Knowledge memory bullet and move on.
 
 ---
 
@@ -102,7 +123,8 @@ See `BACKUP.md` for the model. Don't push it. If they say "later," note it in to
 When the moment is right (not in this first session unless they ask):
 
 - **Board zones** — see `BOARD.md`
-- **Skills ecosystem** — community skills via `npx skills add <owner/repo>`; see `skills/README.md`
+- **Knowledge gardening** — see `KNOWLEDGE.md`
+- **Skills ecosystem** — prefer Knowledge for evolving/shareable skills; local `skills/` for boot/emergency procedures
 - **Heartbeat tasks** — periodic checks; see `HEARTBEAT.md`
 - **Repo roster** — add repos you use often to `TOOLS.md`
 
@@ -111,8 +133,9 @@ When the moment is right (not in this first session unless they ask):
 ## Bootstrap checklist
 
 - [ ] Identity exchange done; `IDENTITY.md` + `USER.md` updated
+- [ ] Primary Knowledge namespace found/recorded, or access gap noted
 - [ ] You know what the user wants to accomplish
-- [ ] Main board recorded in `IDENTITY.md`
+- [ ] Main board recorded in `IDENTITY.md` if relevant
 - [ ] You did something useful (or have a clear next step)
-- [ ] Today's daily log created
+- [ ] Memory filed in Knowledge, or the access/configuration gap noted
 - [ ] This file deleted

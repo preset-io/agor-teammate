@@ -1,16 +1,18 @@
 # Skills
 
-Reusable procedures the assistant can reference. Documented in the open [SKILL.md format](https://agentskills.io) — supported by 30+ agent platforms (Claude Code, Codex, Cursor, Copilot, Gemini CLI, etc.).
+Reusable procedures the assistant can reference.
+
+Agor Knowledge is the preferred home for lightweight, evolving, long-lived, or shareable skill instructions/procedures. The filesystem is often the right home for skills that include executable code, scripts, assets, fixtures, or folders that need to run locally.
 
 ---
 
-## Two flavors
+## Two homes
 
-**This directory (`skills/`)** — markdown-only procedures. Read by the assistant, executed by following the steps. Simple to write, easy to audit, version-controlled like everything else here.
+**Agor Knowledge (`skills/` path in your namespace)** — good for skill instructions that should be searchable, linked to related docs, shared with users/assistants, or updated over time.
 
-**`.claude/` directory** — executable tools (MCP servers, custom tooling). Use when you need real code, not instructions. More setup.
+**This directory (`skills/`) or another repo-native path** — good for skills with executable code, scripts, assets, fixtures, package manifests, or anything that needs a filesystem/runtime. Also useful for boot-critical procedures that must work before Knowledge tools are available.
 
-Start in markdown; graduate to `.claude/` if a skill needs automation.
+Rule of thumb: instructions and references can live in Knowledge; executable skill bundles live in the filesystem, with Knowledge pointers/docs when useful.
 
 ---
 
@@ -32,7 +34,7 @@ Start in markdown; graduate to `.claude/` if a skill needs automation.
 - <common failure> → <fix>
 ```
 
-See `task-management.md` for a worked example.
+See `task-management.md` for a local worked example.
 
 ---
 
@@ -42,8 +44,8 @@ A large community ecosystem of SKILL.md files exists. Main discovery points:
 
 | Platform | Notes |
 |---|---|
-| [skills.sh](https://skills.sh) | Curated, ~83K skills, `npx skills add <owner/repo>` install. Best signal-to-noise. |
-| [SkillsMP](https://skillsmp.com) | Largest catalog (~351K), auto-crawls GitHub. More volume, less curation. |
+| [skills.sh](https://skills.sh) | Curated skills, `npx skills add <owner/repo>` install. Best signal-to-noise. |
+| [SkillsMP](https://skillsmp.com) | Larger catalog, auto-crawls GitHub. More volume, less curation. |
 | [github.com/anthropics/skills](https://github.com/anthropics/skills) | Anthropic's official reference skills. Good starting points. |
 
 ### Before installing
@@ -51,20 +53,14 @@ A large community ecosystem of SKILL.md files exists. Main discovery points:
 1. **Read the SKILL.md** — it's markdown, easy to audit
 2. **Check install count and publisher** — prefer well-adopted skills from known orgs
 3. **Review what it executes** — skills can run shell commands
+4. **Decide home:** if it is for this assistant's long-term use, consider recording a Knowledge skill/reference doc rather than only adding local files
 
 Community hubs have had malicious submissions. Standard supply-chain hygiene applies.
-
-### Use community vs. custom
-
-- **Community** for common patterns (linting, testing, deployment, code review)
-- **Custom** for domain-specific work (Agor flows, org-specific processes)
-
-When you spot a repeating pattern, check the ecosystem first.
 
 ---
 
 ## Related
 
 - `AGENTS.md` — points here from the Files glossary
-- `TOOLS.md` — your env-specific shortcuts
-- `memory/learnings/` — where patterns surface before they become skills
+- `KNOWLEDGE.md` — explains why Knowledge is the default home for reusable procedures
+- `TOOLS.md` — env-specific shortcuts

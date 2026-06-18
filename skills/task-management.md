@@ -1,8 +1,8 @@
 # Skill: Task management in Agor
 
-**When to use:** the user asks for work that needs its own worktree and session.
+**When to use:** the user asks for work that needs its own branch and session.
 
-**Purpose:** spin up an isolated worktree + session cleanly, capture the *why*, and close the loop when done.
+**Purpose:** spin up an isolated Agor branch + session cleanly, capture the *why* in Knowledge, and close the loop when done.
 
 ---
 
@@ -10,17 +10,24 @@
 
 - [ ] Main board ID in `IDENTITY.md`
 - [ ] Repo registered in Agor
+- [ ] Relevant Knowledge context searched/read
 
 ---
 
 ## Steps
 
-### 1. Create a worktree
+### 1. Search and collect context
 
-```
-agor_worktrees_create
+Search Knowledge for prior plans, decisions, docs, and memory related to the task. Include only relevant links/snippets in the child session brief. Do not copy private Knowledge content into public places.
+
+### 2. Create an Agor branch
+
+Use current Agor MCP tool discovery for the exact schema. Current shape:
+
+```text
+agor_branches_create
   repoId:        <repo>
-  worktreeName:  <kebab-case-descriptive-name>
+  branchName:  <kebab-case-descriptive-name>
   createBranch:  true
   sourceBranch:  main
   pullLatest:    true
@@ -29,62 +36,61 @@ agor_worktrees_create
 
 Naming: kebab-case, descriptive but concise — e.g. `superset-fix-chart-bug`, `agor-add-zone-trigger`.
 
-### 2. Spawn a session in it
+### 3. Spawn a session in it
 
-```
+```text
 agor_sessions_create
-  worktreeId:     <from step 1>
-  agenticTool:    claude-code
-  initialPrompt:  <full brief: context, goals, success criteria>
+  branchId:     <from step 1>
+  agenticTool:    codex | claude-code | appropriate agent
+  initialPrompt:  <full brief: context, goals, success criteria, Knowledge links>
 ```
 
 A good brief includes:
-- Relevant background
+- Relevant background and `agor://` Knowledge links
 - Specific objectives
 - What "done" looks like
+- Visibility/privacy constraints
 
-### 3. Log the *why*
+### 4. File the *why* in Knowledge
 
 Agor tracks IDs, status, parent/child, timestamps, zone, PR URL. Query MCP when you need them — don't duplicate.
 
-Agor doesn't track **why**. Put that in today's daily log:
+Agor doesn't track **why**. File a memory bullet with `agor_assistant_memory_append`, for example:
 
-```markdown
-### Task: <name>
-
-- Worktree: <name> (<worktree_id>)
-- Session:  <session_id>
-- Goal:     <why this exists, what success looks like>
-- Outcome:  <expected: PR / investigation / etc.>
+```text
+Firing up branch <name> for <goal>; success is <done criteria>.
 ```
 
-### 4. Monitor
+For larger task plans, create/update a Knowledge doc under `plans/<project>/...` and link it from memory.
 
-- Callbacks (if `enableCallback: true`) fire when the child session ends
-- Otherwise check via `agor_sessions_get` / `agor_worktrees_get`
+### 5. Monitor
+
+- Callbacks (if enabled) fire when the child session ends
+- Otherwise check via session/branch MCP tools
 - Or watch the board — zone changes signal progress
 
-### 5. Close the loop
+### 6. Close the loop
 
 When the task ends:
 
-- Attach any issue or PR the session produced (`agor_worktrees_update` with `issueUrl` / `pullRequestUrl`)
-- Move the worktree to the right zone (`agor_worktrees_set_zone`)
-- When work is truly done, archive the worktree in Agor
-- Note the outcome in today's daily log
-- If you learned something reusable → `memory/learnings/`
-- Curate any standout signal into `MEMORY.md`
+- Attach any issue or PR the session produced to the branch
+- Move the branch to the right zone
+- When work is truly done, archive the branch in Agor
+- File a Knowledge memory bullet with the outcome
+- If you learned something reusable → Knowledge skill/reference doc
+- If a local pointer would help bootstrapping → update `KNOWLEDGE.md` lightly
 
 ---
 
 ## Error handling
 
-- **Worktree create fails:** verify repoId, boardId, branch name uniqueness
-- **Session spawn fails:** verify worktreeId, prompt is well-formed
-- **Lost track of a worktree:** `agor_worktrees_list` — Agor knows
+- **Branch create fails:** verify repoId, boardId, branch name uniqueness
+- **Session spawn fails:** verify branchId, prompt is well-formed
+- **Knowledge memory append fails:** note the configuration/access gap and migrate the memory once the tool is available
+- **Lost track of a branch:** query Agor — Agor knows
 
 ---
 
 ## Framework improvements
 
-If you spot something worth fixing in the framework itself, see `BACKUP.md`: assistants don't PR their own branches. Surface the idea to your human and let them open a clean PR against `main`.
+If you spot something worth fixing in the framework itself, see `BACKUP.md`: running assistants don't PR their personal branches. Surface the idea to your human and let them open a clean PR against `main`, unless you are explicitly working on a framework-improvement branch.
