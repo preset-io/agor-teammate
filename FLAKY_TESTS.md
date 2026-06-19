@@ -43,6 +43,21 @@ Tracking observed flaky test failures across PRs to identify patterns and build 
 
 ---
 
+### FileHandler/index.test.tsx — LaunchQueue mock teardown ⚠️ DOUBLE-OFFENDER
+
+- **File:** `superset-frontend/src/pages/FileHandler/index.test.tsx`
+- **Shard:** `sharded-jest-tests (6)`
+- **Symptom:** Individual tests time out at 20s (`setupLaunchQueue` mock never resolves), then worker teardown crash cascades to remaining tests in file.
+- **Pattern:** LaunchQueue mock not torn down between tests — entire file is affected (Parquet, Excel, and unsupported file type tests all hit).
+- **Verdict:** ✅ Confirmed flaky. **Fix in progress** — worktree `fix-filehandler-flaky-tests`, session `f35cd838`.
+
+| GHA Job ID | PR | Date | Notes |
+|------------|-----|------|-------|
+| 71151070116 | #39332 (sc-102502 download orderby fix) | 2026-04-14 | First observed — "handles Parquet file correctly" timed out |
+| 71282515731 | #39345 (sc-91230 conditional formatting fix) | 2026-04-21 | Second hit, unrelated PR — "handles Excel (.xls) file correctly" timed out — confirmed double-offender |
+
+---
+
 ### ShareMenuItems.test.tsx — `Test suite failed to run`
 
 - **File:** `superset-frontend/src/dashboard/components/menu/ShareMenuItems/ShareMenuItems.test.tsx`
@@ -57,17 +72,7 @@ Tracking observed flaky test failures across PRs to identify patterns and build 
 
 ---
 
-### DataTablesPane.test.tsx — `Should copy data table content correctly`
-
-- **File:** `superset-frontend/src/explore/components/DataTablesPane/test/DataTablesPane.test.tsx`
-- **Shard:** `sharded-jest-tests (4)`
-- **Symptom:** Worker process teardown crash after test
-- **Pattern:** Async teardown. PR #39246 touches clipboard — watch on clipboard-adjacent PRs
-- **Verdict:** Likely flaky. Watch for second occurrence.
-
-| GHA Job ID | PR | Date | Notes |
-|------------|-----|------|-------|
-| 70714654084 | #39246 (sql-popover-fix) | 2026-04-10 | First observed; clipboard PR proximity noted |
+### ~~DataTablesPane.test.tsx~~ — MOVED TO REAL FAILURES (see below)
 
 ---
 
@@ -80,8 +85,11 @@ Quick-reference of all flaky hits across PRs. Useful for spotting patterns at a 
 | FiltersConfigModal.test.tsx | modifies the name of a filter | 5 | 70709522736 | #39248 | 2026-04-10 |
 | DatasetList.listview.test.tsx | type filter persists after duplicating | 4 | 70709522744 | #39248 | 2026-04-10 |
 | ShareMenuItems.test.tsx | Test suite failed to run | 3 | 70714654077 | #39246 | 2026-04-10 |
-| DataTablesPane.test.tsx | Should copy data table content correctly | 4 | 70714654084 | #39246 | 2026-04-10 |
+| ~~DataTablesPane.test.tsx~~ | ~~Should copy data table content correctly~~ | 4 | 70714654084 | #39246 | 2026-04-10 | **REAL REGRESSION** (PR broke test) |
 | FiltersConfigModal.test.tsx | modifies the name of a filter | 5 | 70705021032 | #39249 | 2026-04-10 |
+| FileHandler/index.test.tsx | handles Parquet file correctly + cascade | 6 | 71151070116 | #39332 | 2026-04-14 |
+| Cypress dashboard-header-container | `[data-test=dashboard-header-container]` not found | E2E shards 0,2,3,4 | 78357237457/449/417/500 | #40506 | 2026-05-28 |
+| Playwright global setup | Authentication timeout (5s) at login | E2E (chromium) | 78357237506 | #40506 | 2026-05-28 |
 
 ---
 
@@ -93,6 +101,7 @@ Quick-reference of all flaky hits across PRs. Useful for spotting patterns at a 
 | #39249 | PropertiesModal.test.tsx — "Certification details" | PR removed "Advanced" tab, test can't find element |
 | #39253 | TableChart.test.tsx TS errors | Worker wrote bad TypeScript in tests |
 | #39252 | pre-commit prettier | Worker didn't format before committing |
+| #39246 | DataTablesPane.test.tsx — "Should copy data table content correctly" | `TypeError: Cannot redefine property: default` at `jest.spyOn(copyUtils, 'default')` — PR changed `src/utils/copy.ts` from own impl to `export { default }` re-export, which creates non-configurable live binding that spyOn can't override. Fix: use `import X from ...; export default X` instead. |
 
 ---
 
@@ -116,4 +125,4 @@ Quick-reference of all flaky hits across PRs. Useful for spotting patterns at a 
 
 ---
 
-_Last updated: 2026-04-10_
+_Last updated: 2026-05-28_

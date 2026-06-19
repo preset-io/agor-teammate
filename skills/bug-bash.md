@@ -21,14 +21,14 @@ When a bug is reported on Slack (#bug-reporting), found in Shortcut, or mentione
 ```
 - If missing, create:
   stories-create(name, type="bug", epic=101517, workflow=500020181, team="5fc58cd7")
-  stories-update(storyId, workflow_state_id=500020245)  # Triage
+  stories-update(storyId, workflow_state_id=500020245, owner_ids=["5fbd5291-9d17-435b-be62-e741150064b3"])  # Triage + assign Sophie
 - Note the SC story URL: https://app.shortcut.com/preset/story/<ID>
 ```
 
 ### 3. Spin Up Worktree + Session
 ```
 - agor_worktrees_create(repoId="4903fa88-...", boardId="d623c9f3-...", worktreeName, createBranch=true)
-- agor_worktrees_update(worktreeId, notes, issueUrl=<SC story URL>)
+- agor_branches_update(branchId, issueUrl=<SC story URL>)
 - agor_sessions_create(worktreeId, "claude-code", initialPrompt)
   ↳ ALWAYS include in prompt: "DO NOT open a PR. Commit your work and stop."
 - agor_worktrees_set_zone(worktreeId, "zone-in-progress")
@@ -41,12 +41,15 @@ When a bug is reported on Slack (#bug-reporting), found in Shortcut, or mentione
 ```
 
 ### 5. When Worker is Done (worktree moves to zone-open-pr)
-See **PR Opening Dance** in BOARD.md:
+See **Dances B, B2, B3** in BOARD.md for the full sequence:
 ```
-- gh pr create (orchestrator opens PR, not worker)
-- Post in #eng-reviews with one-liner
-- Link PR in Shortcut + Slack thread
-- agor_worktrees_set_zone(worktreeId, "zone-human-review")
+Dance B  (zone-open-pr):    gh pr create, link metadata, reply in Slack thread
+                             → move to zone-auto-review
+Dance B2 (zone-auto-review): request Copilot review, poll CI, address all bot feedback
+                             → move to zone-qagor
+Dance B3 (zone-qagor):      create QAgor card + kick off session, poll for verdict
+                             → PASS: post #eng-reviews + move to zone-human-review
+                             → FAIL: fix + loop back to zone-auto-review
 ```
 
 ### 6. After Max Merges
@@ -74,6 +77,7 @@ See **Post-Merge Dance** in BOARD.md:
 | State: Merged/Done | `500020392` |
 | SC Team (Producks) | `5fc58cd7` |
 | Max's SC User ID | `5d8c4eae-e5b1-4662-ab9b-a6f106e573df` |
+| Sophie's SC User ID | `5fbd5291-9d17-435b-be62-e741150064b3` |
 | Slack #bug-reporting | `C0AGRNNURGX` |
 | Slack #eng-reviews | `C09KSS4NVLL` |
 
@@ -82,5 +86,3 @@ See **Post-Merge Dance** in BOARD.md:
 - Slack MCP: text only, no image content. Ask reporter to describe in thread.
 - Always include Agor session URL in Slack reply (not just SC link).
 - Workers commit but DO NOT open PRs — orchestrator handles that.
-- Tiny/easy PRs: mark with ✨ in #eng-reviews post.
-- #eng-reviews: unfurling unreliable — always add a one-liner alongside the URL.
