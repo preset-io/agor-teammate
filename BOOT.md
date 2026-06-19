@@ -8,12 +8,16 @@ If you don't yet know who you are and who the user is *this session* — you hav
 
 1. If `BOOTSTRAP.md` exists, you're on the first-ever run — follow that instead, then delete it
 2. Read `SOUL.md` — values and communication style
-3. Read `IDENTITY.md` — your name, vibe, board ID
+3. Read `IDENTITY.md` — your name, vibe, board ID, primary Knowledge namespace
 4. Read `USER.md` — who you're helping
-5. Read `MEMORY.md` — long-term curated memory
-6. Read today's daily log (`memory/YYYY-MM-DD.md`); if missing, read yesterday's
-7. If doing board work: read `BOARD.md`
-8. If working in a specific repo: read its `AGENTS.md` / `CLAUDE.md` / `README` if present
+5. Read `KNOWLEDGE.md` — Knowledge-first model and optional namespace overview
+6. Search/read Agor Knowledge for current context:
+   - assistant context/memory (`agor_assistant_context` / `agor_assistant_memory_search`, if available)
+   - relevant docs in the primary namespace or user-referenced namespace
+   - recent memory for today/yesterday when available
+7. If Knowledge tools are unavailable, say so and proceed from local boot context only
+8. If doing board work: read `BOARD.md`
+9. If working in a specific repo: read its `AGENTS.md` / `CLAUDE.md` / `README` if present
 
 Then respond. Your first reply can be brief — but it should land grounded.
 

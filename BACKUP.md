@@ -6,15 +6,17 @@ This file explains the mental model. `AGENTS.md` has the short version.
 
 ## The model
 
-**Your state lives in this worktree on disk.** Identity, memory, learnings, accumulated context — all of it sits in files: `IDENTITY.md`, `USER.md`, `MEMORY.md`, `memory/`, etc.
+**Your assistant home/base lives in this branch on disk.** Identity/boot/safety files, repo-native config, executable skills, local data, and framework instructions sit in files such as `IDENTITY.md`, `USER.md`, `AGENTS.md`, and `KNOWLEDGE.md`.
 
-**Git is how you back that state up** so it survives:
+**Agor Knowledge is the primary home for memory, learnings, docs, plans, decisions, and shareable artifacts.** Git backup does not replace Knowledge memory.
+
+**Git is how you back up the assistant home/base** so it survives:
 - Session restarts
-- Worktree wipes
+- Branch wipes
 - Host moves
 - Whatever else can go wrong
 
-Backup is one command: `git push origin <your-branch>`. There is no special tool. There is no service. It's just git.
+Backup is one command for assistant home/base files: `git push origin <your-branch>`. Knowledge docs are managed through Agor Knowledge tools, not by pushing this branch.
 
 ---
 
@@ -50,7 +52,7 @@ You commit your accumulated state to **your branch**. You push **your branch** t
 
 ## Hard rules
 
-- **Never PR your branch into anything.** Your branch holds your personal state — memory, identity, learnings. It would contaminate the template and isn't useful to anyone else.
+- **Never PR your branch into anything.** Your branch holds your local assistant state — identity and boot instructions. It would contaminate the template and isn't useful to anyone else.
 - **Never fork the public repo.** A fork creates noise and implies you intend to PR upstream, which you don't.
 - **Never push to `main`.** `main` is the framework template. Only framework-improvement PRs (like fixes to `AGENTS.md` or `BOOTSTRAP.md`) merge into `main`, and those come from contributors, not from running assistants.
 - **Don't touch other assistants' branches.** They're someone else's state.
@@ -71,7 +73,7 @@ git push origin <your-branch>
 
 **Periodic:** if `HEARTBEAT.md` includes a backup task, run it on the heartbeat cadence.
 
-**After significant state changes:** big memory updates, identity changes, learnings worth keeping. Use judgment — don't commit on every turn.
+**After significant assistant home/base changes:** identity changes, Knowledge overview changes, or tooling docs. Use judgment — don't commit on every turn. File memory in Knowledge instead of committing for every remembered fact.
 
 **Not every turn.** Backup has a cost (commit noise, push latency). Batch.
 
@@ -81,7 +83,7 @@ git push origin <your-branch>
 
 You may have been cloned from the **public** repo: `https://github.com/preset-io/agor-assistant`.
 
-If so, anything you push to your branch is **world-readable**. Your accumulated memory and your human's `USER.md` are on the internet.
+If so, anything you push to your branch is **world-readable**. Your local assistant state and your human's `USER.md` are on the internet. Real memory should still be in Knowledge with appropriate RBAC, but assistant home/base files can be sensitive too.
 
 Once you've earned trust and produced value, **suggest a private repo** for backup:
 
@@ -121,8 +123,8 @@ If you notice a framework improvement worth contributing back (a gap in `AGENTS.
 
 | Question | Answer |
 |---|---|
-| Where does my state live? | On disk, in this worktree |
-| How do I back up? | `git push origin <your-branch>` |
+| Where does my state live? | Core home/base files and workbench artifacts on disk; memory/docs in Agor Knowledge |
+| How do I back up? | Assistant home/base: `git push origin <your-branch>`; Knowledge: use Knowledge tools |
 | Do I PR my branch? | **No.** Never. |
 | Do I fork the public repo? | **No.** Never. |
 | What's `main` for? | Framework template; not for personal state |

@@ -13,3 +13,9 @@ Filled during bootstrap. Evolve as you do.
 - **Main board ID:**
 - **Main board name:**
 - **Board URL:** https://agor.live/board/<board_id>
+
+## Knowledge
+
+- **Primary namespace slug:**
+- **Primary namespace URI:** agor://kb/<namespace>/
+- **Memory tool:** `agor_assistant_memory_append` files memories into the right Knowledge location
