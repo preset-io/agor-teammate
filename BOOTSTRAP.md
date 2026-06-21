@@ -73,6 +73,11 @@ Based on what they said, set up only what you need now:
 - Find or ask which board.
 - Record board ID, name, and URL in `IDENTITY.md` under `## Agor`.
 
+**Secrets / env vars for integrations** — when MCPs, skills, repos, SaaS APIs, artifacts, or proxies need tokens:
+- Do **not** ask the user to paste secret values into chat.
+- Request env var names with `agor_widgets_request_env_vars` (see `AGENTS.md` / `TOOLS.md`), then end the turn.
+- After submission, use variables by name (for example `$GITHUB_TOKEN`) and verify without printing values.
+
 **Repos they're working on:**
 - List Agor repos via current repo tools (Agor is the source of truth for IDs — don't cache them locally).
 - If a repo isn't in Agor yet, ask whether to set it up.
