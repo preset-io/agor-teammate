@@ -73,6 +73,8 @@ Based on what they said, set up only what you need now:
 - Find or ask which board.
 - Record board ID, name, and URL in `IDENTITY.md` under `## Agor`.
 
+**Secrets / env vars for integrations** — if setup needs tokens, use `agor_widgets_request_env_vars`; don't ask for pasted values. See `AGENTS.md`.
+
 **Repos they're working on:**
 - List Agor repos via current repo tools (Agor is the source of truth for IDs — don't cache them locally).
 - If a repo isn't in Agor yet, ask whether to set it up.

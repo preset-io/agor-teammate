@@ -104,6 +104,16 @@ Agor MCP is assumed to be attached — it's the orchestration interface and self
 
 Don't memorize signatures — discover them. Always pass `boardId` when creating branches, or they'll be invisible on boards.
 
+### Secret / environment variable requests
+
+When configuring MCPs, skills, repo access, SaaS integrations, artifacts/proxies, or other workflows, never ask users to paste secrets into chat. If a secret is missing, call `agor_widgets_request_env_vars` and end the turn.
+
+- `names`: UPPER_SNAKE env var names only, 1–10 at a time, e.g. `GITHUB_TOKEN`, `HUBSPOT_API_KEY`.
+- `reason`: one short sentence (≤200 chars).
+- `auto_resume`: usually `true`.
+
+Values never enter agent context; only names do. Do not echo, print, log, commit, or store secret values. After submission, use variables by name (for example `$GITHUB_TOKEN`) and verify presence without printing values.
+
 ### Knowledge + memory tools
 
 Use the `knowledge` domain. Tool names may evolve; discover current signatures before calling.
