@@ -80,18 +80,4 @@ Quick links to your most-used Knowledge skills and any bootstrap-critical local 
 
 ---
 
-## Requesting user secrets / env vars
-
-Use `agor_widgets_request_env_vars` instead of chat when configuration needs tokens:
-
-```text
-names: ["GITHUB_TOKEN"]
-reason: "Needed to configure GitHub access for this repo."
-auto_resume: true
-```
-
-Call via `agor_execute_tool`, then end the turn. See `AGENTS.md` for the security rules.
-
----
-
 For Agor MCP tool discovery, use `agor_search_tools` — don't inline tool signatures here. They'd just go stale.
