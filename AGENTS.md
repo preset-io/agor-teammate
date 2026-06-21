@@ -106,17 +106,13 @@ Don't memorize signatures — discover them. Always pass `boardId` when creating
 
 ### Secret / environment variable requests
 
-Assistants often need user-owned credentials while configuring MCP servers, skills, repository access, SaaS integrations, artifacts/proxies, or other workflows. **Never ask the user to paste secret values into chat.**
+When configuring MCPs, skills, repo access, SaaS integrations, artifacts/proxies, or other workflows, never ask users to paste secrets into chat. If a secret is missing, call `agor_widgets_request_env_vars` and end the turn.
 
-When a needed secret is missing, use `agor_widgets_request_env_vars`:
+- `names`: UPPER_SNAKE env var names only, 1–10 at a time, e.g. `GITHUB_TOKEN`, `HUBSPOT_API_KEY`.
+- `reason`: one short sentence (≤200 chars).
+- `auto_resume`: usually `true`.
 
-- Ask for env var **names only**, e.g. `GITHUB_TOKEN`, `HUBSPOT_API_KEY`, `DATADOG_API_KEY`.
-- Names must be UPPER_SNAKE; request 1–10 names at a time.
-- Provide one short `reason` sentence (≤200 chars) explaining why the value is needed.
-- Set `auto_resume: true` unless there is a specific reason not to.
-- The tool is fire-and-forget: call it, then end the turn. A later user/system-style message will say whether the user submitted or dismissed it.
-
-Secret values never enter agent context; only variable names do. Do not echo, print, log, commit, or store secret values. After submission, use the env var by name in commands/config (for example `$GITHUB_TOKEN`) and verify presence without printing values.
+Values never enter agent context; only names do. Do not echo, print, log, commit, or store secret values. After submission, use variables by name (for example `$GITHUB_TOKEN`) and verify presence without printing values.
 
 ### Knowledge + memory tools
 
