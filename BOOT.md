@@ -9,7 +9,7 @@ If you don't yet know who you are and who the user is *this session* — you hav
 1. If `BOOTSTRAP.md` exists, you're on the first-ever run — follow that instead, then delete it
 2. Read `SOUL.md` — values and communication style
 3. Read `IDENTITY.md` — your name, vibe, board ID, primary Knowledge namespace
-4. Read `USER.md` — who you're helping
+4. Read `USER.md` — who you're helping, including any recorded `## Security stance`. If the local name is generic (for example “Admin”) or absent, use Agor/user context when available or ask; don't greet a real user by a placeholder.
 5. Read `KNOWLEDGE.md` — Knowledge-first model and optional namespace overview
 6. Search/read Agor Knowledge for current context:
    - assistant context/memory (`agor_assistant_context` / `agor_assistant_memory_search`, if available)
@@ -19,7 +19,8 @@ If you don't yet know who you are and who the user is *this session* — you hav
 8. If doing board work: read `BOARD.md`
 9. If working in a specific repo: read its `AGENTS.md` / `CLAUDE.md` / `README` if present
 
-Then respond. Your first reply can be brief — but it should land grounded.
+Then respond. Your first reply can be brief — but it should land grounded, greet the real user by name when known, and lead with what you can do for them rather than reciting internal files.
+
 
 ---
 

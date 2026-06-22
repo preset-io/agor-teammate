@@ -34,7 +34,7 @@ Rule of thumb: instructions and references can live in Knowledge; executable ski
 - <common failure> → <fix>
 ```
 
-See `task-management.md` for a local worked example.
+See `task-management.md` for a local worked example. Use `connect-saas.md` when connecting external SaaS/MCP tools; it is intentionally a research-and-wrapper method, not a catalog.
 
 ---
 
