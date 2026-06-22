@@ -26,11 +26,12 @@ Don't interrogate. Talk like a person.
 
 > "Hey. I just came online. Who am I? Who are you?"
 
-Settle these together (briefly):
+Settle these together (briefly), but don't lead by dumping internal setup files:
 
 - **Your name** — what they should call you
 - **Your vibe** — formal / casual / warm / sharp / weird
 - **Your emoji** — one signature char
+- **Their real name** — don't call them a placeholder like “Admin” if Agor/user context or the user tells you otherwise
 
 Update `IDENTITY.md` and `USER.md` with what you learned. Two minutes, not twenty.
 
@@ -49,7 +50,19 @@ If Knowledge access is missing or the user-referenced namespace is inaccessible,
 
 ---
 
-## 3. What do they actually want?
+## 3. Security stance (early, lightweight)
+
+Ask once, in plain language, before storing sensitive context or connecting services:
+
+> “Before I start filing docs or connecting tools, how open should I be by default: private, trusted-team shared, or public-by-request? And should external tools be draft/read-only by default, or can I post/write after explicit approval?”
+
+Record the answer in `USER.md` under `## Security stance`, then apply it to:
+
+- Knowledge visibility
+- connector scopes and account/workspace choice
+- whether messages/posts/issues/docs are drafted only or externally changed
+
+## 4. What do they actually want?
 
 Pivot to the real question:
 
@@ -59,7 +72,7 @@ Listen. Don't propose your workflow before understanding theirs. If worth rememb
 
 ---
 
-## 4. Connect resources
+## 5. Connect resources
 
 Based on what they said, set up only what you need now:
 
@@ -73,7 +86,9 @@ Based on what they said, set up only what you need now:
 - Find or ask which board.
 - Record board ID, name, and URL in `IDENTITY.md` under `## Agor`.
 
-**Secrets / env vars for integrations** — if setup needs tokens, use `agor_widgets_request_env_vars`; don't ask for pasted values. See `AGENTS.md`.
+**SaaS / MCP tools** — use `skills/connect-saas.md`: research the best MCP/OAuth/skill path, explain expected effort, prefer existing Agor/company connector paths, and verify registered → enabled → attached to current session → authenticated → tools visible.
+
+**Secrets / env vars for integrations** — if setup needs tokens, use `agor_widgets_request_env_vars`; don't ask for pasted values. Show token type and minimum scopes before opening the widget. See `AGENTS.md`.
 
 **Repos they're working on:**
 - List Agor repos via current repo tools (Agor is the source of truth for IDs — don't cache them locally).
@@ -84,9 +99,9 @@ Skip board zones, skills installation, and other configuration until they actual
 
 ---
 
-## 5. Prove value
+## 6. Prove value
 
-Now do the actual thing they asked for. Or, if there's no specific ask yet, propose one small concrete next step based on what they've told you.
+Now do the actual thing they asked for. Or, if there's no specific ask yet, propose one small concrete next step based on what they've told you. Once you have produced first value, it is reasonable to offer one follow-up that makes future value easier, such as a first schedule for a recurring digest/review.
 
 If the work needs a coding branch:
 1. Create an Agor branch (board ID required)
@@ -98,7 +113,7 @@ See `AGENTS.md` for the coding-task delegation pattern.
 
 ---
 
-## 6. Wrap up the bootstrap
+## 7. Wrap up the bootstrap
 
 - File a Knowledge memory bullet summarizing what happened.
 - If Knowledge was unavailable, say so and keep necessary context in the current task/PR notes; migrate it later.
@@ -106,11 +121,11 @@ See `AGENTS.md` for the coding-task delegation pattern.
 - Delete this file: `trash BOOTSTRAP.md` (or `rm` if `trash` isn't available).
 - Tell your human you're ready.
 
-**No commit / push yet.** Your assistant home/base files persist on disk. Backup (commit + push) is a separate, secondary flow — see step 7.
+**No commit / push yet.** Your assistant home/base files persist on disk. Backup (commit + push) is a separate, secondary flow — see step 8.
 
 ---
 
-## 7. Mention backup — but only after value is established
+## 8. Mention backup — but only after value is established
 
 Once you've actually done useful work — not before — bring up backup:
 
@@ -127,6 +142,7 @@ When the moment is right (not in this first session unless they ask):
 - **Board zones** — see `BOARD.md`
 - **Knowledge gardening** — see `KNOWLEDGE.md`
 - **Skills ecosystem** — prefer Knowledge for evolving/shareable skills; local `skills/` for boot/emergency procedures
+- **First schedule** — daily/weekly digest or review; use Agor schedule tools when the user wants recurring value.
 - **Heartbeat tasks** — periodic checks; see `HEARTBEAT.md`
 - **Repo roster** — add repos you use often to `TOOLS.md`
 
@@ -136,8 +152,10 @@ When the moment is right (not in this first session unless they ask):
 
 - [ ] Identity exchange done; `IDENTITY.md` + `USER.md` updated
 - [ ] Primary Knowledge namespace found/recorded, or access gap noted
+- [ ] Security stance asked when relevant and recorded in `USER.md`; visibility choice applied
 - [ ] You know what the user wants to accomplish
 - [ ] Main board recorded in `IDENTITY.md` if relevant
 - [ ] You did something useful (or have a clear next step)
+- [ ] Any created board/card/doc/branch/session returned with a clickable link
 - [ ] Memory filed in Knowledge, or the access/configuration gap noted
 - [ ] This file deleted

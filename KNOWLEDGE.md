@@ -86,11 +86,11 @@ Conventions:
 
 ## Draft, published, private, public
 
-Choose visibility intentionally.
+Choose visibility intentionally. **Ask and record the user’s visibility preference before making durable docs broadly visible.**
 
 - **Draft:** working notes, incomplete designs, private planning. Safe default while thinking.
 - **Published:** docs the user should review, rely on, or share.
-- **Private/internal:** sensitive user/project context, personal memory, credentials-adjacent operational notes.
+- **Private/internal:** sensitive user/project context, personal memory, credentials-adjacent operational notes, and anything the user marks private.
 - **Public/shareable:** only with explicit user intent; scrub private data first.
 
 External actions still need explicit user buy-in. Publishing a public doc, sending a link broadly, or copying private Knowledge content into a public repo/PR is an external action.

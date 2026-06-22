@@ -34,9 +34,15 @@ On each fresh session, an assistant reads its core local files, then searches/re
 | `BOARD.md` | Agor board zones + workflow |
 | `HEARTBEAT.md` | Optional periodic tasks |
 | `TOOLS.md` | Env-specific shortcuts (incl. roster of repos) |
-| `skills/` | Local bootstrap/emergency procedures; prefer Knowledge for evolving/shareable skills |
+| `skills/` | Local bootstrap/emergency procedures, including `connect-saas`; prefer Knowledge for evolving/shareable skills |
 
 ---
+
+## Onboarding defaults
+
+- Ask and record the user’s security/sharing stance early: private vs trusted-team shared, and draft/read-only vs post/write after explicit approval.
+- First boot should greet the real user by name when known, lead with user value instead of internal files, avoid unexplained Agor jargon, and return clickable links for created artifacts.
+- For SaaS connections, use `skills/connect-saas.md`.
 
 ## Knowledge-first defaults
 
@@ -91,4 +97,4 @@ Each assistant lives on its own branch. Git backs up the **assistant home/base f
 
 - **Agor:** [agor.live](https://agor.live)
 - **OpenClaw (inspiration):** [openclaw.ai](https://openclaw.ai)
-- **Skills ecosystem:** [agentskills.io](https://agentskills.io), [skills.sh](https://skills.sh)
+- **Connector skill:** [`skills/connect-saas.md`](skills/connect-saas.md)
