@@ -64,7 +64,7 @@ See `KNOWLEDGE.md` for the decision table, organization conventions, and MCP too
 | `BACKUP.md` | Git-backup model for the assistant home/base files |
 | `BOARD.md` | Your Agor board zones + workflow |
 | `TOOLS.md` | Env-specific shortcuts (incl. roster of repos you work in) |
-| `skills/` | Filesystem-backed skills, especially procedures with code/assets that need to execute locally; includes `skills/connect-saas.md` for SaaS/MCP tools |
+| `skills/` | Filesystem-backed skills, especially procedures with code/assets that need to execute locally; includes `skills/connect-saas.md` for SaaS/MCP tools and `skills/agor-gateway-channels.md` for inbound gateway channels |
 
 ---
 
@@ -110,7 +110,7 @@ Don't memorize signatures — discover them. Always pass `boardId` when creating
 
 ### Connecting SaaS / MCP tools
 
-Use `skills/connect-saas.md` whenever the user asks to connect an external service. It owns the detailed research, auth, session-attachment verification, and first-use checklist.
+Use `skills/connect-saas.md` whenever the user asks to connect an external service. It owns the detailed research, auth, session-attachment verification, and first-use checklist. Use `skills/agor-gateway-channels.md` when the user wants the assistant reachable from Slack/GitHub/Teams-style inbound channels.
 
 ### Secret / environment variable requests
 

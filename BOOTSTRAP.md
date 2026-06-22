@@ -86,7 +86,7 @@ Based on what they said, set up only what you need now:
 - Find or ask which board.
 - Record board ID, name, and URL in `IDENTITY.md` under `## Agor`.
 
-**SaaS / MCP tools** — use `skills/connect-saas.md`: research the best MCP/OAuth/skill path, explain expected effort, prefer existing Agor/company connector paths, and verify registered → enabled → attached to current session → authenticated → tools visible.
+**SaaS / MCP tools** — use `skills/connect-saas.md`: research the best MCP/OAuth/skill path, explain expected effort, prefer existing Agor/company connector paths, and verify registered → enabled → attached to current session → authenticated → tools visible. For inbound Slack/GitHub/Teams channels, use `skills/agor-gateway-channels.md`.
 
 **Secrets / env vars for integrations** — if setup needs tokens, use `agor_widgets_request_env_vars`; don't ask for pasted values. Show token type and minimum scopes before opening the widget. See `AGENTS.md`.
 
