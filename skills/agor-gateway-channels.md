@@ -8,6 +8,19 @@
 
 Gateway channels are incoming-first: they create Agor sessions from external messages/mentions. Do not assume they can proactively post scheduled outbound digests; use an outbound-capable SaaS connector for that.
 
+## Slack conversation semantics
+
+Document and configure Slack gateway channels around this intended model:
+
+- A top-level `@assistant` mention in an allowlisted channel starts a new Agor session on the target branch.
+- The assistant replies in the Slack thread for that mention.
+- The Slack thread is the session scope: `channel_id + thread_ts` maps to the Agor session, and follow-up thread replies continue that session.
+- New top-level mentions create new sessions.
+- Random channel messages should be ignored unless the gateway is explicitly configured otherwise.
+- Thread replies without another mention may be allowed only inside an existing mapped thread/session.
+
+If current product behavior does not thread replies or map sessions this way, note it as a gateway product issue and keep the skill documentation focused on the intended setup model.
+
 ## Tools
 
 Discover schemas at runtime with `agor_search_tools` / `agor_get_tool_details` in the `gateway` domain. Current core tools:
