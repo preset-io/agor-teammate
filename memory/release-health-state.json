@@ -1,0 +1,27 @@
+{
+  "last_checked": {
+    "tag": "v6.1.0.1",
+    "sha": "db341f72caeead6ba7c9e151abaf6af6b38d678d",
+    "release_date": "2026-06-23T18:13:45Z",
+    "checked_at": "2026-06-25T23:15:00Z",
+    "status_summary": {
+      "info": 0,
+      "notice": 4,
+      "ok": 1,
+      "warn": 95,
+      "error": 0,
+      "critical": 0
+    },
+    "known_noise": [
+      "AuthlibDeprecationWarning: authlib.jose module is deprecated",
+      "NO_WORKSPACES_AVAILABLE: No workspaces available for task=reports.scheduler",
+      "Shutting down: Master",
+      "Worker exiting",
+      "Not authorized Missing JWT in cookies or headers"
+    ],
+    "new_warnings": [
+      "Session-invalidation check failed; allowing request (x49) — new pattern, not blocking",
+      "Refresh CSRF token error (x1)"
+    ]
+  }
+}
