@@ -76,6 +76,33 @@ Tracking observed flaky test failures across PRs to identify patterns and build 
 
 ---
 
+### SavedQueryList.test.tsx — `"+ Query" button pushes a router-relative path (subdirectory deployment)`
+
+- **File:** `superset-frontend/src/pages/SavedQueryList/SavedQueryList.test.tsx`
+- **Shard:** `sharded-jest-tests (5)`
+- **Symptom:** Test assertion failure on router push path — unrelated to PR changes
+- **Verdict:** Likely flaky. Watch for second occurrence.
+
+| GHA Job ID | PR | Date | Notes |
+|------------|-----|------|-------|
+| 84221764450 | #41557 (fix-db-docs-links-sc111787) | 2026-06-30 | First observed |
+
+---
+
+### TablePreview.test.tsx — `refreshes table metadata when triggered` + `shows CREATE VIEW statement`
+
+- **File:** `superset-frontend/src/SqlLab/components/TablePreview/TablePreview.test.tsx`
+- **Shard:** `sharded-jest-tests (7)`
+- **Symptom:** `TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "sync"` / `"eye"`
+- **Verdict:** ❌ NOT flaky — **deterministic master regression.** Commit `8aa0faf8061` *"fix(a11y): use tooltip string as aria-label on ActionButton, not test-id"* changed the ActionButton accessible name from the icon name to the tooltip string, but `TablePreview.test.tsx:154,173` still queries `getByRole('button', { name: 'sync' / 'eye' })`. Fails on master on every PR. Fix = update the test to query by the tooltip label (or add `name`/`aria-label` back). Re-triggering CI does NOT help.
+
+| GHA Job ID | PR | Date | Notes |
+|------------|-----|------|-------|
+| 84221764465 | #41557 (fix-db-docs-links-sc111787) | 2026-06-30 | First observed |
+| 84334928007 | #41557 (fix-db-docs-links-sc111787) | 2026-06-30 | 2nd run, same failure → confirmed deterministic, root-caused to a11y commit `8aa0faf8061` |
+
+---
+
 ## Cross-PR Anecdotal Table
 
 Quick-reference of all flaky hits across PRs. Useful for spotting patterns at a glance.
@@ -90,6 +117,8 @@ Quick-reference of all flaky hits across PRs. Useful for spotting patterns at a 
 | FileHandler/index.test.tsx | handles Parquet file correctly + cascade | 6 | 71151070116 | #39332 | 2026-04-14 |
 | Cypress dashboard-header-container | `[data-test=dashboard-header-container]` not found | E2E shards 0,2,3,4 | 78357237457/449/417/500 | #40506 | 2026-05-28 |
 | Playwright global setup | Authentication timeout (5s) at login | E2E (chromium) | 78357237506 | #40506 | 2026-05-28 |
+| SavedQueryList.test.tsx | "+ Query" button pushes router-relative path | 5 | 84221764450 | #41557 | 2026-06-30 |
+| TablePreview.test.tsx | refreshes table metadata + shows CREATE VIEW statement | 7 | 84221764465 | #41557 | 2026-06-30 |
 
 ---
 
@@ -125,4 +154,4 @@ Quick-reference of all flaky hits across PRs. Useful for spotting patterns at a 
 
 ---
 
-_Last updated: 2026-05-28_
+_Last updated: 2026-06-30_
