@@ -10,6 +10,6 @@ Just the bot tag + reviewer request + PR link. No description, no one-liner, no 
 <@U0B0BPQV9SQ> can you find a reviewer for <https://github.com/apache/superset/pull/XXXXX>
 ```
 
-**Why:** Bot ID `U0B0BPQV9SQ` triggers reviewer assignment. Do NOT include the display name (e.g. `|Agor Code Review Bot`) — the bot's display name changes and using it can break the mention. Do NOT use `|display text` on the URL — the pipe suffix renders literally instead of as a hyperlink. Post only after QAgor PASS.
+**Why:** Bot ID `U0B0BPQV9SQ` is Minerva McGonagall (the reviewer assignment bot). The message must be sent AS Sophie (via `mcp__Slack__slack_send_message`) — NOT via the Agor gateway. The gateway sends as the McGonagall Slack app, which means the message appears to come from McGonagall herself rather than Sophie. Do NOT use `|display text` on the URL — the pipe suffix renders literally. Post only after QAgor PASS.
 
-**How to apply:** Channel ID `C09KSS4NVLL`.
+**How to apply:** Use `mcp__Slack__slack_send_message` with `channel_id: C09KSS4NVLL`. Fall back to the gateway only if the Slack MCP is unavailable, and note the sender limitation.
