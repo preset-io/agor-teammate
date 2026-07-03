@@ -81,11 +81,12 @@ Tracking observed flaky test failures across PRs to identify patterns and build 
 - **File:** `superset-frontend/src/pages/SavedQueryList/SavedQueryList.test.tsx`
 - **Shard:** `sharded-jest-tests (5)`
 - **Symptom:** Test assertion failure on router push path — unrelated to PR changes
-- **Verdict:** Likely flaky. Watch for second occurrence.
+- **Verdict:** ✅ Confirmed flaky — seen on #41557 (2026-06-30) and #41314 (2026-07-03). **Double-offender.**
 
 | GHA Job ID | PR | Date | Notes |
 |------------|-----|------|-------|
 | 84221764450 | #41557 (fix-db-docs-links-sc111787) | 2026-06-30 | First observed |
+| 84911151687 | #41314 (fix-sc-111554-save-chart-overwrite) | 2026-07-03 | Second hit — confirmed double-offender |
 
 ---
 
@@ -95,11 +96,13 @@ Tracking observed flaky test failures across PRs to identify patterns and build 
 - **Shard:** `sharded-jest-tests (7)`
 - **Symptom:** `TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "sync"` / `"eye"`
 - **Verdict:** ❌ NOT flaky — **deterministic master regression.** Commit `8aa0faf8061` *"fix(a11y): use tooltip string as aria-label on ActionButton, not test-id"* changed the ActionButton accessible name from the icon name to the tooltip string, but `TablePreview.test.tsx:154,173` still queries `getByRole('button', { name: 'sync' / 'eye' })`. Fails on master on every PR. Fix = update the test to query by the tooltip label (or add `name`/`aria-label` back). Re-triggering CI does NOT help.
+- **Fixed in:** #41314 — updated queries to `'Refresh table schema'` / `'Show CREATE VIEW statement'`
 
 | GHA Job ID | PR | Date | Notes |
 |------------|-----|------|-------|
 | 84221764465 | #41557 (fix-db-docs-links-sc111787) | 2026-06-30 | First observed |
 | 84334928007 | #41557 (fix-db-docs-links-sc111787) | 2026-06-30 | 2nd run, same failure → confirmed deterministic, root-caused to a11y commit `8aa0faf8061` |
+| 84911152159 | #41314 (fix-sc-111554-save-chart-overwrite) | 2026-07-03 | Fixed by updating queries to tooltip strings — committed to this PR |
 
 ---
 
@@ -119,6 +122,8 @@ Quick-reference of all flaky hits across PRs. Useful for spotting patterns at a 
 | Playwright global setup | Authentication timeout (5s) at login | E2E (chromium) | 78357237506 | #40506 | 2026-05-28 |
 | SavedQueryList.test.tsx | "+ Query" button pushes router-relative path | 5 | 84221764450 | #41557 | 2026-06-30 |
 | TablePreview.test.tsx | refreshes table metadata + shows CREATE VIEW statement | 7 | 84221764465 | #41557 | 2026-06-30 |
+| SavedQueryList.test.tsx | "+ Query" button pushes router-relative path | 5 | 84911151687 | #41314 | 2026-07-03 | **double-offender** |
+| TablePreview.test.tsx | refreshes table metadata + shows CREATE VIEW statement | 7 | 84911152159 | #41314 | 2026-07-03 | fixed in #41314 |
 
 ---
 
