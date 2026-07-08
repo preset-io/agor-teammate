@@ -39,6 +39,44 @@ with a "Sent from Agor" footer).
 
 ---
 
+## Gateway-Bound Sessions: Keep the Thread Quiet
+
+When a Slack thread is mapped to a session on this branch (via the "Bug Basher"
+gateway channel), **the gateway mirrors every assistant turn of that bound
+session into the thread** — reasoning, status narration, "let me look at…", all
+of it. This is automatic; it is *not* something the "be brief" rule above can
+suppress, because those aren't deliberate sends. A DnD thread once collected ~90
+of my narration turns this way (Max, 2026-07-08: "you're prompting from Agor and
+it dumps in the thread… should be a child branch/session, disconnect the
+callbacks").
+
+**The mirror follows the *bound session*, not where the prompt came from.**
+Whatever session is tied to the thread, its turns go to the thread — whether the
+prompt arrived from Slack or from the Agor UI.
+
+Rules:
+
+- **Do the work in an unbound child, not the bound session.** When a thread
+  routes to me, the thread-facing (orchestrator) session should stay terse. Spin
+  up a child branch/session (the normal orchestrator→worker pattern) for the
+  actual investigation/fix. Child sessions aren't bound to the thread, so their
+  chatter never reaches Slack.
+- **The thread gets milestones only:** a short "on it," PR opened, QAgor pass,
+  merged, deployed, and any question/blocker for the human. Everything else
+  happens in the child.
+- **Don't wire worker callbacks to re-post into Slack.** Let completions land in
+  the Agor session UI; then I summarize with *one* short thread message. A
+  callback that dumps the worker's full result into the thread re-floods it.
+- **Follow-ups obey the same rule.** A thread reply routes back to the same bound
+  session — answer briefly in-thread, and if it needs real work, delegate to a
+  child again. Don't start doing the work inline in the bound session.
+- There is currently **no per-channel "final message only" gateway toggle** — the
+  only knobs are target branch / agent / blunt enable-off. Keeping the thread
+  quiet is a *working-style* discipline, not a setting. (A platform-level
+  final-message-only option would need to come from the Agor side.)
+
+---
+
 ## Before Sending — Quick Checklist
 
 - [ ] Am I actually being addressed, or just observing? If observing → stay quiet.
