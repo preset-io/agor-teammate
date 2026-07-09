@@ -29,6 +29,34 @@ This workspace is an **agent operating center** that runs inside Agor sessions. 
 
 ## How You Operate
 
+### ⚠️ First: Are You a Gateway-Bound (Slack) Session?
+
+**Before anything else, decide whether you are thread-bound.** You are if your
+**first prompt arrived from Slack** — i.e. the **Bug Basher** gateway created you
+when someone @-mentioned it in a thread (that thread will show a "Session
+created… mention me again to follow up" note). If so:
+
+> **Every assistant turn you emit is auto-mirrored into that Slack thread** —
+> your "let me look at…", your reasoning, your tool-by-tool narration, all of it,
+> in front of humans. This is automatic and the "be brief" rule **cannot** undo
+> it, because these aren't deliberate sends. The *only* way to keep the thread
+> clean is to **emit fewer turns in this session.**
+
+If that's you:
+
+- **Read `skills/slack-interaction.md` right now**, before you narrate anything.
+- **Do not investigate or code inline — not even research.** AGENTS.md normally
+  lets you do research inline (see below), but for a thread-bound session inline
+  research *is* the flood. Spin up an **unbound child worktree + session** and do
+  the real work there; a child's turns never reach Slack.
+- **This session emits milestones only:** a one-line "on it," then the result /
+  blocker / question. Nothing in between.
+- When unsure whether you're thread-bound, **assume you are.**
+
+This is the failure mode that floods threads with reasoning: a fresh gateway
+session doesn't realize it's tied to Slack, answers inline, and every step gets
+mirrored. The fix is to catch it *here at boot*, not after you've already posted.
+
 ### You Are Running Inside an Agor Session
 
 - **Current session:** This very conversation is happening in an Agor session
@@ -187,6 +215,10 @@ Before doing anything else:
 6. **Read `MEMORY.md`** — long-term curated memory
 7. **Sync Agor state** — refresh `memory/agor-state/` with current worktrees/sessions
 8. **Check `repos/` directory** — read context files for repos you'll be working in
+9. **Am I gateway-bound?** If my first prompt came from a Slack thread (Bug
+   Basher gateway), read `skills/slack-interaction.md` and stay terse — every
+   turn I emit mirrors to Slack. Delegate real work to an unbound child. (See the
+   ⚠️ callout under **How You Operate**.)
 
 Don't ask permission. Just do it.
 

@@ -4,6 +4,14 @@
 Any time you post to Slack — bug-thread replies in #bug-reporting, #eng-reviews
 posts, status updates, or proactive DMs/threads. Read this **before** sending.
 
+**Also read this the moment you realize you're a gateway-bound session** — i.e.
+your first prompt came from a Slack thread (the Bug Basher gateway created you).
+You don't have to be *deliberately* posting for this skill to matter: a bound
+session's every turn is mirrored to Slack whether it means to post or not, so the
+"stay quiet, delegate to a child" discipline below applies from your very first
+turn. This is the #1 cause of threads flooding with reasoning. (AGENTS.md's boot
+checklist points you here for exactly this reason.)
+
 > Borrowed from Hodor's Slack guidelines + the `slack-gateway-reply-restraint`
 > learning (per Max, 2026-06-18). The complaint that prompted it: agents being
 > chatty and piping up on every message. Don't be that bot.
