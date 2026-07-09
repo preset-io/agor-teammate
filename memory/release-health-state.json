@@ -1,0 +1,36 @@
+{
+  "last_checked": {
+    "tag": "v6.0.0.19",
+    "sha": "ef47292bf332d3a3403a754e83715299a254dde0",
+    "release_date": "2026-07-02T23:20:02Z",
+    "checked_at": "2026-07-09T22:38:11Z",
+    "status_summary": {
+      "info": 4014035,
+      "warn": 1762210,
+      "error": 76316,
+      "critical": 19
+    },
+    "known_noise": [
+      "AuthlibDeprecationWarning: authlib.jose module is deprecated",
+      "NO_WORKSPACES_AVAILABLE: No workspaces available for task=reports.scheduler",
+      "Shutting down: Master",
+      "Worker exiting",
+      "Not authorized Missing JWT in cookies or headers",
+      "Failed to add user to db session: Class 'werkzeug.local.LocalProxy' is not mapped",
+      "Error while rendering virtual dataset query: list object has no element 0",
+      "Datasource not found datasource_type: DatasourceType.TABLE, database_id_or_uuid: 0",
+      "appbuilder.app is deprecated and will be removed in a future version. Use current_app instead",
+      "Could not load default spinner SVG",
+      "Unexpected metric expression type",
+      "The field `timeseries_limit` is deprecated, please use `series_limit` instead.",
+      "The field `series_limit_metric` is already populated, replacing value with contents from `timeseries_limit_metric`.",
+      "The field `timeseries_limit_metric` is deprecated, please use `series_limit_metric` instead.",
+      "Superset.explore_json This API endpoint is deprecated and will be removed in version 5.0.0",
+      "Failed to load query_context for chart",
+      "Failed to get truncated sample data for table",
+      "Refusing to run AIAssistCheckSchemasToVectorize command",
+      "Expired token google-oauth2"
+    ],
+    "note": "First run: no prior state existed. GitHub's 'latest' superset-shell release by created_at was v6.1.0.2, but Datadog showed it only ever deployed to sandbox-aws-us1a (never production). v6.0.0.19, created ~20 min later the same day, is the actual production release train (6 clusters, logs through today). Tracking v6.0.0.x as the production release line going forward -- future runs should verify the picked tag actually appears in environment:production before treating it as the release to check."
+  }
+}
