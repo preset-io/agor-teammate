@@ -1,14 +1,12 @@
 {
   "last_checked": {
-    "tag": "v6.1.0.1",
-    "sha": "db341f72caeead6ba7c9e151abaf6af6b38d678d",
-    "release_date": "2026-06-23T18:13:45Z",
-    "checked_at": "2026-07-02T00:00:00Z",
+    "tag": "v6.1.0.2",
+    "sha": "8b5491b01ccd6799b98f8ff95c60f05563135cdd",
+    "release_date": "2026-07-02T23:19:59Z",
+    "checked_at": "2026-07-09T00:00:00Z",
     "status_summary": {
-      "info": 0,
-      "notice": 4,
-      "ok": 1,
-      "warn": 95,
+      "info": 90,
+      "warn": 10,
       "error": 0,
       "critical": 0
     },
@@ -17,11 +15,15 @@
       "NO_WORKSPACES_AVAILABLE: No workspaces available for task=reports.scheduler",
       "Shutting down: Master",
       "Worker exiting",
-      "Not authorized Missing JWT in cookies or headers"
+      "Not authorized Missing JWT in cookies or headers",
+      "Session-invalidation check failed; allowing request"
     ],
     "new_warnings": [
-      "Session-invalidation check failed; allowing request (x49) — new pattern, not blocking",
-      "Refresh CSRF token error (x1)"
-    ]
+      "No type or annotation for returned value / parameter (x6 each, 5 patterns) — Copilot/MCP service startup type annotation warnings",
+      "Failed to get 'name: description' pair from 'None - This tool does not accept any parameters' (x6) — MCP tool missing description",
+      "sqlalchemy_redshift pkg_resources deprecated (x3) — removal deadline 2025-11-30 now past",
+      "pydantic Field name 'schema' in 'SavedQueryInfo' shadows BaseModel attribute (x2)"
+    ],
+    "notes": "Only sandbox-aws-us1a cluster visible for this SHA. Production logs may not yet be indexed or rollout not complete. DD_API_KEY auth Forbidden — used DATADOG_BEARER_TOKEN fallback."
   }
 }
