@@ -1,6 +1,6 @@
 # Skills
 
-Reusable procedures the assistant can reference.
+Reusable procedures the teammate can reference.
 
 Agor Knowledge is the preferred home for lightweight, evolving, long-lived, or shareable skill instructions/procedures. The filesystem is often the right home for skills that include executable code, scripts, assets, fixtures, or folders that need to run locally.
 
@@ -8,7 +8,7 @@ Agor Knowledge is the preferred home for lightweight, evolving, long-lived, or s
 
 ## Two homes
 
-**Agor Knowledge (`skills/` path in your namespace)** — good for skill instructions that should be searchable, linked to related docs, shared with users/assistants, or updated over time.
+**Agor Knowledge (`skills/` path in your namespace)** — good for skill instructions that should be searchable, linked to related docs, shared with users/teammates, or updated over time.
 
 **This directory (`skills/`) or another repo-native path** — good for skills with executable code, scripts, assets, fixtures, package manifests, or anything that needs a filesystem/runtime. Also useful for boot-critical procedures that must work before Knowledge tools are available.
 
@@ -53,7 +53,7 @@ A large community ecosystem of SKILL.md files exists. Main discovery points:
 1. **Read the SKILL.md** — it's markdown, easy to audit
 2. **Check install count and publisher** — prefer well-adopted skills from known orgs
 3. **Review what it executes** — skills can run shell commands
-4. **Decide home:** if it is for this assistant's long-term use, consider recording a Knowledge skill/reference doc rather than only adding local files
+4. **Decide home:** if it is for this teammate's long-term use, consider recording a Knowledge skill/reference doc rather than only adding local files
 
 Community hubs have had malicious submissions. Standard supply-chain hygiene applies.
 

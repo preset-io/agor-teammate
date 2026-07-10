@@ -1,8 +1,8 @@
 # KNOWLEDGE.md — Knowledge-first operating model
 
-Agor Knowledge Base is the assistant's long-term, user-visible knowledge layer. The branch/filesystem is the assistant's home base and workbench for core framework files, executable code, scripts, data, and local file operations.
+Agor Knowledge Base is the teammate's long-term, user-visible knowledge layer. The branch/filesystem is the teammate's home base and workbench for core framework files, executable code, scripts, data, and local file operations.
 
-Use Knowledge for anything that should be searchable, linkable, shareable, permissioned, versioned, graph-connected, or useful across sessions. Use local files for core assistant function and anything that needs a filesystem/runtime.
+Use Knowledge for anything that should be searchable, linkable, shareable, permissioned, versioned, graph-connected, or useful across sessions. Use local files for core teammate function and anything that needs a filesystem/runtime.
 
 ---
 
@@ -25,12 +25,12 @@ Rule of thumb: be upfront when it affects review, sharing, trust, future retriev
 
 | Put it in... | Use for | Why |
 |---|---|---|
-| **Agor Knowledge** | Daily memory bullets, decisions, outcomes | Searchable, centralized, connected to assistant namespace |
+| **Agor Knowledge** | Daily memory bullets, decisions, outcomes | Searchable, centralized, connected to teammate namespace |
 | **Agor Knowledge** | Plans, designs, research notes, meeting notes, drafts | User-clickable links, draft/publish workflow, RBAC |
 | **Agor Knowledge** | Long-lived knowledge, reference material, project docs | Semantic + fulltext search and graph links |
 | **Agor Knowledge** | Lightweight reusable skill instructions/procedures that should be discovered or shared | Easier to keep current and link across docs |
 | **Agor Knowledge** | Shareable artifacts for the user | Proper review/share links and visibility controls |
-| **Local filesystem** | `AGENTS.md`, `BOOT.md`, `BOOTSTRAP.md`, `SOUL.md`, `IDENTITY.md`, `USER.md` | Core assistant brainstem/system context |
+| **Local filesystem** | `AGENTS.md`, `BOOT.md`, `BOOTSTRAP.md`, `SOUL.md`, `IDENTITY.md`, `USER.md` | Core teammate brainstem/system context |
 | **Local filesystem** | `KNOWLEDGE.md` high-level operating model and optional namespace overview | Helps bootstrapping without mirroring Knowledge |
 | **Local filesystem** | Executable skills, scripts, config, templates, data files, test fixtures | Belongs to the git repo and local execution/runtime environment |
 | **Local filesystem** | Temporary edits/materialized Knowledge docs | Useful for editor/test workflows before publishing back to Knowledge |
@@ -48,7 +48,7 @@ If it helps bootstrapping, this file may include a very short namespace overview
 ```markdown
 ## Namespaces
 
-- `assistant-max` — my primary namespace: memory, plans, working docs, reusable skills.
+- `teammate-max` — my primary namespace: memory, plans, working docs, reusable skills.
 - `team-product` — shared product docs and published design notes I can access.
 ```
 
@@ -63,7 +63,7 @@ Treat your namespace like a maintained garden, not a junk drawer.
 Suggested top-level paths:
 
 ```text
-memory/                            Assistant memory; use MCP memory tools rather than hand-picking files
+memory/                            Teammate memory; use MCP memory tools rather than hand-picking files
 notes/YYYY-MM-DD-<topic>.md        Raw notes, meeting notes, quick captures
 plans/<project>/<topic>.md         Plans, task breakdowns, project state
 designs/<project>/<topic>.md       Design docs and proposals
@@ -99,7 +99,7 @@ External actions still need explicit user buy-in. Publishing a public doc, sendi
 
 ## Access limits and missing docs
 
-Assistants may have limited Knowledge access by design.
+Teammates may have limited Knowledge access by design.
 
 When the user references a doc or namespace:
 
@@ -120,10 +120,10 @@ Discover tool names and schemas at runtime:
 
 Common current tools to look for:
 
-- `agor_assistant_context` — read the current assistant branch's Knowledge memory/context namespace.
-- `agor_assistant_memory_search` — search assistant memory.
-- `agor_assistant_memory_append` — file memory bullets into the assistant's assigned Knowledge memory location.
-- `agor_assistant_knowledge_search` — search Knowledge through assistant branch policy.
+- `agor_teammate_context` — read the current teammate branch's Knowledge memory/context namespace.
+- `agor_teammate_memory_search` — search teammate memory.
+- `agor_teammate_memory_append` — file memory bullets into the teammate's assigned Knowledge memory location.
+- `agor_teammate_knowledge_search` — search Knowledge through teammate branch policy.
 - `agor_kb_namespaces_list` — list available namespaces.
 - `agor_kb_tree` — browse namespace tree.
 - `agor_kb_search` — hybrid/fulltext/semantic search; use result `reference_uri` for graph links.
@@ -136,7 +136,7 @@ Common current tools to look for:
 At nearly every meaningful user prompt, ask: “Is this worth remembering?” If yes:
 
 ```text
-agor_assistant_memory_append
+agor_teammate_memory_append
   bullets: "Max asked to ..."
   category: task | decision | preference | project | learning | note | other
   tags: [short, useful, facets]

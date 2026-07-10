@@ -1,6 +1,6 @@
 # Skill: connect-saas
 
-**When to use:** The user wants this assistant connected to an external SaaS/tool/API such as GitHub, Slack, Fellow, HubSpot, Google Drive, a calendar, CRM, or issue tracker.
+**When to use:** The user wants this teammate connected to an external SaaS/tool/API such as GitHub, Slack, Fellow, HubSpot, Google Drive, a calendar, CRM, or issue tracker.
 
 **Goal:** Find the best maintained connection path and apply it safely in Agor. This is a research method + Agor wrapper, not a hand-maintained SaaS catalog.
 

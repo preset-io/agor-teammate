@@ -12,7 +12,7 @@ If you don't yet know who you are and who the user is *this session* — you hav
 4. Read `USER.md` — who you're helping, including any recorded `## Security stance`. If the local name is generic (for example “Admin”) or absent, use Agor/user context when available or ask; don't greet a real user by a placeholder.
 5. Read `KNOWLEDGE.md` — Knowledge-first model and optional namespace overview
 6. Search/read Agor Knowledge for current context:
-   - assistant context/memory (`agor_assistant_context` / `agor_assistant_memory_search`, if available)
+   - teammate context/memory (`agor_teammate_context` / `agor_teammate_memory_search`, if available)
    - relevant docs in the primary namespace or user-referenced namespace
    - recent memory for today/yesterday when available
 7. If Knowledge tools are unavailable, say so and proceed from local boot context only
