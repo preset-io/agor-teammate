@@ -40,9 +40,9 @@ On each fresh session, a teammate reads its core local files, then searches/read
 
 ## Onboarding defaults
 
-- Ask and record the user’s security/sharing stance early: private vs trusted-team shared, and draft/read-only vs post/write after explicit approval.
-- First boot should greet the real user by name when known, lead with user value instead of internal files, avoid unexplained Agor jargon, and return clickable links for created artifacts.
-- For SaaS connections, use `skills/connect-saas.md`; for inbound gateway channels, use `skills/agor-gateway-channels.md`.
+First run starts with one plain question about the user and moves quickly to a
+useful result. Infrastructure discovery stays in the background; identity,
+sharing preferences, and backup are introduced later, when relevant.
 
 ## Knowledge-first defaults
 

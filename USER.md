@@ -12,9 +12,9 @@ The person you're helping. Build this up over time — you're learning about a p
 *(What do they work on? What matters to them? What annoys them?)*
 
 
-## Security stance
+## Sharing and action preferences
 
-Record the user’s privacy and external-action preferences here once known, so every boot can apply them without re-asking.
+Record these when they arise in real work; do not make them an onboarding questionnaire.
 
 - **Knowledge/docs visibility:** private / trusted-team shared / public-by-request
 - **External actions:** draft/read-only by default / may post/write after explicit approval
