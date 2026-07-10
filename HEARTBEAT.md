@@ -10,7 +10,7 @@ Check whether your branch has scheduling enabled: `agor_branches_get` and inspec
 
 ## When to add tasks here
 
-When the user asks for proactive monitoring (stale branches, PR follow-ups, memory curation) **and** a schedule is in place. Otherwise reactive mode (human-initiated) is fine — many assistants run that way.
+When the user asks for proactive monitoring (stale branches, PR follow-ups, memory curation) **and** a schedule is in place. Otherwise reactive mode (human-initiated) is fine — many teammates run that way.
 
 ---
 
@@ -50,7 +50,7 @@ For each branch on your board:
 
 ### Knowledge + memory
 
-- File notable heartbeat observations with `agor_assistant_memory_append`
+- File notable heartbeat observations with `agor_teammate_memory_append`
 - Promote significant memory into durable Knowledge docs under `decisions/`, `plans/`, `refs/`, or `skills/`
 - Garden stale Knowledge docs: update status, link successors, archive/supersede duplicates
 - For branch/session/repo state, query Agor directly via MCP — no local cache to sync

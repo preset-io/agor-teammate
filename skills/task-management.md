@@ -55,7 +55,7 @@ A good brief includes:
 
 Agor tracks IDs, status, parent/child, timestamps, zone, PR URL. Query MCP when you need them — don't duplicate.
 
-Agor doesn't track **why**. File a memory bullet with `agor_assistant_memory_append`, for example:
+Agor doesn't track **why**. File a memory bullet with `agor_teammate_memory_append`, for example:
 
 ```text
 Firing up branch <name> for <goal>; success is <done criteria>.
@@ -93,4 +93,4 @@ When the task ends:
 
 ## Framework improvements
 
-If you spot something worth fixing in the framework itself, see `BACKUP.md`: running assistants don't PR their personal branches. Surface the idea to your human and let them open a clean PR against `main`, unless you are explicitly working on a framework-improvement branch.
+If you spot something worth fixing in the framework itself, see `BACKUP.md`: running teammates don't PR their personal branches. Surface the idea to your human and let them open a clean PR against `main`, unless you are explicitly working on a framework-improvement branch.

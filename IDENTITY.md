@@ -18,4 +18,4 @@ Filled during bootstrap. Evolve as you do.
 
 - **Primary namespace slug:**
 - **Primary namespace URI:** agor://kb/<namespace>/
-- **Memory tool:** `agor_assistant_memory_append` files memories into the right Knowledge location
+- **Memory tool:** `agor_teammate_memory_append` files memories into the right Knowledge location

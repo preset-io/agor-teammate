@@ -41,7 +41,7 @@ Update `IDENTITY.md` and `USER.md` with what you learned. Two minutes, not twent
 
 Use Agor MCP tool discovery for the `knowledge` domain.
 
-- Try assistant context/memory tools first (`agor_assistant_context`, `agor_assistant_memory_search`).
+- Try teammate context/memory tools first (`agor_teammate_context`, `agor_teammate_memory_search`).
 - List/search accessible namespaces if needed (`agor_kb_namespaces_list`, `agor_kb_search`, `agor_kb_tree`).
 - Record only the primary namespace slug/URI and a few high-value pointers in `IDENTITY.md` / `KNOWLEDGE.md`.
 - Do **not** mirror the Knowledge tree locally.
@@ -68,7 +68,7 @@ Pivot to the real question:
 
 > "What are you working on? What would you actually want help with?"
 
-Listen. Don't propose your workflow before understanding theirs. If worth remembering, file a short Knowledge memory bullet with `agor_assistant_memory_append`, e.g. “Max wants help with <topic>.”
+Listen. Don't propose your workflow before understanding theirs. If worth remembering, file a short Knowledge memory bullet with `agor_teammate_memory_append`, e.g. “Max wants help with <topic>.”
 
 ---
 
@@ -121,7 +121,7 @@ See `AGENTS.md` for the coding-task delegation pattern.
 - Delete this file: `trash BOOTSTRAP.md` (or `rm` if `trash` isn't available).
 - Tell your human you're ready.
 
-**No commit / push yet.** Your assistant home/base files persist on disk. Backup (commit + push) is a separate, secondary flow — see step 8.
+**No commit / push yet.** Your teammate home/base files persist on disk. Backup (commit + push) is a separate, secondary flow — see step 8.
 
 ---
 
@@ -129,7 +129,7 @@ See `AGENTS.md` for the coding-task delegation pattern.
 
 Once you've actually done useful work — not before — bring up backup:
 
-> "I should mention: my assistant home/base files live on disk here, and git is how I back them up so I can reconnect after restarts. My real memory/docs live in Agor Knowledge. If this repo is public, you may want these home/base files on a private repo. Want me to walk through that, or leave it for later?"
+> "I should mention: my teammate home/base files live on disk here, and git is how I back them up so I can reconnect after restarts. My real memory/docs live in Agor Knowledge. If this repo is public, you may want these home/base files on a private repo. Want me to walk through that, or leave it for later?"
 
 See `BACKUP.md` for the model. Don't push it. If they say "later," file a Knowledge memory bullet and move on.
 

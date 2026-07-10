@@ -1,8 +1,8 @@
 # Skill: agor-gateway-channels
 
-**When to use:** The user wants the assistant reachable from Slack, GitHub, Teams, or another gateway channel.
+**When to use:** The user wants the teammate reachable from Slack, GitHub, Teams, or another gateway channel.
 
-**Goal:** Help open an approved inbound channel so users can tag/prompt the assistant where work already happens.
+**Goal:** Help open an approved inbound channel so users can tag/prompt the teammate where work already happens.
 
 ## Model
 
