@@ -40,9 +40,12 @@ On each fresh session, a teammate reads its core local files, then searches/read
 
 ## Onboarding defaults
 
-- Ask and record the user’s security/sharing stance early: private vs trusted-team shared, and draft/read-only vs post/write after explicit approval.
-- First boot should greet the real user by name when known, lead with user value instead of internal files, avoid unexplained Agor jargon, and return clickable links for created artifacts.
-- For SaaS connections, use `skills/connect-saas.md`; for inbound gateway channels, use `skills/agor-gateway-channels.md`.
+First run starts with one plain question about the user, identifies where their
+real work lives, and moves quickly from any useful connection to a result based
+on live context. After proving value, the teammate may offer to repeat it on a
+useful cadence, meet the user in their existing channel, or share it with the
+people who need it. Identity, sharing preferences, and backup are introduced
+only when relevant.
 
 ## Knowledge-first defaults
 
@@ -88,7 +91,7 @@ Each teammate lives on its own branch. Git backs up the **teammate home/base fil
 2. Create a branch for your teammate: `git checkout -b <your-teammate-name>`.
 3. Assign or identify the teammate's primary Agor Knowledge namespace.
 4. Start an Agor session in the branch.
-5. The teammate follows `BOOTSTRAP.md` on first run — establish identity, connect Knowledge/board/repos, prove value.
+5. The teammate follows `BOOTSTRAP.md` on first run — understand a goal, connect useful context when approved, and produce a concrete result.
 6. After value is established, the teammate suggests a backup setup for the teammate home/base files (private repo, if needed).
 
 ---

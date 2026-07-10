@@ -1,12 +1,13 @@
 # Skill: connect-saas
 
-**When to use:** The user wants this teammate connected to an external SaaS/tool/API such as GitHub, Slack, Fellow, HubSpot, Google Drive, a calendar, CRM, or issue tracker.
+**When to use:** The user asks to connect an external service, or a concrete task would materially benefit from direct access to one.
 
 **Goal:** Find the best maintained connection path and apply it safely in Agor. This is a research method + Agor wrapper, not a hand-maintained SaaS catalog.
 
 ## Principles
 
 - Lead with the value the connection unlocks.
+- Recommend one high-leverage source based on the user's goal; do not present a catalog.
 - Prefer reusable, approved paths over one-off secrets.
 - Ask/apply the user's security stance from `USER.md` when scopes, visibility, or posting are involved.
 - Never ask for secrets in chat; use `agor_widgets_request_env_vars`.
@@ -33,8 +34,9 @@ Registry pointers, not a catalog:
 3. If session-scoped, attach it to the **current session**; don't stop at “registered.”
 4. Check auth status. If a token is unavoidable, explain token type + minimum scopes, call `agor_widgets_request_env_vars`, then stop.
 5. Verify tools are visible after refresh/re-prompt if needed.
-6. Do the first useful action, usually read/summarize/draft before write/post.
-7. Record outcome in memory/Knowledge if available; never record secrets.
+6. Do the first useful action from live context, usually read/summarize/draft before write/post; authentication alone is not an outcome.
+7. If the result has recurring value, offer a specific cadence through Agor's scheduler and agree on scope, output, destination, and how to stop it.
+8. Record outcome in memory/Knowledge if available; never record secrets.
 
 ## Examples
 

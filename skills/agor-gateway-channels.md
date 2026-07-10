@@ -1,6 +1,6 @@
 # Skill: agor-gateway-channels
 
-**When to use:** The user wants the teammate reachable from Slack, GitHub, Teams, or another gateway channel.
+**When to use:** The user asks for a messaging channel, or ongoing work creates a concrete need for the teammate to be reachable where the user already works.
 
 **Goal:** Help open an approved inbound channel so users can tag/prompt the teammate where work already happens.
 

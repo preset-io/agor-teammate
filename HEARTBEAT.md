@@ -12,6 +12,12 @@ Check whether your branch has scheduling enabled: `agor_branches_get` and inspec
 
 When the user asks for proactive monitoring (stale branches, PR follow-ups, memory curation) **and** a schedule is in place. Otherwise reactive mode (human-initiated) is fine — many teammates run that way.
 
+After a useful result, look for a natural recurring version and offer it rather
+than silently adding it here. Agree with the user on the deliverable, data
+scope, cadence, destination, and how to change or disable it. Create the Agor
+schedule only after approval, then keep this file focused on the work that
+schedule should perform.
+
 ---
 
 ## Scope
