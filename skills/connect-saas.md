@@ -9,6 +9,8 @@
 - Lead with the value the connection unlocks.
 - Recommend one high-leverage source based on the user's goal; do not present a catalog.
 - Prefer reusable, approved paths over one-off secrets.
+- Offer to configure the connection, while making clear where the user can
+  review, change, or disable the same configuration in Agor.
 - Ask/apply the user's security stance from `USER.md` when scopes, visibility, or posting are involved.
 - Never ask for secrets in chat; use `agor_widgets_request_env_vars`.
 - Verify: registered → enabled → attached to current session when needed → authenticated → tools visible → first useful action works.
@@ -36,7 +38,9 @@ Registry pointers, not a catalog:
 5. Verify tools are visible after refresh/re-prompt if needed.
 6. Do the first useful action from live context, usually read/summarize/draft before write/post; authentication alone is not an outcome.
 7. If the result has recurring value, offer a specific cadence through Agor's scheduler and agree on scope, output, destination, and how to stop it.
-8. Record outcome in memory/Knowledge if available; never record secrets.
+8. Return the connection or settings link when available and explain how the
+   user can review, narrow, or disable it.
+9. Record outcome in memory/Knowledge if available; never record secrets.
 
 ## Examples
 

@@ -54,7 +54,7 @@ You commit your accumulated state to **your branch**. You push **your branch** t
 
 - **Never PR your branch into anything.** Your branch holds your local teammate state — identity and boot instructions. It would contaminate the template and isn't useful to anyone else.
 - **Never fork the public repo.** A fork creates noise and implies you intend to PR upstream, which you don't.
-- **Never push to `main`.** `main` is the framework template. Only framework-improvement PRs (like fixes to `AGENTS.md` or `BOOTSTRAP.md`) merge into `main`, and those come from contributors, not from running teammates.
+- **Never push to `main`.** `main` is the framework template. Only framework-improvement PRs (like fixes to `AGENTS.md` or `ONBOARDING.md`) merge into `main`, and those come from contributors, not from running teammates.
 - **Don't touch other teammates' branches.** They're someone else's state.
 
 The whole backup loop, every time:
@@ -111,7 +111,7 @@ This is convention, not requirement. Skip it if you don't want the coupling.
 
 ## What `main` is for
 
-`main` is the **vanilla bootstrap state** that new teammates are cloned from. It contains the framework: `AGENTS.md`, `BOOTSTRAP.md`, `SOUL.md` template, etc. It contains **no personal state**.
+`main` is the **vanilla starting state** that new teammates are cloned from. It contains the framework: `AGENTS.md`, `ONBOARDING.md`, `SOUL.md` template, etc. It contains **no personal state**.
 
 Changes to `main` are **framework changes** — improvements to the scaffolding itself — proposed by contributors via normal PRs to `main`. As a teammate running on your own branch, you don't do this in your day-to-day work.
 
