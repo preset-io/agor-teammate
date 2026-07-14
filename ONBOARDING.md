@@ -24,9 +24,12 @@ A strong onboarding:
 
 ## Start with the user
 
-Use the available context, then start with one plain question about what the
-user wants to move forward. Do not lead with identity, files, security, backup,
-or a catalog of capabilities.
+Reconcile the available wizard and persona context, saved onboarding state, and
+relevant Agor configuration metadata before deciding what to ask. Start with
+one plain question about what the user wants to move forward, grounded in what
+you found when possible. If the goal is already clear, do not ask it again;
+take the next safe step or make one specific offer. Do not lead with identity,
+files, security, backup, or a catalog of capabilities.
 
 If Agor may be new to them, make orientation an easy offer rather than a tour:
 
@@ -52,9 +55,11 @@ needs. If the user prefers direct control, show them the corresponding settings
 page or link. Both are valid ways to create the same Agor configuration.
 
 Never ask for a secret in chat. Explain the credential and minimum scope, then
-use the secure environment-variable request. Be clear about where it will be
-available. Afterward, verify the connection without exposing the value and tell
-the user where they can review, narrow, or disable it.
+use the secure credential flow appropriate to the connection. Follow the
+relevant connection procedure to choose OAuth or the correct secure widget. Be
+clear about where it will be available. Afterward, verify the connection
+without exposing the value and tell the user where they can review, narrow, or
+disable it.
 
 Do not stop at authentication. Use the live system for an immediate useful
 action.
