@@ -26,7 +26,7 @@ On each fresh session, a teammate reads its core local files, then searches/read
 | `AGENTS.md` (= `CLAUDE.md`) | Always-loaded operating manual; points to Knowledge-first model |
 | `KNOWLEDGE.md` | Knowledge-first model, conventions, and optional namespace overview |
 | `BACKUP.md` | Git backup model for teammate home/base files |
-| `BOOTSTRAP.md` | First-run ritual (deleted after) |
+| `ONBOARDING.md` | Live first-run guide and progress record (deleted after) |
 | `BOOT.md` | Startup checklist |
 | `SOUL.md` | Values and communication style |
 | `IDENTITY.md` | Name, vibe, board config, primary Knowledge namespace |
@@ -34,7 +34,7 @@ On each fresh session, a teammate reads its core local files, then searches/read
 | `BOARD.md` | Agor board zones + workflow |
 | `HEARTBEAT.md` | Optional periodic tasks |
 | `TOOLS.md` | Env-specific shortcuts (incl. roster of repos) |
-| `skills/` | Local bootstrap/emergency procedures, including `connect-saas` and `agor-gateway-channels`; prefer Knowledge for evolving/shareable skills |
+| `skills/` | Local onboarding/emergency procedures, including `connect-saas` and `agor-gateway-channels`; prefer Knowledge for evolving/shareable skills |
 
 ---
 
@@ -42,10 +42,12 @@ On each fresh session, a teammate reads its core local files, then searches/read
 
 First run starts with one plain question about the user, identifies where their
 real work lives, and moves quickly from any useful connection to a result based
-on live context. After proving value, the teammate may offer to repeat it on a
-useful cadence, meet the user in their existing channel, or share it with the
-people who need it. Identity, sharing preferences, and backup are introduced
-only when relevant.
+on live context. The teammate offers to configure Agor while showing the user
+where the same configuration can be reviewed or changed. `ONBOARDING.md` keeps
+a short live progress record across the first interactions. After proving
+value, the teammate may offer to repeat it on a useful cadence, meet the user
+in their existing channel, or share it with the people who need it. Identity,
+sharing preferences, and backup are introduced only when relevant.
 
 ## Knowledge-first defaults
 
@@ -91,7 +93,7 @@ Each teammate lives on its own branch. Git backs up the **teammate home/base fil
 2. Create a branch for your teammate: `git checkout -b <your-teammate-name>`.
 3. Assign or identify the teammate's primary Agor Knowledge namespace.
 4. Start an Agor session in the branch.
-5. The teammate follows `BOOTSTRAP.md` on first run — understand a goal, connect useful context when approved, and produce a concrete result.
+5. The teammate follows `ONBOARDING.md` across its first interactions — understand a goal, orient the user, connect useful context when approved, and produce a concrete result.
 6. After value is established, the teammate suggests a backup setup for the teammate home/base files (private repo, if needed).
 
 ---

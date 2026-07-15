@@ -76,7 +76,7 @@ Prefer saving reusable prompts in Knowledge (for search, links, and sharing). Ke
 
 ## Skills shortcuts
 
-Quick links to your most-used Knowledge skills and any bootstrap-critical local skills (in `skills/`).
+Quick links to your most-used Knowledge skills and any startup-critical local skills (in `skills/`).
 
 ---
 

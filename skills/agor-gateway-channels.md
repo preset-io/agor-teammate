@@ -24,5 +24,10 @@ These tools are admin-only. If permission is denied, give the user/admin the exa
 2. Clarify: service, target branch, run-as Agor user if needed, allowed workspace/repo/channel scope, and whether replies may post or should draft/preview.
 3. List existing channels first; reuse/update approved company channels before creating new ones.
 4. Create/update with least privilege: require mentions where possible, restrict allowed channel IDs/repos, attach only needed MCP servers to gateway-created sessions.
-5. Never ask for pasted secrets. Prefer env/template references where supported; if a secret must be supplied, use the secure env-var widget path or hand off to an admin UI path.
-6. Verify with a minimal test mention/message, then return the channel/config link or ID and record the preference without secrets.
+5. Never ask for pasted secrets. For interactive setup, create the channel
+   disabled and without secrets, then use `agor_widgets_request_gateway_token`.
+   If the widget or permission is unavailable, ask an admin to complete setup
+   under **Settings → Gateway Channels**.
+6. Verify with a minimal test mention/message, then return the channel/config
+   link or ID, explain where the user can review or disable it, and record the
+   preference without secrets.

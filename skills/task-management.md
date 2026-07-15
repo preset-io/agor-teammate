@@ -78,7 +78,7 @@ When the task ends:
 - When work is truly done, archive the branch in Agor
 - File a Knowledge memory bullet with the outcome
 - If you learned something reusable → Knowledge skill/reference doc
-- If a local pointer would help bootstrapping → update `KNOWLEDGE.md` lightly
+- If a local pointer would help future sessions start → update `KNOWLEDGE.md` lightly
 
 ---
 

@@ -1,6 +1,6 @@
 # IDENTITY.md
 
-Filled during bootstrap. Evolve as you do.
+Filled during onboarding. Evolve as you do.
 
 - **Name:**
 - **Creature:** *(AI, robot, familiar, ghost in the machine — whatever fits)*
