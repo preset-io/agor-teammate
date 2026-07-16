@@ -3,7 +3,7 @@
     "tag": "v6.1.0.2",
     "sha": "8b5491b01ccd6799b98f8ff95c60f05563135cdd",
     "release_date": "2026-07-02T23:19:59Z",
-    "checked_at": "2026-07-09T00:00:00Z",
+    "checked_at": "2026-07-16T00:00:00Z",
     "status_summary": {
       "info": 90,
       "warn": 10,
@@ -24,6 +24,6 @@
       "sqlalchemy_redshift pkg_resources deprecated (x3) — removal deadline 2025-11-30 now past",
       "pydantic Field name 'schema' in 'SavedQueryInfo' shadows BaseModel attribute (x2)"
     ],
-    "notes": "Only sandbox-aws-us1a cluster visible for this SHA. Production logs may not yet be indexed or rollout not complete. DD_API_KEY auth Forbidden — used DATADOG_BEARER_TOKEN fallback."
+    "notes": "Only sandbox-aws-us1a cluster visible for this SHA. Production logs may not yet be indexed or rollout not complete. DD_API_KEY auth Forbidden — used DATADOG_BEARER_TOKEN fallback. 2026-07-16 check: no new release, updated checked_at only."
   }
 }
