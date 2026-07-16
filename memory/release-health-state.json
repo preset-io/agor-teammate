@@ -3,7 +3,7 @@
     "tag": "v6.0.0.19",
     "sha": "ef47292bf332d3a3403a754e83715299a254dde0",
     "release_date": "2026-07-02T23:20:02Z",
-    "checked_at": "2026-07-09T22:38:11Z",
+    "checked_at": "2026-07-16T20:01:40Z",
     "status_summary": {
       "info": 4014035,
       "warn": 1762210,
@@ -31,6 +31,6 @@
       "Refusing to run AIAssistCheckSchemasToVectorize command",
       "Expired token google-oauth2"
     ],
-    "note": "First run: no prior state existed. GitHub's 'latest' superset-shell release by created_at was v6.1.0.2, but Datadog showed it only ever deployed to sandbox-aws-us1a (never production). v6.0.0.19, created ~20 min later the same day, is the actual production release train (6 clusters, logs through today). Tracking v6.0.0.x as the production release line going forward -- future runs should verify the picked tag actually appears in environment:production before treating it as the release to check."
+    "note": "First run: no prior state existed. GitHub's 'latest' superset-shell release by created_at was v6.1.0.2, but Datadog showed it only ever deployed to sandbox-aws-us1a (never production). v6.0.0.19, created ~20 min later the same day, is the actual production release train (6 clusters, logs through today). Tracking v6.0.0.x as the production release line going forward -- future runs should verify the picked tag actually appears in environment:production before treating it as the release to check. 2026-07-16 check: no new superset-shell release since 07-09 (GitHub still shows v6.1.0.2/v6.0.0.19 as the two most recent tags) -- no Datadog re-query performed, status_summary/known_noise carried over unchanged."
   }
 }
