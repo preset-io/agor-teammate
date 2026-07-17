@@ -47,86 +47,27 @@ Registry pointers, not a catalog:
 
 ## GitHub remote MCP
 
-GitHub is an exception to the generic remote-OAuth path: its remote MCP server
-does not support Dynamic Client Registration. Use an existing working GitHub
-MCP, GitHub App, or pre-registered OAuth client when one is already available.
-Otherwise use a fine-grained personal access token through the secure env-var
-widget. Do not send the user through **Start OAuth Flow** without a configured
-GitHub OAuth client ID, and never ask them to paste a token into chat.
+GitHub's remote MCP OAuth does not support Agor's generic Dynamic Client
+Registration flow. Reuse a working GitHub MCP/App or registered OAuth client;
+otherwise use a fine-grained PAT. Never ask for the token in chat.
 
-1. Establish the GitHub owner, repositories, and actions needed for the user's
-   outcome. Reuse an existing working GitHub connection or saved
-   `GITHUB_MCP_PAT` when available.
-2. Choose the smallest matching connection:
-   - For reading, reviewing, or summarizing, use
-     `https://api.githubcopilot.com/mcp/readonly` and request read access to
-     contents, issues, and pull requests.
-   - When the authorized outcome requires GitHub mutations, use
-     `https://api.githubcopilot.com/mcp/` and request write access only for the
-     required areas. Do not request Actions, Workflows, organization, or
-     security permissions unless the task specifically needs them.
-3. Build one pre-filled fine-grained-token link using
-   `https://github.com/settings/personal-access-tokens/new`. Pre-fill:
-   - `name=Agor GitHub MCP`;
-   - a short purpose in `description`;
-   - `target_name` when the repository owner is known;
-   - a finite `expires_in` (normally 90 days, or less when policy requires);
-   - the exact permission parameters, such as
-     `contents=read&issues=read&pull_requests=read`.
-
-   GitHub cannot pre-select individual repositories through this URL. Tell the
-   user to choose **Only select repositories** and select the repositories they
-   want available. Keep the explanation and link in the same message as the
-   secure widget so the user can generate, copy, and submit the token in one
-   pass.
-4. Invoke `agor_widgets_request_env_vars` and then end the turn. Use:
-
-   ```json
-   {
-     "names": ["GITHUB_MCP_PAT"],
-     "reason": "Connect the GitHub repositories you selected.",
-     "variable_metadata": {
-       "GITHUB_MCP_PAT": {
-         "description": "Fine-grained GitHub token for the repositories you selected.",
-         "placeholder": "github_pat_…",
-         "format_hint": "Create it with the GitHub link above.",
-         "input_type": "password"
-       }
-     },
-     "auto_resume": true
-   }
-   ```
-
-   The user chooses global or session scope in the widget. Do not override that
-   choice or repeat the request immediately if they dismiss it.
-5. After the widget resumes the session, find or create the GitHub MCP server
-   with bearer authentication. Keep the credential as a template, never a raw
-   value:
-
-   ```json
-   {
-     "name": "github",
-     "displayName": "GitHub",
-     "transport": "http",
-     "url": "https://api.githubcopilot.com/mcp/",
-     "auth": {
-       "type": "bearer",
-       "token": "{{ user.env.GITHUB_MCP_PAT }}"
-     },
-     "scope": "global",
-     "enabled": true
-   }
-   ```
-
-   Substitute the read-only URL chosen in step 2 when appropriate. If a GitHub
-   server already exists with broken OAuth, update it to bearer authentication
-   instead of creating a duplicate. For a session-scoped server, attach it to
-   the current session.
-6. Verify the server is enabled and effective, then perform one harmless live
-   GitHub read against an authorized repository. If the organization requires
-   approval or SSO, explain that specific blocker instead of restarting OAuth.
-   After verification, continue directly to the useful GitHub outcome that
-   motivated the connection.
+1. Confirm the repositories and required actions. For read-only work, use
+   `https://api.githubcopilot.com/mcp/readonly` with only `contents=read`,
+   `issues=read`, and `pull_requests=read`. Request writes only when explicitly
+   authorized.
+2. Give the user one pre-filled
+   `https://github.com/settings/personal-access-tokens/new` link with a purpose,
+   `target_name` when known, finite expiry, and the required permissions.
+   GitHub cannot pre-select repositories, so ask them to choose
+   **Only select repositories**.
+3. Request `GITHUB_MCP_PAT` through `agor_widgets_request_env_vars` as a password
+   with auto-resume, then end the turn. Match the MCP server scope to the user's
+   global/session choice.
+4. On resume, create or update—not duplicate—the GitHub server using bearer
+   token `{{ user.env.GITHUB_MCP_PAT }}` and the chosen endpoint. Attach it when
+   session-scoped.
+5. Verify with a harmless live read. If organization approval or SSO blocks
+   access, explain that; otherwise continue the original task.
 
 ## Examples
 
