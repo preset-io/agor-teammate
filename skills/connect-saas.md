@@ -45,8 +45,32 @@ Registry pointers, not a catalog:
    user can review, narrow, or disable it.
 9. Record outcome in memory/Knowledge if available; never record secrets.
 
+## GitHub remote MCP
+
+GitHub's remote MCP OAuth does not support Agor's generic Dynamic Client
+Registration flow. Reuse a working GitHub MCP/App or registered OAuth client;
+otherwise use a fine-grained PAT. Never ask for the token in chat.
+
+1. Confirm the repositories and required actions. For read-only work, use
+   `https://api.githubcopilot.com/mcp/readonly` with only `contents=read`,
+   `issues=read`, and `pull_requests=read`. Request writes only when explicitly
+   authorized.
+2. Give the user one pre-filled
+   `https://github.com/settings/personal-access-tokens/new` link with a purpose,
+   `target_name` when known, finite expiry, and the required permissions.
+   GitHub cannot pre-select repositories, so ask them to choose
+   **Only select repositories**.
+3. Request `GITHUB_MCP_PAT` through `agor_widgets_request_env_vars` as a password
+   with auto-resume, then end the turn. Match the MCP server scope to the user's
+   global/session choice.
+4. On resume, create or update—not duplicate—the GitHub server using bearer
+   token `{{ user.env.GITHUB_MCP_PAT }}` and the chosen endpoint. Attach it when
+   session-scoped.
+5. Verify with a harmless live read. If organization approval or SSO blocks
+   access, explain that; otherwise continue the original task.
+
 ## Examples
 
-- **GitHub:** Prefer existing GitHub MCP/App/OAuth. PAT fallback should be fine-grained, selected repos only, minimum permissions for the task.
+- **GitHub:** Follow the provider-specific remote MCP procedure above; do not attempt DCR.
 - **Fellow:** Try public MCP `https://fellow.app/mcp` with OAuth. Verify current-session attachment. Watch for redirect URI allowlisting on dev/test hosts.
 - **Slack:** Prefer an existing company Slack app/MCP if available. Proactive posts require an outbound-capable Slack connector and explicit posting policy.
