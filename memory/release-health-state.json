@@ -1,14 +1,14 @@
 {
   "last_checked": {
-    "tag": "v6.0.0.19",
-    "sha": "ef47292bf332d3a3403a754e83715299a254dde0",
-    "release_date": "2026-07-02T23:20:02Z",
-    "checked_at": "2026-07-16T20:01:40Z",
+    "tag": "v6.0.0.21",
+    "sha": "0549160d9d60a322b348735282a65515457ca027",
+    "release_date": "2026-07-22T23:29:01Z",
+    "checked_at": "2026-07-23T20:03:40Z",
     "status_summary": {
-      "info": 4014035,
-      "warn": 1762210,
-      "error": 76316,
-      "critical": 19
+      "info": 3383765,
+      "warn": 1426269,
+      "error": 66696,
+      "critical": 12
     },
     "known_noise": [
       "AuthlibDeprecationWarning: authlib.jose module is deprecated",
@@ -29,8 +29,14 @@
       "Failed to load query_context for chart",
       "Failed to get truncated sample data for table",
       "Refusing to run AIAssistCheckSchemasToVectorize command",
-      "Expired token google-oauth2"
+      "Expired token google-oauth2",
+      "WORKER TIMEOUT (pid:",
+      "TimeLimitExceeded",
+      "exited with 'signal 9 (SIGKILL)'",
+      "Filter type not supported for column",
+      "An error occurred when running alert query",
+      "SSL connection has been closed unexpectedly"
     ],
-    "note": "First run: no prior state existed. GitHub's 'latest' superset-shell release by created_at was v6.1.0.2, but Datadog showed it only ever deployed to sandbox-aws-us1a (never production). v6.0.0.19, created ~20 min later the same day, is the actual production release train (6 clusters, logs through today). Tracking v6.0.0.x as the production release line going forward -- future runs should verify the picked tag actually appears in environment:production before treating it as the release to check. 2026-07-16 check: no new superset-shell release since 07-09 (GitHub still shows v6.1.0.2/v6.0.0.19 as the two most recent tags) -- no Datadog re-query performed, status_summary/known_noise carried over unchanged."
+    "note": "2026-07-23 check: skipped two intermediate tags (v6.0.0.20 created 07-21, v6.1.0.3 created 07-20 -- latter looked like a hotfix/staging branch based on non-release commit message) and jumped straight to the newest, v6.0.0.21 (created 2026-07-22T23:29:01Z). Verified it reached environment:production across 4 clusters (ap1a, eu5a, us1a, us2a) before treating it as current -- prior run's note flagged that GitHub 'latest' isn't always the real prod release. Cross-checked every error/critical message pattern that looked new against the prior release's own logs (v6.0.0.19, ef47292b): WORKER TIMEOUT (gunicorn), Celery TimeLimitExceeded (chart/dashboard thumbnail generation), ForkPoolWorker SIGKILL exits, 'Filter type not supported for column' (RBAC filter validation), alert query failures, and transient Postgres SSL drops all pre-date this release at comparable or higher rates -- added to known_noise since they're recurring background conditions, not regressions. No genuinely new error signatures found. Six clusters were mentioned in the original 2026-07-16 note vs. 4 seen this run -- worth checking next run whether rollout is still in progress or two clusters were decommissioned."
   }
 }
