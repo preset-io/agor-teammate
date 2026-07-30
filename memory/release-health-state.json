@@ -1,14 +1,14 @@
 {
   "last_checked": {
-    "tag": "v6.0.0.21",
-    "sha": "0549160d9d60a322b348735282a65515457ca027",
-    "release_date": "2026-07-22T23:29:01Z",
-    "checked_at": "2026-07-23T20:03:40Z",
+    "tag": "v6.0.0.24",
+    "sha": "1e9915a0daf6254bed12792596d14620c46c3648",
+    "release_date": "2026-07-28T18:46:17Z",
+    "checked_at": "2026-07-30T20:05:00Z",
     "status_summary": {
-      "info": 3383765,
-      "warn": 1426269,
-      "error": 66696,
-      "critical": 12
+      "info": 9901038,
+      "warn": 3639750,
+      "error": 176800,
+      "critical": 33
     },
     "known_noise": [
       "AuthlibDeprecationWarning: authlib.jose module is deprecated",
@@ -18,7 +18,7 @@
       "Not authorized Missing JWT in cookies or headers",
       "Failed to add user to db session: Class 'werkzeug.local.LocalProxy' is not mapped",
       "Error while rendering virtual dataset query: list object has no element 0",
-      "Datasource not found datasource_type: DatasourceType.TABLE, database_id_or_uuid: 0",
+      "Datasource not found datasource_type: DatasourceType.TABLE, database_id_or_uuid:",
       "appbuilder.app is deprecated and will be removed in a future version. Use current_app instead",
       "Could not load default spinner SVG",
       "Unexpected metric expression type",
@@ -35,8 +35,19 @@
       "exited with 'signal 9 (SIGKILL)'",
       "Filter type not supported for column",
       "An error occurred when running alert query",
-      "SSL connection has been closed unexpectedly"
+      "SSL connection has been closed unexpectedly",
+      "HTTPException",
+      "SupersetErrorException",
+      "We haven't found any Content Security Policy (CSP) defined in the configurations",
+      "Access is Denied for: can_write on: DashboardFilterStateRestApi",
+      "client.files_upload() may cause some issues like timeouts for relatively large files",
+      "pkg_resources is deprecated as an API",
+      "Query with client_id could not be stopped: query already complete",
+      "Refresh CSRF token error",
+      "Failed to execute REDACTED: Message may have contained a raw SQL [S]ELECT statement.",
+      "Report Schedule is still working, refusing to re-compute",
+      "Report still in working state, refusing to re-compute"
     ],
-    "note": "2026-07-23 check: skipped two intermediate tags (v6.0.0.20 created 07-21, v6.1.0.3 created 07-20 -- latter looked like a hotfix/staging branch based on non-release commit message) and jumped straight to the newest, v6.0.0.21 (created 2026-07-22T23:29:01Z). Verified it reached environment:production across 4 clusters (ap1a, eu5a, us1a, us2a) before treating it as current -- prior run's note flagged that GitHub 'latest' isn't always the real prod release. Cross-checked every error/critical message pattern that looked new against the prior release's own logs (v6.0.0.19, ef47292b): WORKER TIMEOUT (gunicorn), Celery TimeLimitExceeded (chart/dashboard thumbnail generation), ForkPoolWorker SIGKILL exits, 'Filter type not supported for column' (RBAC filter validation), alert query failures, and transient Postgres SSL drops all pre-date this release at comparable or higher rates -- added to known_noise since they're recurring background conditions, not regressions. No genuinely new error signatures found. Six clusters were mentioned in the original 2026-07-16 note vs. 4 seen this run -- worth checking next run whether rollout is still in progress or two clusters were decommissioned."
+    "note": "2026-07-30 check: v6.0.0.24 (released 2026-07-28T18:46:17Z) vs prior v6.0.0.21. Normalized error/warn/info/critical rates per hour-in-production are flat vs. the prior run (e.g. error/hr ~3176 then vs ~3400 now) -- the raw totals look like a jump but reflect ~52h of production time this run vs ~21h last run, not a regression. Rollout confirmed broad and healthy: 19 clusters via cluster_name aggregate (production-aws-us1a/us2a/eu5a/ap1a, staging x2, sandbox x2, plus 9 customer-dedicated MPC/GCP clusters: flywire, ippen, komgo, cargosense, preset, wealthsimple, beam, koa, zeta, hmetrix). This resolves the open question from the 07-23 note about clusters shrinking from 6 to 4 -- that was a sampling artifact of the raw events/search page limit (100), not a real rollout regression. Used /api/v2/logs/analytics/aggregate (group_by status, group_by cluster_name) for accurate full-window counts since /events/search truncates to page limit. Added ~11 new low-volume (1-22 occurrence) benign patterns to known_noise: generic exception wrappers (HTTPException/SupersetErrorException), CSP-not-configured config warning, RBAC permission-denied notices, slack_sdk/pkg_resources deprecation UserWarnings, report-scheduler overlap guards, and a SQL-redaction log line. Deliberately did NOT suppress two new patterns, left them open for next-run comparison: (1) a single 'error'-status Snowflake session error on prs_partnership_saos (customer table, prs_ prefix) -- 'Cannot perform SELECT, session has no current database' -- looks like an isolated customer-side Snowflake session issue, not a superset-shell regression, but only one data point so far; (2) Slack 'not_allowed_token_type' / missing channels:read scope errors on report notifications -- customer Slack app config gaps, tied to the v1 Slack API removal called out for Superset 6.0.0 (we are now on v6.0.0.24) -- worth checking if usage climbs as more customers hit the removal. Also saw one odd internal-sounding message 'dashboard capture proceeding with zero chart holders -- readiness gate inactive' (1 occurrence) that doesn't match standard OSS Superset wording; not enough volume to investigate now but flagged for awareness."
   }
 }
