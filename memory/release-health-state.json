@@ -1,14 +1,14 @@
 {
   "last_checked": {
-    "tag": "v6.0.0.24",
-    "sha": "1e9915a0daf6254bed12792596d14620c46c3648",
-    "release_date": "2026-07-28T18:46:17Z",
-    "checked_at": "2026-07-30T20:05:00Z",
+    "tag": "v6.0.0.26",
+    "sha": "726d5c27d428a00a99ec8c9fb87c14f91e66304c",
+    "release_date": "2026-08-06T17:13:06Z",
+    "checked_at": "2026-08-06T20:05:00Z",
     "status_summary": {
-      "info": 9901038,
-      "warn": 3639750,
-      "error": 176800,
-      "critical": 33
+      "info": 123019,
+      "warn": 140863,
+      "error": 2781,
+      "critical": 0
     },
     "known_noise": [
       "AuthlibDeprecationWarning: authlib.jose module is deprecated",
@@ -46,8 +46,17 @@
       "Refresh CSRF token error",
       "Failed to execute REDACTED: Message may have contained a raw SQL [S]ELECT statement.",
       "Report Schedule is still working, refusing to re-compute",
-      "Report still in working state, refusing to re-compute"
+      "Report still in working state, refusing to re-compute",
+      "Refused to delete permission view, assoc with role exists",
+      "View already exists LogRestApi ignoring",
+      "backups_user does not exist, refusing to grant readonly permissions",
+      "Skipping Vector DB creation for workspace",
+      "LangChainPendingDeprecationWarning: The default value of `allowed_objects`",
+      "No type or annotation for parameter",
+      "Could not cache key",
+      "A downstream warning occurred while generating a report",
+      "The request to the Slack API failed. (url: https://slack.com/api/files.upload)"
     ],
-    "note": "2026-07-30 check: v6.0.0.24 (released 2026-07-28T18:46:17Z) vs prior v6.0.0.21. Normalized error/warn/info/critical rates per hour-in-production are flat vs. the prior run (e.g. error/hr ~3176 then vs ~3400 now) -- the raw totals look like a jump but reflect ~52h of production time this run vs ~21h last run, not a regression. Rollout confirmed broad and healthy: 19 clusters via cluster_name aggregate (production-aws-us1a/us2a/eu5a/ap1a, staging x2, sandbox x2, plus 9 customer-dedicated MPC/GCP clusters: flywire, ippen, komgo, cargosense, preset, wealthsimple, beam, koa, zeta, hmetrix). This resolves the open question from the 07-23 note about clusters shrinking from 6 to 4 -- that was a sampling artifact of the raw events/search page limit (100), not a real rollout regression. Used /api/v2/logs/analytics/aggregate (group_by status, group_by cluster_name) for accurate full-window counts since /events/search truncates to page limit. Added ~11 new low-volume (1-22 occurrence) benign patterns to known_noise: generic exception wrappers (HTTPException/SupersetErrorException), CSP-not-configured config warning, RBAC permission-denied notices, slack_sdk/pkg_resources deprecation UserWarnings, report-scheduler overlap guards, and a SQL-redaction log line. Deliberately did NOT suppress two new patterns, left them open for next-run comparison: (1) a single 'error'-status Snowflake session error on prs_partnership_saos (customer table, prs_ prefix) -- 'Cannot perform SELECT, session has no current database' -- looks like an isolated customer-side Snowflake session issue, not a superset-shell regression, but only one data point so far; (2) Slack 'not_allowed_token_type' / missing channels:read scope errors on report notifications -- customer Slack app config gaps, tied to the v1 Slack API removal called out for Superset 6.0.0 (we are now on v6.0.0.24) -- worth checking if usage climbs as more customers hit the removal. Also saw one odd internal-sounding message 'dashboard capture proceeding with zero chart holders -- readiness gate inactive' (1 occurrence) that doesn't match standard OSS Superset wording; not enough volume to investigate now but flagged for awareness."
+    "note": "2026-08-06 check: v6.0.0.26 (released 2026-08-06T17:13:06Z) vs prior-checked v6.0.0.24. Two intermediate releases (v6.0.0.25 on 08-04, v6.1.0.4 on 08-03) shipped between checks and were skipped -- comparing straight to latest per the skill's stated behavior, not a gap in this run. Only ~3h of production time on the new SHA at check time, so raw counts (info:123019 warn:140863 error:2781 critical:0) aren't directly comparable to the prior run's ~52h window; no critical logs at all this run (down from 33 previously). Rollout looks broad and healthy across all 18 clusters (production x4, staging x2, sandbox x1, 8 customer MPC/GCP clusters, preset x2). Sampled up to 1000 error/warn/critical log lines and cross-checked every message pattern that looked new against the previous SHA's full history -- every single one (permission-view-delete-refused RBAC cleanup noise, LogRestApi/Vector-DB-already-exists no-ops, backups_user check, LangChain deprecation warning, 'No type or annotation for parameter' AI-assist warning, generic report-generation warning wrapper, Slack files.upload API failures from the v1 API removal, cache-key misses) turned out to predate this release by weeks and were already present at comparable or higher volume on v6.0.0.24 -- they were just never sampled into known_noise before because /events/search only samples up to the page limit and rare patterns rotate in/out. Added 8 newly-confirmed-benign prefixes to known_noise this run. Two things NOT added to known_noise, carried forward as open items: (1) 'Problem upserting user preset|machine-<id> ... duplicate key value violates unique constraint ab_user_email_key ... machine@preset.io' -- continuous, near-one-per-second in production-aws-us1a/us2a, 613 occurrences in just the first ~2h of this SHA vs 13479 over the prior SHA's full ~7-day run (roughly 3.6x higher hourly rate). Pre-existing (not introduced by this release) but never triaged and rate looks elevated -- worth a real investigation into why many distinct preset|machine-* identities collide on one email. (2) Slack 'not_allowed_token_type'/'method_deprecated' report-notification failures, still present, consistent with the customer Slack v1 API removal flagged in the 07-30 note -- not worsening. The isolated Snowflake session error on prs_partnership_saos flagged 07-30 did not reappear in this window."
   }
 }
