@@ -1,0 +1,16 @@
+{
+  "_comment": "De-dup ledger for the Sentry New-Error Spike Alert schedule (skills/sentry-spike-alert.md). Seeded 2026-08-07 from the investigation that motivated the schedule.",
+  "acknowledged_baseline": {
+    "SUPERSET-PYTHON-12EZ": {
+      "note": "Chronic since 2026-04-27 — QueryObjectValidationError 'list object has no element 0', a customer virtual-dataset Jinja template rendering error (ChartDataRestApi.data). ~115k events/7d, 0 users, handled. Dominant volume driver, not a new spike. Only re-alert if >=3x this peak.",
+      "peak_events_7d": 115244
+    }
+  },
+  "alerted": {
+    "SUPERSET-PYTHON-158W": {
+      "first_alerted": "2026-08-07",
+      "peak_events_24h": 523,
+      "note": "fsspec ImportError in SqlLabRestApi.execute_sql_query, workspace 73cc29dd (ai-tutor Athena/S3 reads). New 2026-08-03, escalating, 5 users. Code/dependency-shaped."
+    }
+  }
+}
