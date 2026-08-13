@@ -6,17 +6,18 @@ Find one code-fixable production error in Sentry, root-cause it with evidence, s
 
 1. Read `memory/` daily logs for the last ~7 days and `MEMORY.md` — collect Sentry issue IDs already fixed, in-flight, or intentionally skipped. Never pick one of those.
 2. Check open PRs you authored on the target repos (`gh pr list --author @me`) — an unmerged fix means that issue is still in flight.
+3. **Sentry access is via `./scripts/sentry.py` (direct REST API), not the Sentry MCP.** The MCP's OAuth flow has been blocked since 2026-08-10 by a client/server issuer-parameter mismatch (RFC 9207 / MCP SEP-2468) this non-interactive environment can't resolve — see `project_sentry_mcp_auth_blocked`. `SENTRY_API_TOKEN` (Internal Integration token, org `preset-inc`) is set in env; if a fresh run finds it missing, that's a real blocker again — don't fall back to the MCP tools, flag it the same way the prior outage was flagged.
 
 ## Picking an issue
 
-1. Sentry org is `preset-inc` (region https://us.sentry.io). List unresolved issues sorted by frequency (`search_issues`, `is:unresolved`, sort freq, limit ~20).
+1. Sentry org is `preset-inc` (region https://us.sentry.io). List unresolved issues sorted by frequency: `./scripts/sentry.py search --query "is:unresolved" --sort freq --limit 20` (requires `SENTRY_API_TOKEN` in env — direct REST API, not the Sentry MCP; see note below).
 2. **Skip infra noise** — not code-fixable in an app repo: websocket disconnects/502s, SIGKILL/TimeLimitExceeded celery kills, SSL cert mismatches, psycopg2/Redis connection drops, customer-database errors (e.g. Snowflake "no current database" — user config). If something looks like a real infra problem (e.g. a staging cert mismatch flooding events), note it in the daily log for Elizabeth instead of fixing.
 3. **Prefer**: high event volume or high users-impacted, in repos we own (preset-io/manager, apache/superset via preset deployment, superset-shell...). A "noise" issue (log spam) is a valid pick — killing 100k+ events/month of noise has real SRE value.
 4. Pick exactly ONE issue per run. Log the pick + rationale before starting the fix.
 
 ## Root-causing (evidence, not guesses)
 
-- Pull full issue details AND breadcrumbs (`get_sentry_resource`) — breadcrumbs often pinpoint the exact trigger (e.g. the Redis MGET immediately before an error identified the missing Split flag).
+- Pull full issue details AND breadcrumbs: `./scripts/sentry.py issue <SHORT-ID>` (add `--frames N` to widen the trailing stacktrace/breadcrumb window, `--raw` for the full event JSON) — breadcrumbs often pinpoint the exact trigger (e.g. the Redis MGET immediately before an error identified the missing Split flag).
 - Read the actual dependency source when a library is involved: `python3 -m pip download <pkg>==<pinned> --no-deps` and diff against latest before assuming "upgrade fixes it" — verify the code path actually changed.
 - Reproduce the mechanism standalone when possible (small python snippet) before writing the fix.
 
@@ -63,6 +64,7 @@ After this run, do NOT babysit the PR: the 3pm "Daily PR status check" merges ap
 
 ## Guardrails
 
+- **Ship the PR — don't hold.** This pipeline carries the fix all the way to an opened PR (Elizabeth, 2026-08-13). Never tell the implementation session "get to a clean tree, I'll handle commit/PR" and hand a finished-but-unshipped fix back to her. The ONLY legitimate reason to stop short of a PR is the unresolved commit-identity classifier block (memory `project_commit_identity_classifier_blocked`) — and if that's the blocker, flag it and the pending identity decision explicitly, don't silently sit on the fix.
 - One issue per run; no scope creep into "while I'm here" fixes.
 - If no suitable code-fixable issue exists, or the only candidates are already in flight: say so, log the triage notes, and stop — do not force a marginal fix.
 - If tests can't be made to pass or the root cause stays unverified, stop and write up findings instead of shipping a speculative fix.

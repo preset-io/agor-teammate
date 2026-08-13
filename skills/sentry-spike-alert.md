@@ -30,10 +30,12 @@ De-dup ledger so the same issue isn't paged day after day. Shape:
 
 1. **Read state** — load `memory/sentry-spike-alerts.json` (create from the template above if missing). Also skim the last ~3 days of `memory/` daily logs and open burndown PRs (`gh pr list --author @me`) — an issue already in flight is not "news."
 
-2. **Pull candidates** (org `preset-inc`, region `https://us.sentry.io`). Three lenses, union the results:
-   - **New**: `search_issues` with `is:unresolved firstSeen:-3d`, sort `freq`, limit 25.
-   - **Escalating**: `search_issues` with `is:unresolved is:escalating`, sort `freq`, limit 25.
-   - **Org-wide volume delta** (directly catches "the dashboard doubled"): `search_events` dataset `errors`, `is:unresolved`, `count()`, for `period:24h` vs the prior 24h (query the 48h and 24h windows and subtract). If today's 24h total is **≥1.5×** yesterday's, that's a reportable spike even when spread across many issues — identify the top issues driving the delta.
+2. **Pull candidates** (org `preset-inc`, region `https://us.sentry.io`) via `./scripts/sentry.py` (direct REST API — see note below on why this replaced the MCP). Three lenses, union the results:
+   - **New**: `./scripts/sentry.py search --query "is:unresolved firstSeen:-3d" --sort freq --limit 25`.
+   - **Escalating**: `./scripts/sentry.py search --query "is:unresolved is:escalating" --sort freq --limit 25`.
+   - **Org-wide volume delta** (directly catches "the dashboard doubled"): `./scripts/sentry.py volume-delta --window 24h` — computes today's 24h `count()` vs the prior 24h. If today's total is **≥1.5×** yesterday's, that's a reportable spike even when spread across many issues — identify the top issues driving the delta (cross-reference against the New/Escalating lenses above). Note: this endpoint has a known quirk where short windows sometimes both return 0 even when the issue-level lenses show real activity (the script prints a warning when this happens) — don't treat a 0/0 read alone as an all-clear.
+
+**Sentry access is via `./scripts/sentry.py`, not the Sentry MCP.** The MCP's OAuth flow has been blocked since 2026-08-10 by a client/server issuer-parameter mismatch (RFC 9207 / MCP SEP-2468) this non-interactive environment can't resolve — see `project_sentry_mcp_auth_blocked`. `SENTRY_API_TOKEN` (Internal Integration token) is set in env; if it's missing on a fresh run, that's a real blocker — flag it, don't fall back to the MCP tools.
 
 3. **Threshold — flag an issue if ANY of:**
    - New (firstSeen ≤ 72h) **and** ≥ 100 events, **or**
