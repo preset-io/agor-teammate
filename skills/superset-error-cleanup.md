@@ -71,6 +71,7 @@ After this run, do NOT babysit the PR — that's the 11am requested-changes tria
 
 ## Guardrails
 
+- **Ship the PR — don't hold.** This pipeline carries the fix all the way to an opened PR (Elizabeth, 2026-08-13). Never tell the implementation session "get to a clean tree, I'll handle commit/PR" and hand a finished-but-unshipped fix back to her. The ONLY legitimate reason to stop short of a PR is the unresolved commit-identity classifier block (memory `project_commit_identity_classifier_blocked`) — and if that's the blocker, flag it and the pending identity decision explicitly, don't silently sit on the fix.
 - One example per run; no scope creep into "while I'm here" fixes elsewhere in the file.
 - If no clean, high-confidence candidate exists, say so, log candidates considered and why they were rejected, and stop — do not force a marginal or speculative fix.
 - Never invent a new exception class when an existing one fits — check `superset/exceptions.py` and the relevant domain's `errors.py` first.
