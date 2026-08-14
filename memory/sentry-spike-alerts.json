@@ -12,5 +12,11 @@
       "peak_events_24h": 523,
       "note": "fsspec ImportError in SqlLabRestApi.execute_sql_query, workspace 73cc29dd (ai-tutor Athena/S3 reads). New 2026-08-03, escalating, 5 users. Code/dependency-shaped."
     }
+  },
+  "tooling_incidents": {
+    "2026-08-14-search-index-stale": {
+      "first_alerted": "2026-08-14",
+      "note": "Sentry issues/events search API (used by scripts/sentry.py — the standing bypass for both Sentry pipelines since 2026-08-13) returns 0/stale for any recent window; every issue's lastSeen frozen at 2026-08-05T20:54 UTC regardless of statsPeriod (checked 6h-90d) or project filter. Confirmed NOT a real ingestion outage: org stats_v2 (Outcomes API, separate backend) shows continuous 27k-125k events/day through today, including a 2.42x org-wide jump 2026-08-12->2026-08-13 (46,264 -> 112,051) that crosses the 1.5x spike threshold but can't be attributed to specific issues while the search index is stuck. DMed Elizabeth. Re-check next run whether the search index has recovered before trusting scripts/sentry.py issue-level results; don't re-alert on this exact tooling note unless it's still frozen or the unattributed spike resolves into identifiable issues."
+    }
   }
 }
