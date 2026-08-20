@@ -1,16 +1,17 @@
 {
   "last_checked": {
-    "tag": "v6.0.0.27",
-    "sha": "4b9cca47fb95d707bc045eaebed6f0128223760f",
-    "release_date": "2026-08-07T21:52:15Z",
-    "checked_at": "2026-08-13T20:04:39Z",
+    "tag": "v6.0.0.30",
+    "sha": "668ddd701d060c6952c42730e544a40a1de31f78",
+    "release_date": "2026-08-16T00:00:00Z",
+    "checked_at": "2026-08-20T20:02:39Z",
     "status_summary": {
-      "info": 12800080,
-      "warn": 1396309,
-      "error": 302681,
-      "critical": 135
+      "info": 3199710,
+      "warn": 485002,
+      "error": 54567,
+      "critical": 12
     },
     "known_noise": [
+      "from authlib.jose import JsonWebToken",
       "AuthlibDeprecationWarning: authlib.jose module is deprecated",
       "NO_WORKSPACES_AVAILABLE: No workspaces available for task=reports.scheduler",
       "Shutting down: Master",
@@ -58,6 +59,6 @@
       "A downstream warning occurred while generating a report",
       "The request to the Slack API failed. (url: https://slack.com/api/files.upload)"
     ],
-    "note": "2026-08-13 check: v6.0.0.27 (tag created/published 2026-08-10T16:53:47Z, but underlying commit 4b9cca4 dated 2026-08-07T21:52:15Z and first Datadog logs for this SHA start 2026-08-07T22:32:00Z -- used the commit/first-log date as release_date and queried from 2026-08-06 onward, not the later GitHub release-publish timestamp, since that would have missed 3 days of real deployment history) vs prior-checked v6.0.0.26 (2026-08-06). One intermediate release v6.1.0.5 (2026-08-07T16:33:42Z) shipped between checks and was skipped per the skill's stated behavior. Window covers ~6 days (2026-08-07 22:32 to now), much longer than the prior run's ~3h snapshot, so raw counts aren't directly comparable; used the Datadog logs/analytics/aggregate endpoint (group_by status) for exact totals since /events/search page limits only return samples up to the page size. Rollout is broad and healthy across 18 clusters (production x5 incl. new-since-last-check ap1a, staging x2, sandbox x1, 9 customer MPC/GCP clusters, preset x2). All 135 critical-status logs are 'WORKER TIMEOUT (pid:N)' -- already known_noise (Gunicorn worker recycling), just the first run where any showed up at critical severity instead of 0; not a new issue. Investigated the error volume (302,681 total, sampled up to 1000 by recency plus targeted counts for the biggest patterns): ~89k are authlib deprecation-warning stack-trace fragments split across 4 log lines each (already known_noise, mis-classified as error by the log pipeline as documented). ~53k are a literal one-word-for-word RENAME of an existing known_noise pattern -- 'Error while rendering virtual dataset query: list object has no element 0' (101,362 hits on the prior SHA, going back to 2026-07-01) has been replaced by 'Virtual dataset template error: list object has no element 0' (0 hits on the prior SHA, 53,036 hits on this SHA) -- same 'list object has no element 0' root cause, just reworded in this release; confirmed via direct before/after SHA queries and added the new string to known_noise rather than flagging as a new bug. Remaining ~160k errors are long-tail unique messages not fully enumerated in this pass (limited by the 1000-line sample); none of the sampled top-40 patterns were unrecognized aside from the rename above and a low-volume (2 occurrences) generic Celery 'BROKER_POOL_LIMIT deprecated' warning, which was left out of known_noise as immaterial. No SupersetErrorException, HTTPException, or Slack-notification spikes beyond known baseline noise."
+    "note": "2026-08-20 check: v6.0.0.30 (tag created/published 2026-08-18T02:24:26Z, underlying commit 668ddd7 dated 2026-08-17T21:04:56Z) vs prior-checked v6.0.0.27 (2026-08-13). Two intermediate releases (v6.0.0.28 2026-08-13T21:57:17Z, v6.0.0.29 2026-08-13T20:45:59Z) shipped between checks and were skipped per the skill's stated behavior. Queried from 2026-08-16 (a day before the commit date, per skill guidance) to now, a ~4.5 day window vs. the prior run's ~6 day window -- raw counts aren't directly comparable across runs. Used logs/analytics/aggregate (group_by status) for exact status totals, and a 1000-line /events/search sample (up from the skill's default 50) for message-pattern breakdown. Rollout is broad and healthy across 17 clusters (production x4, staging x2, sandbox x1, preset x2, 8 customer MPC/GCP clusters); production-aws-ap1a still present from last check. Of 54,567 total error-status logs, the top sampled patterns are all previously-known noise: 'Virtual dataset template error: list object has no element 0' (175 explicit + a matching 175-count 'Exception'-titled companion log carrying the same traceback in exc_info -- confirmed by inspecting a sample event; not double-counting two different bugs), authlib deprecation-warning stack-trace fragments (added 'from authlib.jose import JsonWebToken' to known_noise as a safe specific string; left the more generic 'warnings.warn(message, FutureWarning)' and 'It will be compatible before version 2.0.0.' fragments OUT of known_noise since they're too generic and could mask unrelated FutureWarnings -- these still show up in raw error counts). A large customer-specific batch of 'Unexpected metric expression type: ...' warnings (WebRTC/telecom-looking custom SQL metrics, ~140 sampled) is covered by the existing generic 'Unexpected metric expression type' known_noise prefix. Of 12 critical-status logs: 5 are 'WORKER TIMEOUT (pid:N)' (known_noise). The other 2 are NEW and NOT in known_noise: a single Celery beat crash ('beat raised exception <class ValueError>: ValueError(\"invalid operation on closed shelf\")', preceded by a shelve.py KeyError) on pod ws--cd26366c--main-superset-worker-beat in production-aws-us2a at 2026-08-20T15:43:44Z. Confirmed via direct search this exact string has zero hits anywhere in Datadog going back to 2026-07-20 (any version) -- genuinely new, not a rename. Only 1 real incident (2 log lines: a WARNING traceback + a CRITICAL summary for the same event), single pod, no recurrence since. Flagged as NEEDS ATTENTION but low-severity/isolated -- looks like a shelve-file race during beat pod restart rather than a systemic issue; worth a follow-up if it recurs on the next check. Also noted ~113/275 'null message' nginx access-log entries at various upstream_status (500/404/403/400/502) on chart/data and explore_json endpoints -- consistent with downstream effects of the already-known virtual-dataset-template-error class, not flagged separately."
   }
 }
