@@ -13,6 +13,14 @@
       "note": "fsspec ImportError in SqlLabRestApi.execute_sql_query, workspace 73cc29dd (ai-tutor Athena/S3 reads). New 2026-08-03, escalating, 5 users. Code/dependency-shaped."
     }
   },
+  "held_pending_ooo": {
+    "SUPERSET-PYTHON-15GE": {
+      "first_seen_crossing_threshold": "2026-08-22",
+      "peak_events": 197,
+      "last_checked": "2026-08-23",
+      "note": "OperationalError: MySQLdb can't connect to 'rm-uf6ue625urmyzw13zlo.mysql.rds.aliyuncs.com' (errno 115), culprit load_chart_data_into_cache, workspace 5b87a490. Customer-owned Alibaba Cloud RDS unreachable from Preset (firewall/allowlist or customer-side outage, not our infra) — classic customer-DB config infra-noise per skills/sentry-error-burndown.md skip-list. 0 users (background cache-warm job, not user-facing at request time), single workspace. Crosses New-lens threshold (197>=100, firstSeen 2026-08-20 <=72h) but held per project_elizabeth_ooo_2026_08_18 (names this exact schedule as an example of routine pings to hold during her 2026-08-18-to-~08-25 OOO window) — not urgent/blocking. Not added to `alerted` since no DM was sent. Re-checked 2026-08-23: still count=197/userCount=0, lastSeen 2026-08-22T13:29Z (~24h quiet, not growing) — no re-escalation, still no users affected, Elizabeth still OOO (back ~08-25). Continuing to hold, no change. Re-evaluate on next run: DM if still ongoing once Elizabeth is back (~08-25), if it starts affecting users (userCount>0), or if volume grows sharply (re-escalation)."
+    }
+  },
   "tooling_incidents": {
     "2026-08-14-search-index-stale": {
       "first_alerted": "2026-08-14",
