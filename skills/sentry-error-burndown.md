@@ -33,7 +33,7 @@ Find one code-fixable production error in Sentry, root-cause it with evidence, s
 
 Mirror the "Daily deprecation fix" pipeline — the card + zone placement is what lets the companion schedules (11am requested-changes triage on `zone-in-review`, 3pm PR status check on `zone-pr-ready`) manage the PR lifecycle after this run ends.
 
-1. Shortcut story first: `stories-create` with `workflow: 500020181` (Engineering Kanban; `team: automations` 400s), type bug. Root cause + fix + follow-ups in description.
+1. Shortcut story first — use `scripts/shortcut.py` (direct REST API via `SHORTCUT_API_TOKEN`; don't depend on the Shortcut MCP, which needs an interactive OAuth flow the session can't complete): `./scripts/shortcut.py create --type bug --state 500020181 --team automations --name "<title>" --description "<root cause + fix + follow-ups>"`. Engineering Kanban = workflow 500020181; **always pass `--team automations`** (a create without it lands orphaned in Triage with no team — the sc-117856 gap from 2026-08-19).
 2. Commit as Elizabeth Thompson <elizabeth@preset.io>, conventional-commit style with `(SC-<story>)` in the subject and `Fixes <SENTRY-ISSUE-ID>` in the body (auto-resolves Sentry on merge). Include the Claude co-author line.
 3. Push to origin, `gh pr create`. PR body MUST include: Sentry link + volume, root cause, fix rationale, **a Tradeoffs section disclosing any failure-mode semantics change** (raise→warn, suppress, degrade — never leave these undisclosed), follow-ups, testing evidence, Shortcut link.
 4. Spawn self-review session on the fix branch (claude-code; codex if OpenAI auth is fixed — it was broken 2026-07-22) with the template from memory `reference_self_review_prompt`. Address blocking findings; failure-mode/unratified findings get disclosed to Elizabeth, never self-ratified.
@@ -44,7 +44,7 @@ Mirror the "Daily deprecation fix" pipeline — the card + zone placement is wha
    - `url`: the PR URL
    - `description`: one-line summary + Sentry issue ID + Shortcut story URL
    - `data`: `{"agor_branch_id": "<the fix branch's branch_id>"}` — the 3pm PR status check uses this to archive the branch after merge (archive-on-merge cleanup; don't archive it yourself)
-6. **Move the Shortcut story to Reviewing**: `stories-update` with `workflow_state_id: 500020186`.
+6. **Move the Shortcut story to Reviewing**: `./scripts/shortcut.py update <story> --state 500020186`.
 7. **Send to Minerva for review** — create a session on the Minerva/EngCodeReviewBot branch (`019df42c-8d6d-76d2-92bd-a49c169db7f1`, board "Minerva") via `agor_sessions_create` (`agenticTool: claude-code`, `enableCallback: true`, `includeLastMessage: true`), asking it to:
    1. Review the PR (include URL, the Sentry issue + volume, and a one-line description of the fix)
    2. Find a reviewer from its roster for the affected repo

@@ -46,10 +46,10 @@ Pick exactly ONE example per run. It must be a real, reachable code path — not
 
 Mirrors the Sentry burndown / deprecation-fix pipeline — the card + zone placement is what lets the companion schedule (11am requested-changes triage on `zone-in-review`) manage the PR lifecycle after this run ends. Note: as of 2026-07-24 there is no separate "3pm auto-merge on approval" schedule on the SRE board yet — cards that reach approval currently need a human or a future schedule to merge them. Don't invent that step yourself; just card it correctly and stop.
 
-1. Shortcut story first: `stories-create` with `workflow: 500020181` (Engineering Kanban; `team: automations`), type `chore`. Description: the bug pattern, root cause, fix, PR link.
+1. Shortcut story first — use `scripts/shortcut.py` (direct REST API via `SHORTCUT_API_TOKEN`; don't depend on the Shortcut MCP, which needs an interactive OAuth flow the session can't complete): `./scripts/shortcut.py create --type chore --state 500020181 --team automations --name "<title>" --description "<bug pattern, root cause, fix, PR link>"`. Engineering Kanban = workflow 500020181; **always pass `--team automations`** (a create without it lands orphaned in Triage with no team — the sc-117856 gap from 2026-08-19).
 2. Push to the `eschutho` fork (`git remote add fork https://github.com/eschutho/superset.git` if not already configured; `git push fork HEAD:<branch-name>`). Never force-push on first push.
 3. Open PR via `gh pr create --repo apache/superset --base master --head eschutho:<branch-name>`, following `.github/PULL_REQUEST_TEMPLATE.md` (SUMMARY/PROBLEM/FIX/TESTING INSTRUCTIONS/ADDITIONAL INFORMATION). Link the originating pattern PR (#42366 or the most recent cleanup PR) for context. Include a **Tradeoffs** note if the fix changes any failure-mode semantics (it shouldn't, for this pipeline — these are additive catches, not behavior changes — but call it out explicitly if it ever does).
-4. Move the Shortcut story to Reviewing (`workflow_state_id: 500020186`).
+4. Move the Shortcut story to Reviewing: `./scripts/shortcut.py update <story> --state 500020186` (only once the PR exists to point it at).
 5. Spawn a self-review session on the fix branch (claude-code) using the template from memory `reference_self_review_prompt`. Address blocking findings; disclose anything ambiguous to Elizabeth rather than self-ratifying.
 6. **Card on the SRE board** (`agor_cards_create`):
    - `boardId`: `9a49d11a-6605-4581-b58e-f45fe6bfbadb`
