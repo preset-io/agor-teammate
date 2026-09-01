@@ -7,6 +7,18 @@
     }
   },
   "alerted": {
+    "SUPERSET-PYTHON-162Q": {
+      "first_alerted": "2026-09-01",
+      "peak_events_24h": 70505,
+      "note": "ValueError: couldn't parse rate limit string 'None', culprit health.health (flask_limiter application-limit check via limits/util.py parse_many). New 2026-08-31T20:59Z, still firing 2026-09-01T14:01Z, 0 users. Sole driver of ~77% of today's org-wide 5.29x 24h volume jump (90999 vs 17191) and crosses New/Escalating thresholds independently (70505 events, is:escalating). Root cause: Amin's 2026-08-31 deploy-group change setting RATELIMIT_APPLICATION to None to disable Flask-Limiter's app-level limit (memory/2026-08-31.md) — flask-limiter is receiving the literal string \"None\" and trying to parse it as a rate-limit spec instead of treating the limiter as disabled. Error is caught/swallowed app-side (not user-facing) but floods Sentry. Config/deploy-shaped, not necessarily an app-code PR — flagged for Amin/deploy or the 8am burndown to pick a real disable value. No open burndown PR touches flask_limiter/RATELIMIT_APPLICATION/health.health as of 2026-09-01. Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7703229074/"
+    },
+    "MANAGER-PYTHON-42R": {
+      "first_alerted": "2026-09-01",
+      "peak_events_24h": 266,
+      "note": "UserNotInTeamException: '', culprit TeamMembershipApi.get_team_membership. New 2026-09-01T09:49Z, 0 users. Same exception class as MANAGER-PYTHON-374 (fixed, PR preset-io/manager#3937, merged 2026-08-31) and MANAGER-PYTHON-386 (fixed, PR preset-io/manager#3940, open as of 2026-09-01) but a distinct fingerprint/endpoint neither PR's diff touches (get_team_membership vs get_workspace_roles_for_user). Code-shaped, easy pickup for burndown: catch UserNotInTeamException explicitly ahead of the generic PresetException handler, log WARNING without traceback instead of ERROR. Not part of today's org-wide volume-jump story (manager-python, not superset-python) — flagged independently for crossing the New-lens threshold (266 events, firstSeen<=72h). Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7704250568/"
+    },
     "SUPERSET-PYTHON-158W": {
       "first_alerted": "2026-08-07",
       "peak_events_24h": 523,
