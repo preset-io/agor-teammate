@@ -29,6 +29,12 @@
       "peak_events_24h": 274,
       "note": "OperationalError: MySQLdb can't connect (errno 2002/115), culprit ChartDataRestApi.data. Customer-owned DB unreachable from Preset — customer-DB-config infra-noise per skills/sentry-error-burndown.md skip-list. 0 users throughout, quiet since 2026-08-24T13:20Z (no growth since last check). Was held in `held_pending_ooo` since crossing the New-lens threshold on 2026-08-22 (197 events, firstSeen<=72h then); released and DMed today per the ledger's own re-evaluate note now that Elizabeth is back from OOO (project_elizabeth_ooo_2026_08_18, back ~2026-08-25). Never crossed the 500/24h escalating bar on its own. Re-alert only if it starts affecting users (userCount>0) or crosses 500 events/24h."
     },
+    "SUPERSET-PYTHON-164G": {
+      "first_alerted": "2026-09-02",
+      "peak_events_24h": 148,
+      "note": "TenantNotFoundException: ConnectTimeout to api.app.preset.io (internal control-plane), culprit DatasetRestApi.get_drill_info. New 2026-09-01T15:09Z, 0 users. Transient ~37min connectivity blip during multi_tenant workspace-config lookups, self-resolved (lastSeen 2026-09-01T15:46Z, no events on 09-02). Infra-noise, not code-fixable (existing backoff/retry already wraps the call) — flagged in case it correlates with a known api.app.preset.io deploy/outage. Low-volume siblings same window/root cause not separately tracked: SUPERSET-PYTHON-164E (multi_tenant.scheduler, 16 events), SUPERSET-PYTHON-164F (multi_tenant.poll_workspace_events, 12 events), SUPERSET-PYTHON-164D (multi_tenant.poll_workspace_updates, 9 events). Re-alert if events/24h grow >=2x this peak or it starts recurring.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7704901866/"
+    },
     "SUPERSET-PYTHON-YD4": {
       "first_alerted": "2026-08-25",
       "peak_events_24h": 426,
