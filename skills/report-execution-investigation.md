@@ -83,5 +83,46 @@ When running this as a recurring check across a *watchlist* of workspaces (vs. i
    - **Gotcha (observed 2026-08-15):** `capture_kind=report` does not cleanly isolate report deliveries from alert-condition-check noise — Alert-type schedules that route through the same capture pipeline still tag their terminal line `capture_kind=report`, with `state=Not triggered` or `state=On Grace` (the same "normal, not a report run" states the top-level note above associates with `capture_kind=alert`). On two watchlist workspaces these outnumbered real report runs 10:1+. Filter to `state in (Success, Error)` to count only actual report executions for the digest; don't trust the `capture_kind` tag alone.
 2. Keep the digest **lightweight for workspaces with nothing to report** — a zero-execution workspace gets one line, not a paragraph. Reserve detail (schedule id, error reason, timing) for workspaces that actually had an error or an anomaly.
 3. Don't flag "no activity" as inherently suspicious once you've confirmed it's an expected/quiet workspace (see note above on recently-onboarded logging) — a one-line "no activity" mention is enough; only escalate the tone if a workspace that's normally active suddenly goes silent.
+4. **Parsing gotcha (observed 2026-08-23):** if querying the Datadog Logs API directly (not the UI), `state`, `terminal_reason`, `report_schedule_id`, `elapsed_seconds`, etc. on `report_execution_terminal`/`report_execution_start` lines are NOT separate log attributes — they only exist inline in the free-text `message` field (e.g. `"report_execution_terminal capture_kind=report execution_id=... state=Error terminal_reason=Report Schedule reached a working timeout. elapsed_seconds=0.50 ..."`). Regex-parse `message` directly; don't rely on `log["attributes"]["attributes"]["state"]` etc. Also, `terminal_reason` values can contain spaces (e.g. "Report Schedule reached a working timeout."), so a naive `key=\S+` capture truncates them at the first space — capture up to the next known key (e.g. lookahead to ` elapsed_seconds=`) instead.
+
+## Blank / Empty Report Watch (added 2026-08-26)
+
+A daily sub-check for blank/empty delivered PDFs, after fail-closed protection shipped
+(apache/superset #43348 reports → 6.0.0.31; #43031 alerts). Generator:
+`scripts/blank_watch.py` (reuses `dd.py`, prints JSON of all four buckets). **The spec's
+facet names are best-guess — these are the real tokens that exist in prod logs:**
+
+- **capture_kind** has only two values: `report` and `alert`. There is **no**
+  `capture_kind=delivery` / `capture_kind=thumbnail` facet (both return 0). The real
+  **delivery-vs-thumbnail** split is: a *delivery* line carries `report_schedule_id=<n>`
+  + `execution_id=` in its trailing `[ ... ]` context; a UI *thumbnail* carries only
+  `[cache_key=...]` (no schedule, no recipient). Filter to `report_schedule_id` present
+  and `!= None` to get deliveries only. (Trap: high-`virtualized_holders` lines are
+  usually `cache_key`-only thumbnails — e.g. a Paysend virt=4 line was a thumbnail, not a
+  delivery.)
+- **Capture failures (fail-closed, bucket 1):** `ReportScheduleScreenshotFailedError`
+  and `terminal_reason=readiness_timeout` return **0**. The real caught-blank signal is
+  `report_capture_terminal ... terminal_reason=TimeoutError` (status:error, ~330s elapsed
+  = working-timeout budget), plus `report_execution_terminal state=Error terminal_reason=
+  "Report Schedule reached a working timeout."` / `ReportSchedulePreviousWorkingError`.
+  Offending-chart detail (`unready_holders`, per-chart states) lives on
+  `report_readiness_terminal ... semantic_success=False` lines (join by `execution_id`).
+- **PAINT-TRUTH (bucket 2a):** `report_readiness_ready` + `semantic_success=True` +
+  `virtualized_holders>0` on a delivery. Rank by virt-to-rendered ratio; `rendered=0`
+  with `virt>0` and `semantic_success=True` is the strongest silent-blank (declared
+  success, nothing painted). Small virt (2-6) is normal off-screen virtualization — low
+  confidence. Not fixed by #43348.
+- **Legacy alert null-context (bucket 2b):** `capture_kind=alert` readiness with
+  `mounted_holders=0` that carries a `report_schedule_id` (delivered). The bare
+  "dashboard capture proceeding with zero chart holders — readiness gate inactive" warn
+  lines are mostly UI thumbnails (no schedule context) — don't count those as deliveries.
+- **Deploy context / release:** log tags carry only a git SHA (`version:<sha>`,
+  `image_tag:<sha>`), **not** a semver. Map SHA→release via Birds `get_workspace_by_name`
+  → `deployment_id` → `get_deployment` → `app_versions.version`. Confirmed 2026-08-26:
+  SHA `668ddd701d` = **6.0.0.30 (PRE-#43348, can still silently blank)**; SHA
+  `636b8d2e78` = **6.0.0.31 (post-fix)**. Fleet was mid-rollout (6.0.0.31 cut ~08-24);
+  ~90%+ of offenders were on 6.0.0.30. "Retries exhausted / customer got nothing" =
+  group capture-fails by `(ws, report_schedule_id)`; if no `state=Success`
+  `report_execution_terminal` exists for that pair in the window, all attempts failed.
 
 **Related skills:** [[skills/datadog/SKILL.md]] (general Datadog query/auth patterns)
