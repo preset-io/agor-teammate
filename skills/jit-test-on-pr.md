@@ -71,9 +71,9 @@ The output is a **signal, never a PR comment** (never comment on GitHub PRs with
 - One PR per invocation; don't batch-sweep during the pilot.
 - If the isolated env can't run the test at all (not just a test failure — an environment failure), stop and report the env blocker; do not fall back to the broken shared-clone pytest, and do not report the change as unverified-therefore-bad.
 
-## Wiring (scheduled, DISABLED pending sign-off)
+## Wiring (scheduled, ENABLED 2026-09-03)
 
-A dedicated **disabled** schedule exists: **"JiT test gate (advisory)"** — `01a0698f-6d8c-7665-ba72-599df73e494f` on the private-sre branch, `0 13 * * *` America/Los_Angeles (1pm PT, a couple hours before the 3pm merge sweep), Opus 4.8/high. Deliberately a *separate* schedule rather than folded into the merge-critical 3pm "Daily PR status check" (`019ea9d1`), so it's independently toggleable and can never affect merge. Each run: pulls `zone-pr-ready` apache/superset cards, skips any already gated (`data.jit_gate`), caps at 3/run, spawns an ephemeral gate session per card, records the verdict on the card, and DMs Elizabeth only on a real FAIL / meaningful author-test gap. It is **advisory and non-blocking** — never comments on PRs, never moves cards, never gates merge. Enable only after Elizabeth reviews the pilot's false-positive rate (`agor_schedules_patch … enabled:true`).
+A dedicated schedule runs this gate: **"JiT test gate (advisory)"** — `01a0698f-6d8c-7665-ba72-599df73e494f` on the private-sre branch, `0 13 * * *` America/Los_Angeles (1pm PT, a couple hours before the 3pm merge sweep), Opus 4.8/high, **enabled 2026-09-03** (Elizabeth signed off after the #43795 + #43710 e2e PoCs). Deliberately a *separate* schedule rather than folded into the merge-critical 3pm "Daily PR status check" (`019ea9d1`), so it's independently toggleable and can never affect merge. Each run: pulls `zone-pr-ready` apache/superset cards, skips any already gated (`data.jit_gate`), caps at 3/run, spawns an ephemeral gate session per card, records the verdict on the card, and DMs Elizabeth only on a real FAIL / meaningful author-test gap. It is **advisory and non-blocking** — never comments on PRs, never moves cards, never gates merge. To pause: `agor_schedules_patch … enabled:false`.
 
 ## Related skills
 
