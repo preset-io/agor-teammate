@@ -71,9 +71,9 @@ The output is a **signal, never a PR comment** (never comment on GitHub PRs with
 - One PR per invocation; don't batch-sweep during the pilot.
 - If the isolated env can't run the test at all (not just a test failure — an environment failure), stop and report the env blocker; do not fall back to the broken shared-clone pytest, and do not report the change as unverified-therefore-bad.
 
-## Wiring (future, not yet enabled)
+## Wiring (scheduled, DISABLED pending sign-off)
 
-Once the pilot shows the JiTTest catches things author tests miss (tracked in daily logs), the natural home is the existing PR-lifecycle: add a JiT verification pass to the 3pm "Daily PR status check" (schedule `019ea9d1`) so every `zone-pr-ready` superset card gets an independent JiTTest before the approved-auto-merge, surfacing its result on the card. Keep it advisory (non-blocking) until its false-positive rate is known. Do not enable this without Elizabeth's sign-off.
+A dedicated **disabled** schedule exists: **"JiT test gate (advisory)"** — `01a0698f-6d8c-7665-ba72-599df73e494f` on the private-sre branch, `0 13 * * *` America/Los_Angeles (1pm PT, a couple hours before the 3pm merge sweep), Opus 4.8/high. Deliberately a *separate* schedule rather than folded into the merge-critical 3pm "Daily PR status check" (`019ea9d1`), so it's independently toggleable and can never affect merge. Each run: pulls `zone-pr-ready` apache/superset cards, skips any already gated (`data.jit_gate`), caps at 3/run, spawns an ephemeral gate session per card, records the verdict on the card, and DMs Elizabeth only on a real FAIL / meaningful author-test gap. It is **advisory and non-blocking** — never comments on PRs, never moves cards, never gates merge. Enable only after Elizabeth reviews the pilot's false-positive rate (`agor_schedules_patch … enabled:true`).
 
 ## Related skills
 
