@@ -1,6 +1,24 @@
-# Skill: Release Health Check (GitHub Tag → Datadog Logs)
+# Skill: Release Health Check (GitHub Tag → Datadog Logs + Sentry New Issues)
 
-**When to use:** Given a superset-shell release tag (e.g. `v6.1.0.0`), resolve the commit SHA and pull deployment health from Datadog logs. Can also run in **comparison mode** to diff the current release against the previously checked one.
+**When to use:** Given a superset-shell release tag (e.g. `v6.1.0.0`), resolve the commit SHA and pull deployment health from **two** sources:
+1. **Datadog logs** — aggregate status counts and dominant error/warn messages for the deployed SHA (Steps 4–5).
+2. **Sentry new issues** — error groups that *first appeared in this release* (Step 5b). Sentry stamps every issue with the release it debuted in, so a release with new `firstRelease:` groups is introducing new failure modes that Datadog's status-count aggregate can bury. This is the "what broke that wasn't broken before" lens.
+
+Can also run in **comparison mode** to diff the current release against the previously checked one.
+
+---
+
+## ⚠️ Compare Within the Same Release Line
+
+**Always diff a release against the previous release on the _same_ branch line.** The version format is `v<major>.<minor>.<patch>.<build>` (e.g. `v6.0.0.33`), where `<major>.<minor>.<patch>` identifies the **release line** and `<build>` is the incrementing build number on that line.
+
+- ✅ `v6.0.0.33` vs `v6.0.0.32` — same line (`6.0.0.x`), a real apples-to-apples diff.
+- ❌ `v6.0.0.33` vs `v6.1.0.6` — **different lines** (`6.0.0.x` vs `6.1.0.x`). These come from different branches with different code, deploy windows, and cluster targets — the diff is meaningless and will produce false "new issue" / "resolved issue" noise.
+
+**Before running comparison mode:**
+1. Extract the release line prefix (`major.minor.patch`) of the current tag.
+2. Confirm `last_checked.tag` shares that same prefix. If it does **not**, do **not** diff against it — instead find the previous build on the current line (highest `<build>` below the current one with the same prefix) via `gh api .../releases`, and compare against that. If no prior build exists on this line, report it as a **baseline / first check** for the line rather than forcing a cross-line diff.
+3. Note the release line explicitly in the Slack summary so the comparison basis is auditable.
 
 ---
 
@@ -10,6 +28,7 @@
 - [ ] At least one Datadog auth method available (checked in priority order):
   1. `DD_API_KEY` + `DD_APP_KEY` — traditional API key auth (preferred)
   2. `DATADOG_BEARER_TOKEN` — Personal Access Token fallback
+- [ ] `SENTRY_API_TOKEN` set — used by `./scripts/sentry.py` for the Sentry new-issue lens (Step 5b). **Use the script, not the Sentry MCP** — the MCP's OAuth is blocked in this non-interactive env (see `project_sentry_mcp_auth_blocked`). If the token is missing, run Datadog-only, note the gap in the summary, and don't fall back to the MCP.
 
 ---
 
@@ -36,10 +55,20 @@ State is persisted at `memory/release-health-state.json` between runs:
       "Shutting down: Master",
       "Worker exiting",
       "Not authorized Missing JWT in cookies or headers"
-    ]
+    ],
+    "sentry": {
+      "project": "superset-python",
+      "matched_releases": [
+        { "version": "superset@6.0.0.33.014b4fa9-1f499d88", "new_groups": 0 },
+        { "version": "superset@hotfix-43784-6.0.0.33.55c27acf-c5eb4281", "new_groups": 3 }
+      ],
+      "new_issue_ids": ["SUPERSET-PYTHON-1695", "SUPERSET-PYTHON-1696", "SUPERSET-PYTHON-1697"]
+    }
   }
 }
 ```
+
+`sentry.new_issue_ids` is the de-dup ledger: an issue already listed here from a prior build on the same line is not "new" again — only report shortIds not present in the previous run's list.
 
 ---
 
@@ -135,13 +164,57 @@ curl -s -X POST "https://api.datadoghq.com/api/v2/logs/events/search" \
   }] | group_by(.message) | map({message: .[0].message, count: length, status: .[0].status}) | sort_by(-.count)'
 ```
 
+### 5b. Sentry: new issue groups that first appeared in this release
+
+Sentry tags each error group with the **release it debuted in**, so this step answers "what new failure modes did this build introduce?" — a signal Datadog's raw status counts can't isolate. Access is via `./scripts/sentry.py` (the app project is `superset-python`), **not** the Sentry MCP (OAuth blocked, see prerequisites).
+
+**Release-name mapping (validated 2026-09-03).** A superset-shell tag maps to Sentry releases whose `version` embeds both the app version string and the **same commit SHA** Datadog uses:
+- Datadog `version:014b4fa9…` ⇄ Sentry release `superset@6.0.0.33.**014b4fa9**-1f499d88`.
+- One shell tag can map to **several** Sentry releases: the main build plus hotfix builds (`superset@hotfix-43784-6.0.0.33.…`). Check all of them — a clean main build can still ship a hotfix that introduces new groups.
+
+**Step 5b.1 — find the Sentry release(s) for this tag.** Query by the bare version (strip the `v`), then confirm the SHA fragment matches `COMMIT_SHA[:8]`:
+
+```bash
+VERSION="${TAG#v}"          # e.g. v6.0.0.33 -> 6.0.0.33
+SHA8="${COMMIT_SHA:0:8}"    # e.g. 014b4fa9
+
+curl -s "https://us.sentry.io/api/0/organizations/preset-inc/releases/?query=${VERSION}&per_page=25" \
+  -H "Authorization: Bearer $SENTRY_API_TOKEN" \
+  | jq -r '.[] | "\(.version)\tnewGroups=\(.newGroups)\tcreated=\(.dateCreated[:10])"'
+# Keep the release(s) whose version contains $VERSION. The one containing $SHA8 is the exact
+# main build; hotfix-* releases on the same version are also in scope. newGroups>0 => investigate.
+```
+
+**Step 5b.2 — enumerate the new issues per matched release** with `firstRelease:` (this is the precise "new in this release" lens):
+
+```bash
+for REL in "superset@6.0.0.33.014b4fa9-1f499d88" "superset@hotfix-43784-6.0.0.33.55c27acf-c5eb4281"; do
+  echo "=== firstRelease:$REL ==="
+  ./scripts/sentry.py search --query "is:unresolved firstRelease:\"$REL\"" --sort new --limit 25
+done
+```
+
+**Step 5b.3 — time-window fallback** (robust when release-name mapping is fuzzy, e.g. continuous `superset@master.<sha>` deploys that don't embed the version). Catches new groups org-wide since the release date; cross-reference against the matched releases above:
+
+```bash
+# N = whole days since RELEASE_DATE (round up). Answers "new issues since this release shipped".
+./scripts/sentry.py search --query "is:unresolved firstSeen:-2d" --sort new --limit 25
+```
+
+**Classify, don't just count.** For each new issue, tag it **code-shaped** vs **infra-noise** using the skip-list in `skills/sentry-error-burndown.md` (websocket/502, SIGKILL/TimeLimitExceeded, SSL/psycopg2/Redis drops, customer-DB config errors, thumbnail/screenshot timeouts, MCP customer-SQL errors). Note volume (`events`/`users`) and environment (a `firstSeen` issue with 1 event, 0 users, on `app-stg` is a staging blip, not a prod regression). Pull a stack trace for anything code-shaped and non-trivial: `./scripts/sentry.py issue <SHORT-ID>`.
+
+**De-dup** against the previous run's `sentry.new_issue_ids` — a group carried over from an earlier build on the same line is not news.
+
 ### 6. Compare against previous run
 
-Diff the current results against `last_checked.status_summary` and `last_checked.known_noise`:
+**First, verify the comparison baseline is on the same release line** (see "⚠️ Compare Within the Same Release Line" above). Confirm `last_checked.tag` shares the current tag's `major.minor.patch` prefix. If it doesn't, pick the previous build on the current line as the baseline (or declare a baseline check if none exists) — never diff across lines.
+
+Then diff the current results against the chosen baseline's `status_summary` and `known_noise`:
 
 - **New error messages** not in `known_noise` → flag these prominently
 - **Status count changes** (e.g. errors went from 0 → 12) → flag
 - **New clusters** appearing → note (rollout expanding)
+- **Sentry new issues** (Step 5b) not in the previous run's `sentry.new_issue_ids` → flag code-shaped ones; note infra-noise ones briefly. A matched release with `newGroups > 0` is the headline even if Datadog status counts look flat.
 - **Known noise** (see table below) → mention briefly, don't alarm
 
 ### 7. Update state file
@@ -149,7 +222,8 @@ Diff the current results against `last_checked.status_summary` and `last_checked
 Write the new run's results back to `memory/release-health-state.json` and commit:
 
 ```bash
-# Update last_checked with new tag, sha, release_date, checked_at, status_summary, known_noise
+# Update last_checked with new tag, sha, release_date, checked_at, status_summary, known_noise,
+# and the sentry block (matched_releases + new_issue_ids from Step 5b).
 # No credentials stored — only metadata
 git add memory/release-health-state.json && git commit -m "chore: update release health state for $TAG"
 ```
@@ -174,10 +248,12 @@ Format the message as:
 ```
 *superset-shell Release Health Check* — <date>
 - Release: <tag> (`<sha[:8]>`) — <verdict: ✅ CLEAN | ⚠️ NEEDS ATTENTION | ℹ️ NO CHANGE>
-- Previous: <last_tag>
+- Release line: <major.minor.patch>.x
+- Previous: <last_tag>  (⚠️ note if baseline is a different line, or "baseline — first check on this line")
 - Status: info:<n> warn:<n> error:<n> critical:<n>
 - Clusters: <list>
-- New issues: <bulleted list, or "none">
+- New DD issues: <bulleted list, or "none">
+- Sentry new groups: <matched release(s) + count, e.g. "hotfix build +3: LLM/OpenRouter Copilot errors (staging, 1 ev each)"; or "none">
 - Known noise suppressed: <count> patterns
 ```
 
@@ -203,6 +279,8 @@ Format the message as:
 | Status counts spiked vs. previous | Check if it's a specific cluster or widespread |
 | Pods shut down (`Shutting down: Master`) | Version was replaced — check if successor version looks healthy |
 | `NO_WORKSPACES_AVAILABLE` | Benign unless count is dramatically higher than previous run |
+| Sentry release `newGroups > 0` / new `firstRelease:` issues | New failure mode introduced by this build — classify code-shaped vs infra-noise, weight by events/users and prod-vs-staging |
+| Sentry new issue: 1 event, 0 users, `app-stg` culprit | Staging blip — note, don't alarm |
 
 ---
 
@@ -234,11 +312,13 @@ Format the message as:
 ## Notes
 
 - The `version` tag in Datadog tracks the **superset-shell** commit SHA, not superset-private.
+- **Sentry release ⇄ Datadog version:** the same commit SHA fragment appears in both — Datadog `version:014b4fa9…` ⇄ Sentry `superset@6.0.0.33.014b4fa9-…`. That's the join key when mapping a shell tag to Sentry releases (Step 5b). One shell tag can fan out to multiple Sentry releases (main + hotfix builds).
+- Sentry `newGroups` on the release object and `firstRelease:<version>` on the issue search are the two forms of the same "new in this release" signal — `newGroups` is the count, `firstRelease:` enumerates them.
 - Logs for a version disappear from `now-Xh` queries once pods are replaced — use absolute `from`/`to` dates tied to the release window.
 - Auth priority: `DD_API_KEY` + `DD_APP_KEY` (standard headers) → `DATADOG_BEARER_TOKEN` PAT (`Authorization: Bearer`). Both are in `AGOR_USER_ENV_KEYS` and inherited by scheduled sessions.
 - Never store credentials in files — always read from env vars.
 
 ---
 
-**Last Updated:** 2026-07-09
+**Last Updated:** 2026-09-03 (added Step 5b — Sentry new-issue lens via `./scripts/sentry.py`)
 **Created By:** Preset Architect

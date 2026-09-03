@@ -43,9 +43,11 @@ This is why one number isn't enough. "A single enterprise customer lost all thei
 
 > Rate on **peak observed impact**, not the average and not the worst *imaginable* case. If it worsened over time, rate the worst point actually reached and note the escalation in the timeline.
 
-### Combined matrix → priority & response
+### How the code relates to our existing P0–P4 priority
 
-The code maps to a priority tier (the `P0/P1` language already used in `#p0-p1-comms`), which drives paging, comms cadence, and whether a full postmortem is required.
+The code **does not set the priority.** We already assign a **priority (P0–P4)** *live*, while the incident is happening — that's what drives paging, comms cadence, and response urgency, and it's unchanged (the `P0/P1` language already used in `#p0-p1-comms`). The Impact × Severity code is a **separate, finer-grained rating added afterward — usually while writing the postmortem** — to characterize what actually happened more precisely than one priority number can.
+
+The two aren't derived from each other, but they track together. As a rough sanity-check (not a formula), codes tend to correspond to priorities like this:
 
 | Impact ↓ / Severity → | **1 Critical** | **2 Major** | **3 Moderate** | **4 Minor** |
 |---|---|---|---|---|
@@ -62,9 +64,11 @@ The code maps to a priority tier (the `P0/P1` language already used in `#p0-p1-c
 | **P3** | Normal queue. | Optional |
 | **P4** | Tracked as a bug. | Not needed |
 
-**Worked example — a `B3`:** a whole region's workspaces (`B` — Segment) saw elevated errors / slow chart loads but stayed usable with most requests succeeding (`3` — Moderate) → **P2**. Notable and postmortem-worthy, but not a fleet-wide fire. This is the level the user flagged as the reference case.
+The postmortem requirement is gated by the **priority**, not the code: required for P0/P1, optional (encouraged for novel/recurring) below that. The Impact × Severity code is then assigned *as part of writing that postmortem*.
 
-Put the code **in the title and the TL;DR** (`Postmortem: <slug> — B3 (P2)`) so it's greppable and sortable later.
+**Worked example — a `B3`:** a whole region's workspaces (`B` — Segment) saw elevated errors / slow chart loads but stayed usable with most requests succeeding (`3` — Moderate) — a roughly **P2**-shaped incident. Notable and worth characterizing precisely, but not a fleet-wide fire.
+
+Put both the code and the priority **in the title and the TL;DR** (`Postmortem: <slug> — B3 (P2)`) so it's greppable and sortable later.
 
 ---
 
@@ -72,7 +76,7 @@ Put the code **in the title and the TL;DR** (`Postmortem: <slug> — B3 (P2)`) s
 
 ### 1. Rate it first
 
-Assign Impact + Severity before writing prose — it sets the priority, the required rigor, and the audience. If you're between two ratings, **round up** and say why in one line. Re-rate at the end if the investigation changed your understanding of blast radius (and note the change).
+Assign Impact + Severity early — alongside the priority that was already set live during the incident. It anchors the required rigor and the audience. If you're between two ratings, **round up** and say why in one line. Re-rate at the end if the investigation changed your understanding of blast radius (and note the change).
 
 ### 2. Reconstruct the timeline (UTC, anchored to evidence)
 
