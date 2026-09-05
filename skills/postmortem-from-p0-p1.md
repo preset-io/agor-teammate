@@ -1,6 +1,8 @@
 # Skill: Post-Mortem from #p0-p1-comms
 
-**When to use:** Elizabeth (or teammates) asks for a post-mortem/incident writeup for something reported in `#p0-p1-comms` (`C01SK5P63UJ`), usually alongside `#releases-preset-cloud` (`C017U4N8RJP`) for the release/rollback side of the story. Goal: produce a decision-grade Agor Knowledge doc under the `incidents` namespace that nails root cause (not just symptoms), quantifies blast radius, and calls out any monitoring gap that let it through.
+**When to use:** Elizabeth (or teammates) asks for a post-mortem/incident writeup for something reported in `#p0-p1-comms` (`C01SK5P63UJ`), usually alongside `#releases-preset-cloud` (`C017U4N8RJP`) for the release/rollback side of the story. Goal: gather decision-grade evidence for the Amazon-style COE defined by [[postmortem-authoring]]. **One production incident per COE is absolute:** separate production events remain separate documents even when they share a release, subsystem, page, or root cause.
+
+> This skill gathers and verifies facts. [[postmortem-authoring]] controls incident identity, preservation, causal analysis, action quality, required structure, and the publication gate. If an existing writeup combines events, inventory every substantive fact first, split it into separate COEs, cross-reference them, and complete a preservation audit before publishing.
 
 ---
 

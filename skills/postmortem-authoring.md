@@ -1,237 +1,183 @@
-# Skill: Postmortem Authoring (Impact × Severity)
+# Skill: Amazon-Style Correction of Errors (COE) Authoring
 
-**When to use:** You need to write (or grade) a postmortem for a production incident. This is the canonical "how to structure, rate, and publish the doc" skill. It defines Preset's **Impact × Severity** rating (e.g. a `B3` incident) and a copy-paste template. Pair it with [[postmortem-from-p0-p1]] when the raw story has to be reconstructed from `#p0-p1-comms` / `#releases-preset-cloud` first — that skill *gathers* the facts, this one *rates and writes them up*.
+**When to use:** Write, rewrite, migrate, or grade any production-incident postmortem. This is the canonical standard. Pair it with [[postmortem-from-p0-p1]] when evidence must first be reconstructed from incident and release channels.
 
-**Principle: blameless.** Postmortems fix systems, not people. Name roles/systems, never blame an individual. Assume everyone acted reasonably with the information they had. (Google SRE.)
+**Role and objective:** Soraya acts as an SRE/postmortem investigator. Produce blameless Amazon-style Correction of Errors (COE) documents that explain exactly what happened; the technical failure mechanism; the engineering and organisational escape mechanisms; why safeguards did not prevent, contain, detect, diagnose, or accelerate recovery; and which concrete changes materially reduce recurrence or related failures. The objective is systemic improvement, never attribution of blame.
 
----
+## Non-negotiable rules
 
-## The Rating: Impact × Severity → a two-letter/number code
+### One incident per document
 
-> **Canonical standard:** [Postmortem Rubric: Impact × Severity](https://agor.sandbox.preset.zone/ui/kb/incidents/standards/impact-severity-rubric.md) (`agor://kb/incidents/standards/impact-severity-rubric.md`). The tables below mirror it — if they ever diverge, the KB doc wins; update it there and re-sync here.
+Every production incident has its own COE. Never combine incidents merely because they occurred on the same day, affected the same release/subsystem, generated related pages, or share a defect. Incident identity follows the distinct production event and customer/system impact, not root-cause uniqueness.
 
-Every incident gets **one Impact letter (A–D)** and **one Severity number (1–4)**, combined into a single code like `B3`. The two axes are deliberately independent:
+If a source document contains multiple incidents, split it. Cross-reference related COEs and repeat shared context where useful. Preserve every substantive source fact somewhere in the resulting documents. A single fix may legitimately appear in multiple COEs.
 
-- **Impact = blast radius.** *Who and how many* are affected (breadth).
-- **Severity = depth of harm.** *How badly* they're affected, for those in the blast radius (depth).
+### Preserve historical evidence
 
-This is why one number isn't enough. "A single enterprise customer lost all their data" (`D1`) and "every workspace has a slightly-misaligned button" (`A4`) are wildly different incidents that a single SEV scale would smear together. Keeping breadth and depth on separate axes captures both.
+When rewriting or migrating an existing postmortem:
 
-### Why this shape (prior art)
+- Never silently discard evidence or overwrite investigation history.
+- Preserve timestamps, corrections, retractions, uncertainty, links, metrics, logs, PRs, tickets, people involved, mitigation attempts, unsuccessful actions, and discarded hypotheses.
+- Never promote an old hypothesis to fact or leave a superseded hypothesis as the current cause.
+- Preserve the distinction between **quiet**, **mitigated**, **recovered**, and **fixed**.
+- Retain superseded conclusions under **Investigation History / Retracted Hypotheses**, including the hypothesis, original supporting evidence, actions it prompted, disproving evidence, correction time if known, and investigation cost/lesson when meaningful.
+- Before publication, perform a preservation audit. Every substantive source fact must be (A) retained, (B) moved to a related incident's COE during a split, or (C) explicitly classified as duplicate/non-substantive formatting.
 
-- **[MIL-STD-882E](https://reliabilityanalytics.com/reliability_engineering_library/MIL-STD-882E_Department_of_Defense_Standard_Practice_System_Safety_11_May_2012/MIL-STD-882E_Department_of_Defense_Standard_Practice_System_Safety_11_May_2012_pp_18.pdf)** — the DoD system-safety standard — rates hazards on exactly this shape: a **numeric Severity** (1 Catastrophic, 2 Critical, 3 Marginal, 4 Negligible) crossed with a **letter axis**, combined into a single "Risk Assessment Code" like `1A`. We borrow the code shape and the Severity number semantics directly.
-- **[Google SRE](https://sre.google/workbook/postmortem-culture/):** "severity is an attribute of the incident; priority is a decision made by the responder." Our Severity number is that attribute; the combined code drives the priority (below).
-- **[PagerDuty / Atlassian SEV1–SEV5](https://www.xurrent.com/blog/incident-severity-levels):** the conventional single-axis scale. Our Severity number maps 1:1 to SEV1–SEV4 depth; our Impact letter is the axis those scales leave implicit.
+### Evidence and confidence discipline
 
-### Impact — blast radius (A–D)
+Separate evidence from interpretation. Support important claims with logs, traces, metrics, source, commits/PRs, deployments, Sentry, Datadog, Shortcut, Slack, release metadata, or reproducible tests. Use **CONFIRMED**, **STRONGLY SUPPORTED**, **PLAUSIBLE**, **UNCONFIRMED**, and **DISPROVEN** where useful. A symptom-compatible hypothesis is not automatically a cause. Disproven hypotheses remain operational knowledge.
 
-| Impact | Blast radius (Preset terms) | Rough scope |
-|--------|------------------------------|-------------|
-| **A — Global** | All / most workspaces across regions, or a shared control-plane outage (auth, manager, gateway) affecting the whole fleet. Public/press-worthy, fleet-wide SLA exposure. | Whole customer base |
-| **B — Segment** | A full region/cluster, or a large customer tier/cohort of workspaces. Bounded, but many customers. | A region / a tier |
-| **C — Localized** | A handful of workspaces or a single customer, **or** one non-critical feature across many workspaces. | Few customers / one feature |
-| **D — Isolated / Internal** | A single workspace, internal tooling, or staging/pre-prod. No material external customer impact. | One tenant / internal only |
+Capture expiring evidence in the COE: paste query windows and values, representative searchable log lines, and stable screenshots/artifacts. Keep live links as labelled pointers.
 
-### Severity — depth of harm (1–4)
+## Incident rating
 
-| Severity | Depth of harm | Workaround |
-|----------|---------------|------------|
-| **1 — Critical** | Complete loss of service, data loss/corruption, or a confirmed **security/privacy breach**. | None |
-| **2 — Major** | A core workflow (log in, load a dashboard, run a query) is broken or effectively unusable. | None acceptable |
-| **3 — Moderate** | Degraded but usable — slow, intermittent, elevated errors, or a non-core feature down. Most requests still succeed. | Exists / partial |
-| **4 — Minor** | Cosmetic or edge-case. Negligible functional impact. | Trivial / N/A |
+Assign both live priority (**P0–P4**) and retrospective **Impact × Severity**. They are independent. Rate peak observed impact, not average or worst imaginable impact; round up when uncertain and explain. Preserve previous ratings if later corrected.
 
-> Rate on **peak observed impact**, not the average and not the worst *imaginable* case. If it worsened over time, rate the worst point actually reached and note the escalation in the timeline.
+| Impact | Breadth |
+|---|---|
+| **A — Global** | Most/all workspaces, regions, or shared control plane |
+| **B — Segment** | Region, cluster, customer tier, or large cohort |
+| **C — Localized** | A few workspaces/single customer, or one non-critical feature broadly |
+| **D — Isolated/Internal** | One workspace, internal tooling, staging/pre-prod |
 
-### How the code relates to our existing P0–P4 priority
+| Severity | Depth |
+|---|---|
+| **1 — Critical** | Complete outage, data loss/corruption, or confirmed security/privacy breach; no workaround |
+| **2 — Major** | Core workflow unusable; no acceptable workaround |
+| **3 — Moderate** | Degraded/intermittent/non-core failure; usable or partial workaround |
+| **4 — Minor** | Cosmetic/edge-case/negligible functional impact |
 
-The code **does not set the priority.** We already assign a **priority (P0–P4)** *live*, while the incident is happening — that's what drives paging, comms cadence, and response urgency, and it's unchanged (the `P0/P1` language already used in `#p0-p1-comms`). The Impact × Severity code is a **separate, finer-grained rating added afterward — usually while writing the postmortem** — to characterize what actually happened more precisely than one priority number can.
+P0/P1 require a reviewed COE; P2 is encouraged for novel/recurring failures; P3/P4 are optional. Rating never permits incident consolidation.
 
-The two aren't derived from each other, but they track together. As a rough sanity-check (not a formula), codes tend to correspond to priorities like this:
+## Required investigation method
 
-| Impact ↓ / Severity → | **1 Critical** | **2 Major** | **3 Moderate** | **4 Minor** |
-|---|---|---|---|---|
-| **A Global**   | **P0** | **P0** | **P1** | **P2** |
-| **B Segment**  | **P0** | **P1** | **P2** | **P3** |
-| **C Localized**| **P1** | **P2** | **P3** | **P3** |
-| **D Isolated** | **P2** | **P3** | **P3** | **P4** |
+### 1. Establish identity and scope
 
-| Priority | Response | Postmortem |
-|----------|----------|------------|
-| **P0** | All-hands, page immediately, public status page + exec notify, comms on a fixed cadence. | **Required**, reviewed |
-| **P1** | Page on-call, stakeholder notify, status page if customer-visible. | **Required** |
-| **P2** | Business-hours urgent, internal notify. | Optional (encouraged if novel/recurring) |
-| **P3** | Normal queue. | Optional |
-| **P4** | Tracked as a bug. | Not needed |
+Define the distinct production event: trigger/start, affected population/function, customer/system impact, and end state. Split separate impact events even if the same defect caused them. Quantify users, workspaces, requests, duration, functionality lost/degraded, workaround, and blast radius. Separate impact from secondary/noisy symptoms.
 
-The postmortem requirement is gated by the **priority**, not the code: required for P0/P1, optional (encouraged for novel/recurring) below that. The Impact × Severity code is then assigned *as part of writing that postmortem*.
+### 2. Build an evidence-backed UTC timeline
 
-**Worked example — a `B3`:** a whole region's workspaces (`B` — Segment) saw elevated errors / slow chart loads but stayed usable with most requests succeeding (`3` — Moderate) — a roughly **P2**-shaped incident. Notable and worth characterizing precisely, but not a fleet-wide fire.
+Anchor each fact to evidence and distinguish facts known at the time from later interpretation. Calculate separately:
 
-Put both the code and the priority **in the title and the TL;DR** (`Postmortem: <slug> — B3 (P2)`) so it's greppable and sortable later.
+- **TTD:** start → detection
+- **TTA:** detection → acknowledgement/investigation ownership
+- **TTM:** acknowledgement → meaningful mitigation/customer impact stopped
+- **TTR:** acknowledgement → causal defect actually fixed/resolved
 
----
+Disappearance of errors is not TTR if the defect remains. Current status must be exactly **ACTIVE**, **MITIGATED**, **QUIET / NOT FIXED**, **FIX DEPLOYED / VERIFYING**, or **RESOLVED**.
 
-## Steps
+### 3. Construct two causal structures
 
-### 1. Rate it first
+#### A. Failure Mechanism Chain
 
-Assign Impact + Severity early — alongside the priority that was already set live during the incident. It anchors the required rigor and the audience. If you're between two ratings, **round up** and say why in one line. Re-rate at the end if the investigation changed your understanding of blast radius (and note the change).
+Explain execution from normal operation to observed impact as deeply as evidence supports:
 
-### 2. Reconstruct the timeline (UTC, anchored to evidence)
+`condition/trigger → component behaviour → unexpected state → safety mechanism failure → propagation → customer/system impact`
 
-A table, every row anchored to something **verifiable** — a commit SHA, a Slack `ts`, a Datadog event timestamp, a deploy/rollback event — never vague relative time. See [[postmortem-from-p0-p1]] for pulling these from Slack + release channels. Capture the canonical incident metrics from the timeline:
+Use code-level detail. For branching/converging causes use a causal tree/DAG, not a false line.
 
-| Metric | Meaning |
-|--------|---------|
-| **TTD** — time to detect | incident start → first alert/human notice |
-| **TTA** — time to acknowledge | detect → someone owns it |
-| **TTM** — time to mitigate | ack → customer impact stopped (rollback/flag/scale) |
-| **TTR** — time to resolve | ack → root cause actually fixed |
+#### B. Escape / System Chain
 
-A large **TTD** is itself a finding — it means detection is the gap (see step 5), regardless of how fast the fix was.
+Explain why the engineering system let the unsafe state reach and remain in production. Continue asking why while answers reveal controllable weaknesses:
 
-### 3. Capture the logs and metrics *into the doc* — don't just link
+- Why was the behaviour possible?
+- Why did design/review/tests not prevent it?
+- Why did staging/canary/release validation not catch it?
+- Why was it not detected or acted on earlier?
+- Why was diagnosis misleading or slow?
+- Why did mitigation fail or take too long?
+- Why did an existing fix not reach this release?
+- Why were related signals, tickets, PRs, or investigations not correlated?
+- Which architecture, ownership, or information-flow assumption enabled escape?
 
-**Datadog (and most dashboard) links expire.** Treat every external link as a pointer that will rot. The doc must stand alone years later. So:
+Do not force exactly five whys. For each causal node ask: **without it, would the incident have been prevented, materially reduced, detected earlier, or recovered from faster?** If no, it is likely context, chronology, or symptom.
 
-- **Pull the raw numbers via the API and paste them as markdown tables / code blocks** — this is the source of truth, it never expires, and it's diff-able. Use the [[datadog]] skill (`/api/v2/logs/events/search` for samples, `/api/v2/logs/analytics/aggregate` for exact counts grouped by `cluster_name`/`environment`). Include the **exact query string and time window** next to the numbers so anyone can re-run it.
-- **Screenshot anything that only lives in a graph** (a spike shape, a flame graph, a trace waterfall) and embed the image — *and still paste the underlying peak/count as text beneath it*, so the fact survives even if the image is later lost.
-- Paste representative log lines (timestamp + status + message + a stack frame) in a code block, not a screenshot of a log line — text is searchable and copyable.
-- Keep the live Datadog URL too, but label it *"(link expires — data captured below)"* so no future reader trusts it as the record.
-
-Attaching images to the published doc: upload the screenshot as an Agor Knowledge attachment / board artifact (or drop it under `incidents/assets/<slug>/`) and reference it with a stable relative/`agor://` path — never a Datadog CDN URL, which expires with the link.
-
-### 4. Root cause — the mechanism, confirmed
-
-State the **confirmed mechanism**, not the symptom. Distinguish the **trigger** (what set it off now — a deploy, a traffic spike, a config change) from the **root cause** (the latent condition that made the trigger harmful). Confirm via source diff / logs, not changelog text alone — see [[postmortem-from-p0-p1]] steps 3–4 for the verify-at-the-tag technique and checking for prior recurrences.
-
-Then go past the first "why." A short **5-whys** or a **contributing-factors** list ("why did it happen / why wasn't it caught / why did it take so long to mitigate") almost always beats a single root cause — most incidents are a chain, not a point. If something is genuinely unknown from outside the org, **say so and name who should chase it** — don't launder speculation as fact.
-
-### 5. Remediation — what we did, and the detection gap
-
-- **Mitigation** (stopped the bleeding): rollback, feature flag, scale-up, failover — with the timestamp it took effect and how you confirmed impact stopped (the *last* occurrence in Datadog after the fix — verify before claiming "resolved").
-- **Fix** (removed the root cause): the PR/commit, whether it's merged and deployed everywhere.
-- **Detection gap:** should a monitor have caught this, and why didn't it? "No monitor exists" vs. "a monitor exists but didn't fire" (threshold too high for a low-traffic-but-100%-failing tenant, ratio metric whose denominator collapsed, wrong layer) are different findings with different fixes. Remember monitors are **IaC/Terraform + PR only**, never console clicks ([[project_iac_only_no_manual_infra_changes]]).
-
-### 6. Next steps — action items that reduce recurrence or blast radius
-
-An **action-item table**, each row with an **owner, a due date, a tracking link (Shortcut story), and a class**:
-
-- **Prevent** — stop the root cause recurring (the highest-leverage row is usually here — often a *process* gap like the release pipeline, not another monitor).
-- **Detect** — catch it faster next time (closes the TTD gap from step 2).
-- **Mitigate** — make it less bad / faster to stop when it does recur.
-
-Pick **1–3 that matter**, file them as real Shortcut stories, and link them. An action item with no owner or ticket is a wish, not a plan. Prefer one durable fix over ten vague "improve X" bullets.
-
-### 7. Publish
+Classify nodes where useful: initiating defect; necessary precondition; contributing factor; amplifier/blast-radius factor; failed prevention/containment/detection control; diagnosis/observability weakness; mitigation/recovery weakness; release/process escape; organisational/ownership weakness.
 
-Publish to Agor Knowledge under the `incidents` namespace (same convention as [[postmortem-from-p0-p1]]):
-
-```
-agor_kb_put({
-  namespace: "incidents",
-  path: "YYYY-MM-DD-<slug>.md",
-  kind: "decision",
-  visibility: "public",
-  status: "published",
-  editPolicy: "public",
-  content: "<full markdown>"
-})
-```
-
-Then report back in the incident channel: lead with the **code + one-line root cause + peak impact numbers + doc URL**. Don't paste the whole timeline into chat — that's the doc's job. Link any related prior incident doc via `agor://kb/document/<id>` if this is a recurrence.
-
----
-
-## Postmortem Template (copy-paste)
-
-````markdown
-# Postmortem: <short title> — <CODE> (<Pn>)
-
-**Status:** Draft | In review | Published
-**Impact × Severity:** <e.g. B3 — Segment × Moderate → P2>
-**Author:** <name>   **Date:** <YYYY-MM-DD>   **Reviewers:** <names>
-**Related:** <agor://kb/document/... for any prior/recurring incident>
-
-> Blameless: this document examines systems and decisions, not individuals.
-
-## TL;DR
-- What broke, for whom, how bad (5–8 bullets — the 30-second read).
-- Rating: **<CODE>** (<Impact> × <Severity>) → **<Pn>**.
-- Root cause in one sentence. Mitigation in one sentence.
-
-## Impact
-- **Rating:** <CODE> — <Impact letter rationale> × <Severity number rationale>.
-- **Blast radius:** <regions/clusters/workspaces/customers affected>.
-- **Numbers (captured, not linked — Datadog links expire):**
-  | Metric | Value | Query / window |
-  |--------|-------|----------------|
-  | Failed requests | | `<dd query>` / `<from>–<to>` |
-  | Peak error rate | | |
-  | Customers affected | | |
-  | Revenue / SLA at risk | | |
-- **Detection:** how we found out (monitor / customer / manual) and when.
-
-## Timeline (UTC)
-| Time (UTC) | Event | Evidence |
-|------------|-------|----------|
-| | Incident begins | <commit/deploy> |
-| | Detected | <alert/Slack ts> |
-| | Acknowledged | |
-| | Mitigated | <rollback/flag> |
-| | Resolved | <last DD occurrence> |
-
-**TTD:** __  **TTA:** __  **TTM:** __  **TTR:** __
-
-## Logs & Evidence
-<!-- Paste raw log lines in code blocks; embed screenshots AND the numbers beneath them.
-     Every image via a stable path, never a Datadog CDN URL. -->
-```
-[timestamp] [status] message ... stack frame
-```
-![error spike](incidents/assets/<slug>/error-spike.png)
-_Peak: <N> errors/min at <time> in <cluster>. (Datadog link expires — captured above.)_
-
-## Root Cause
-- **Trigger:** <what set it off now>.
-- **Root cause:** <latent condition, confirmed via source diff / logs>.
-- **Contributing factors / 5 whys:**
-  1. Why did it happen? …
-  2. Why wasn't it caught? …
-  3. Why did mitigation take as long as it did? …
-- **Open questions:** <unknowns + who should chase them>.
-
-## Remediation
-- **Mitigation:** <action, timestamp, how impact-stop was confirmed>.
-- **Fix:** <PR/commit, merged? deployed everywhere?>.
-- **Detection gap:** <no monitor / monitor didn't fire — and why>.
-
-## What went well / poorly / where we got lucky
-- **Well:** …
-- **Poorly:** …
-- **Lucky:** <things that could have been much worse>.
-
-## Next Steps (action items)
-| Action | Class (Prevent/Detect/Mitigate) | Owner | Due | Ticket |
-|--------|--------------------------------|-------|-----|--------|
-| | | | | <Shortcut story> |
-
-## Related incidents
-- <links to prior/similar postmortems>
-````
-
----
-
-## Notes
-
-- **Rate on peak observed impact**, round up when between tiers, and re-rate at the end if the facts changed (note the change).
-- **Every external dashboard link is assumed to expire** — the numbers and screenshots must live inside the doc. A postmortem whose evidence is a dead Datadog link is worthless in six months.
-- A big **TTD** is a finding, not a footnote — it means detection, not the fix, is where the leverage is.
-- Highest-leverage action item in a recurrence is almost always the **process/prevent** row (e.g. a release-pipeline gap), not another layer of monitoring — say so explicitly rather than burying it in an equal-weighted list ([[postmortem-from-p0-p1]] step 7).
-- Action items are only real once they're **Shortcut stories with owners** — file them, link them, don't leave wishes.
-
-**Related skills:** [[postmortem-from-p0-p1]] (reconstruct the story from Slack + release channels — the input to this skill), [[datadog]] (pull the log/metric evidence), [[report-execution-investigation]] (execution-id tracing), [[release-health-check]] (release-tag vs. Datadog correlation)
-
-**Sources:** [MIL-STD-882E](https://reliabilityanalytics.com/reliability_engineering_library/MIL-STD-882E_Department_of_Defense_Standard_Practice_System_Safety_11_May_2012/MIL-STD-882E_Department_of_Defense_Standard_Practice_System_Safety_11_May_2012_pp_18.pdf) · [Google SRE postmortem culture](https://sre.google/workbook/postmortem-culture/) · [SEV1–SEV5 explained (Xurrent)](https://www.xurrent.com/blog/incident-severity-levels) · [Incident severity & blast radius (Uptime Labs)](https://www.uptimelabs.io/learn/incident-severity-levels)
-```
+Do not label symptoms as causes (elevated errors, consequent retries, loop-generated noise, or CPU caused by runaway execution).
+
+### 4. State causes precisely
+
+Avoid “the root cause” when several factors were necessary. Prefer: “The initiating software defect was X. It reached production because controls A and B were absent, impact was amplified by C, and recovery was delayed by D.” The canonical **Root Cause / Causal Summary** contains only the best supported explanation. Retracted explanations remain only in Investigation History.
+
+### 5. Identify safety invariants
+
+State the property that should always have held—for example: an error handler cannot throw while building an error response; absent tenant context fails closed; tenant config never crosses tenants; retries are bounded; requests cannot contaminate another request's state; handled auth failure cannot recursively invoke auth. Encode invariants in code, types, assertions, tests, architecture, deployment gates, or runtime checks rather than memory.
+
+### 6. Analyse coverage and release escape
+
+Never write only “tests missed it.” Name the precise missing behaviour and layer: unit, integration, concurrency, multi-tenant, request lifecycle, auth/unauthenticated, error, rollback, upgrade, release branch, load, or failure injection. Derive regression/invariant tests from the mechanism.
+
+For regressions document the introducing change, why it appeared safe, review assumptions, tests run/missing, deployment path/releases, any fix elsewhere and why it did not propagate, and whether staging/canary could realistically catch it. Analyse the system around a change, not its author.
+
+### 7. Analyse detection and response
+
+Keep prevention, containment, detection, diagnosis, mitigation, recovery, and permanent fix distinct. Explain detection method, expected versus actual behaviour, TTD/TTA gaps, and causes of diagnosis/mitigation time.
+
+## Corrective actions
+
+Every addressable causal/control weakness maps to action(s) or an explicit Accepted Risk. No filler.
+
+Consider: **Eliminate** the defect; **Prevent** with regression/property tests, stronger APIs/types, fail-closed behaviour, isolation/static validation; **Contain** with bounded retries, recursion guards, circuit breakers, tenant/request isolation, resource limits; **Detect** with invariant telemetry, targeted alerts, canary/release assertions; **Diagnose** with causal identifiers and correlation telemetry; **Recover** with safe degradation, rollback automation, fallback, kill switches; **Escape Prevention** with ancestry checks/backport tracking/release gates; and **Organisational / Process** improvements to correlation, work discovery, closure reasons, and ownership.
+
+Never use vague actions (“add tests,” “improve monitoring,” “be careful,” “human error”). Specify mechanism and objectively testable result.
+
+| # | Action | Causal node addressed | Class | Owner | Tracking | Target | Verification | Status |
+|---|---|---|---|---|---|---|---|---|
+
+Do not invent commitments. Use **NEEDS OWNER**, **NEEDS TRACKING**, and **NEEDS TARGET DATE**. “Merged” is not verification; state how the failure mode will be proven controlled.
+
+| Weakness | Reason risk accepted | Decision owner | Review date |
+|---|---|---|---|
+
+## Required COE structure
+
+Use approximately this structure for **each individual incident**:
+
+1. **Metadata** — Incident ID, date, priority, Impact × Severity, affected service/workspace/release, status, author, reviewers, related incidents, tracking links.
+2. **Executive Summary** — impact, initiating defect, major systemic causes, current fix state.
+3. **Impact** — quantified actual impact, duration, function, workaround, blast radius; secondary noise separate.
+4. **Detection** — method, expected/actual control behaviour, TTD/TTA, gaps.
+5. **Timeline** — evidence-backed UTC facts; TTD/TTA/TTM/TTR.
+6. **Technical Reconstruction** — execution-level transition from normal to failure.
+7. **Failure Mechanism Causal Chain** — numbered chain or DAG.
+8. **Escape / System Causal Chain** — development, tests, review, release, observability, response, organisation.
+9. **Safety Invariant(s)** — properties and encoding mechanism.
+10. **Failed or Missing Controls** — `Control | Expected behaviour | Actual behaviour | Why it failed/was absent`.
+11. **Contributing and Amplifying Factors** — conditions that worsened impact but did not independently cause it.
+12. **Investigation History / Retracted Hypotheses** — support, actions, disproof, correction time, cost/lesson, unsuccessful mitigations, misleading signals.
+13. **Root Cause / Causal Summary** — current explanation only; defect, preconditions, safeguards, amplification, response.
+14. **Test Coverage and Change / Release Escape Analysis**.
+15. **Corrective Actions** — full-schema table mapped to nodes.
+16. **Accepted Risks** — every intentionally unaddressed weakness.
+17. **What Went Well** — evidence-supported working controls.
+18. **What Made This Harder**.
+19. **Lessons / Generalisable Improvements** — architectural/operational principles.
+20. **Verification / Closure Criteria** — exact evidence required for RESOLVED.
+21. **Evidence / References** — captured data and relevant links/timestamps.
+22. **Preservation Audit** — mandatory for rewrite/split; source-to-destination fact accounting.
+
+## Publication
+
+Publish each incident separately under Agor Knowledge `incidents`, e.g. `YYYY-MM-DD-<incident-slug>-coe.md`. Report the public `url`, not only `agor://`. In incident channels lead with rating, one-line causal summary, peak impact, status, and URL. Related documents link each other and retain their own trigger, impact, detection, timeline, and contributors.
+
+## Final publication gate
+
+Do not publish until every answer is yes:
+
+- Can the document explain exactly how impact occurred?
+- Are mechanisms distinguished from symptoms/context?
+- Does it explain why safeguards allowed escape/persistence?
+- Are review, test, staging/canary, release, detection, diagnosis, containment, and recovery gaps examined where relevant?
+- Does every addressable weakness map to a specific verifiable action or Accepted Risk?
+- Are unknown owners/tracking/targets explicitly marked rather than invented?
+- Are disproven hypotheses and unsuccessful actions preserved without polluting the canonical cause?
+- Is quiet/mitigated/recovered distinguished from fixed/resolved?
+- Is this exactly one production incident?
+- If rewritten/split, is every substantive source fact accounted for?
+- Has no superseded hypothesis entered the final cause?
+- Does every causal node pass the counterfactual test?
+
+The finished COE must leave the system stronger at every causal layer exposed.
+
+**Related skills:** [[postmortem-from-p0-p1]], [[datadog]], [[report-execution-investigation]], [[release-health-check]]
