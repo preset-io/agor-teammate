@@ -31,7 +31,9 @@ Capture expiring evidence in the COE: paste query windows and values, representa
 
 ## Incident rating
 
-Assign both live priority (**P0–P4**) and retrospective **Impact × Severity**. They are independent. Rate peak observed impact, not average or worst imaginable impact; round up when uncertain and explain. Preserve previous ratings if later corrected.
+Assign three ratings, all independent: the live priority (**P0–P4**, set during the incident); the retrospective **Impact × Severity** code (blast radius × depth); and the retrospective **Release-Note & Fix-Propagation** score (**F0–F3**, below) — *where the fix actually landed and whether the release record honestly reflects it*. Rate peak observed impact, not average or worst imaginable impact; round up when uncertain and explain. Preserve previous ratings if later corrected. Put the combined code in the title and TL;DR so it is greppable, e.g. `B3 · F2 (P2)`.
+
+The canonical scale definitions and prior art live in the [Impact × Severity + Release-Note rubric](agor://kb/document/01a0686b-bf81-7552-b0dd-f6b0a8d0be41) (KB `incidents/standards`); the tables below are the working copy this skill applies.
 
 | Impact | Breadth |
 |---|---|
@@ -48,6 +50,24 @@ Assign both live priority (**P0–P4**) and retrospective **Impact × Severity**
 | **4 — Minor** | Cosmetic/edge-case/negligible functional impact |
 
 P0/P1 require a reviewed COE; P2 is encouraged for novel/recurring failures; P3/P4 are optional. Rating never permits incident consolidation.
+
+### Assessment scoring — Release-Note & Fix-Propagation (F0–F3)
+
+Impact × Severity captures *how bad* the incident was. The **Release-Note & Fix-Propagation** score captures a different, recurring failure class our own postmortems keep surfacing: *the fix never reached the shipped release branch, or the release record doesn't honestly reflect it.* Score the **best-supported current state of the causal fix** — not the mitigation — and name the release(s) involved: the build the incident shipped on, and the build carrying the permanent fix.
+
+| Score | Fix propagation & release-note state |
+|---|---|
+| **F0 — Shipped & documented** | The causal defect is fixed in the released build customers actually run, and that build's release notes document the fix (real, traceable PR; the change is not mislabeled). Fully traceable. |
+| **F1 — Shipped, note gap** | The fix is in a released build, but the release notes omit it — or document the incident-*causing* change only as a routine entry (e.g. a memory-growing dependency bump listed plainly under "Fixes"). The build is safe; its paper trail is not. |
+| **F2 — Master-only / backport gap** | The fix (or its band-aid) merged to `master` but was never cherry-picked into the release branch the shipped build was cut from, so the released build still carries the defect. Production runs on a rollback / hotfix / unreleased SHA. The classic cherry-pick-missed-the-release-branch escape. |
+| **F3 — Not fixed in any release** | Only mitigated, rolled back, or quiet; no permanent fix has shipped in any released build. Nothing to document yet. |
+
+Round toward the **less-traceable** score when uncertain, and say why. Establish it from evidence, not assumption (compute it in §6 below):
+
+- **Is the fix in the shipped build?** `git show <tag>:<path>`, `git branch --contains <fix-sha>`, or `git log <release-branch> --grep` — confirm the fix commit is on the release branch the incident's build was cut from, not just `master`. A release branch cut *before* the fix merged to `master` needs a backport; record whether it landed and in which build.
+- **Do the release notes reflect it?** Read the GitHub Release body (`gh api repos/preset-io/superset-shell/releases/tags/<tag> --jq .body`) for the build that shipped the fix — and for the build the incident manifested on. Check the fix PR is listed, in a section matching what it actually did, and that the change which *caused* the incident isn't buried as a routine "fix"/"chore".
+
+> **Worked example — `F2`.** The worker-med v6.1.0.7 crash-loop: the sizing band-aid (#4925) merged to `master` on 2026-08-27 but the `6.1-release` branch was cut on 2026-08-31 *without* it, so the shipped build ran the un-patched sizing — master-only, never backported. Worse, v6.1.0.7's release notes list the incident's *cause* (#4914, "fix(mcp): upgrade protocol dependency stack") plainly under **Fixes** with no hint it grew worker boot memory ~2 GB, while the mitigating change is absent entirely. If a permanent fix still hasn't shipped in *any* released build, score `F3` instead.
 
 ## Required investigation method
 
@@ -110,6 +130,8 @@ Never write only “tests missed it.” Name the precise missing behaviour and l
 
 For regressions document the introducing change, why it appeared safe, review assumptions, tests run/missing, deployment path/releases, any fix elsewhere and why it did not propagate, and whether staging/canary could realistically catch it. Analyse the system around a change, not its author.
 
+Assign the **Release-Note & Fix-Propagation score (F0–F3)** here (see *Assessment scoring* above): verify from source whether the causal fix reached the shipped release branch or only `master`, whether a backport was required and landed, and whether the shipping build's release notes document it (and don't mislabel the incident-causing change). State the release(s) by tag.
+
 ### 7. Analyse detection and response
 
 Keep prevention, containment, detection, diagnosis, mitigation, recovery, and permanent fix distinct. Explain detection method, expected versus actual behaviour, TTD/TTA gaps, and causes of diagnosis/mitigation time.
@@ -134,7 +156,7 @@ Do not invent commitments. Use **NEEDS OWNER**, **NEEDS TRACKING**, and **NEEDS 
 
 Use approximately this structure for **each individual incident**:
 
-1. **Metadata** — Incident ID, date, priority, Impact × Severity, affected service/workspace/release, status, author, reviewers, related incidents, tracking links.
+1. **Metadata** — Incident ID, date, priority, Impact × Severity, Release-Note & Fix-Propagation score (F0–F3), affected service/workspace/release, status, author, reviewers, related incidents, tracking links.
 2. **Executive Summary** — impact, initiating defect, major systemic causes, current fix state.
 3. **Impact** — quantified actual impact, duration, function, workaround, blast radius; secondary noise separate.
 4. **Detection** — method, expected/actual control behaviour, TTD/TTA, gaps.
@@ -147,7 +169,7 @@ Use approximately this structure for **each individual incident**:
 11. **Contributing and Amplifying Factors** — conditions that worsened impact but did not independently cause it.
 12. **Investigation History / Retracted Hypotheses** — support, actions, disproof, correction time, cost/lesson, unsuccessful mitigations, misleading signals.
 13. **Root Cause / Causal Summary** — current explanation only; defect, preconditions, safeguards, amplification, response.
-14. **Test Coverage and Change / Release Escape Analysis**.
+14. **Test Coverage and Change / Release Escape Analysis** — including the Release-Note & Fix-Propagation score (F0–F3) with its evidence: where the fix landed (release branch vs `master`-only), whether a backport was required/landed, and whether the shipping build's release notes document it.
 15. **Corrective Actions** — full-schema table mapped to nodes.
 16. **Accepted Risks** — every intentionally unaddressed weakness.
 17. **What Went Well** — evidence-supported working controls.
@@ -173,6 +195,7 @@ Do not publish until every answer is yes:
 - Are unknown owners/tracking/targets explicitly marked rather than invented?
 - Are disproven hypotheses and unsuccessful actions preserved without polluting the canonical cause?
 - Is quiet/mitigated/recovered distinguished from fixed/resolved?
+- Is the Release-Note & Fix-Propagation score (F0–F3) assigned and evidence-backed — stated where the causal fix actually shipped (release branch vs `master`-only) and whether the release notes reflect it?
 - Is this exactly one production incident?
 - If rewritten/split, is every substantive source fact accounted for?
 - Has no superseded hypothesis entered the final cause?
