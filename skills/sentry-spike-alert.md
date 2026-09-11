@@ -48,17 +48,15 @@ De-dup ledger so the same issue isn't paged day after day. Shape:
 
 6. **If nothing survives** → append a one-line note to today's `memory/YYYY-MM-DD.md` ("Sentry spike check: nothing new above threshold") and STOP. No Slack.
 
-7. **If something survives → DM Elizabeth on Slack.** Look up her IM channel by email, then post (Agor Slack gateway is broken for this bot — use curl with `SLACK_BOT_TOKEN_XOXB`):
-   ```bash
-   UID=$(curl -s "https://slack.com/api/users.lookupByEmail?email=elizabeth@preset.io" \
-     -H "Authorization: Bearer $SLACK_BOT_TOKEN_XOXB" | python3 -c 'import sys,json;print(json.load(sys.stdin)["user"]["id"])')
-   # build payload.json via python json.dump; channel = $UID (Slack opens the IM automatically)
-   curl -s -X POST "https://slack.com/api/chat.postMessage" \
-     -H "Authorization: Bearer $SLACK_BOT_TOKEN_XOXB" \
-     -H "Content-Type: application/json; charset=utf-8" \
-     --data-binary @payload.json
+7. **If something survives → DM Elizabeth on Slack via the Agor gateway.** Use `agor_gateway_emit_message` with **her email as the target** — this is the intended path and does **NOT** need `SLACK_BOT_TOKEN_XOXB` (the gateway uses its own credentials; an email target opens the IM automatically). Do **not** curl the Slack Web API with a bot token — that path is deprecated, and a missing `SLACK_BOT_TOKEN_XOXB` is **not** a blocker for these alerts (that was a stale belief that stalled alerts 09-08→09-11; see [[gateway-proactive-dm-via-email]]).
    ```
-   Verify the response has `"ok":true`. Message format (Slack mrkdwn):
+   agor_gateway_emit_message(
+     gatewayChannelId="019edd38-92af-73a4-9691-a3a8c55ce4f4",   # the "Soraya" gateway channel
+     target="elizabeth@preset.io",
+     purpose="Sentry spike alert",
+     message="<Slack mrkdwn, format below>")
+   ```
+   A successful send returns `platform_permalink` + `platform_message_id` — capture the permalink as delivery proof (the earlier "gateway can't DM her" `provider_request_failed` came from targeting her by user ID/name, not email; email works — confirmed 2026-09-11). Message format (Slack mrkdwn):
    ```
    :rotating_light: *New Sentry volume* — <N> issue(s) worth a look
 
@@ -72,7 +70,7 @@ De-dup ledger so the same issue isn't paged day after day. Shape:
 
 8. **Update state** — add each newly-alerted issue to `alerted` with today's date + its 24h peak; bump peaks for re-escalations. Write `memory/sentry-spike-alerts.json` and commit it (`log:` prefix, mirroring the workspace convention).
 
-9. **Log** — append to today's `memory/YYYY-MM-DD.md`: what was flagged, what was suppressed as already-known, and the Slack `ts` if a message was sent.
+9. **Log** — append to today's `memory/YYYY-MM-DD.md`: what was flagged, what was suppressed as already-known, and the gateway `platform_permalink` if a message was sent.
 
 ## Guardrails
 
