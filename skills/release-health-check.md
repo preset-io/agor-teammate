@@ -230,18 +230,9 @@ git add memory/release-health-state.json && git commit -m "chore: update release
 
 ### 8. Send results to Slack via Soraya (SRE assistant)
 
-**Do NOT use `agor_gateway_emit_message`** — Soraya's gateway lacks `chat:write` scope.
+**Use `agor_gateway_emit_message`** — confirmed working 2026-09-17. Soraya's gateway channel (`019edd38-92af-73a4-9691-a3a8c55ce4f4`) is bound to the `private-sre` branch, has outbound enabled, and its default target is already `#engineering-monitor-logs-production`, so a plain emit delivers the message natively with no token handling required.
 
-Instead, create a new session in Soraya's branch and have her post using `$SLACK_BOT_TOKEN_XOXB`:
-
-```
-Use agor_sessions_create with:
-  branchId: "c0894821-afb7-46a1-9944-f31b1eabd635"  (private-sre)
-  agenticTool: "claude-code"
-  initialPrompt: "Post this message to #engineering-monitor-logs-production using curl and $SLACK_BOT_TOKEN_XOXB: <message>"
-```
-
-**No MCP servers needed** — Soraya has native Slack access via `$SLACK_BOT_TOKEN_XOXB`.
+The older "Do NOT use `agor_gateway_emit_message` — lacks `chat:write` scope" / "spawn a session and curl with `$SLACK_BOT_TOKEN_XOXB`" instruction is **stale** — same class of staleness as the Sentry spike and JiT gate schedule prompts (see `project_sentry_spike_schedule_stale_prompt` / `project_jit_gate_schedule_stale_dm_instruction` memory notes). Don't spawn a subsession for this step; call the gateway tool directly.
 
 Format the message as:
 
@@ -303,9 +294,8 @@ Format the message as:
 | **Branch** | `private-sre` |
 | **Branch ID** | `c0894821-afb7-46a1-9944-f31b1eabd635` |
 | **Gateway channel** | Soraya (`019edd38-92af-73a4-9691-a3a8c55ce4f4`) |
-| **How she posts** | `curl` + `$SLACK_BOT_TOKEN_XOXB` (native Slack access) |
-| **Target channel** | `#engineering-monitor-logs-production` |
-| **Why not gateway emit?** | Soraya's bot token missing `chat:write` scope for proactive outbound |
+| **How she posts** | `agor_gateway_emit_message` directly (confirmed working 2026-09-17; no subsession/token needed) |
+| **Target channel** | `#engineering-monitor-logs-production` (gateway's default target) |
 
 ---
 
@@ -320,5 +310,5 @@ Format the message as:
 
 ---
 
-**Last Updated:** 2026-09-03 (added Step 5b — Sentry new-issue lens via `./scripts/sentry.py`)
+**Last Updated:** 2026-09-17 (Step 8: `agor_gateway_emit_message` works directly for Soraya's channel — dropped the stale curl/token subsession workaround)
 **Created By:** Preset Architect
