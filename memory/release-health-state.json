@@ -1,5 +1,86 @@
 {
   "last_checked": {
+    "tag": "v6.1.0.8",
+    "sha": "497f9627a2dc1f8c42134186ca7489570fb86d1b",
+    "release_date": "2026-09-15T00:42:50Z",
+    "checked_at": "2026-09-17T20:03:16Z",
+    "status_summary": {
+      "info": 692705,
+      "warn": 1347415,
+      "error": 6588,
+      "critical": 1
+    },
+    "clusters_seen": [
+      "production-aws-us2a",
+      "production-aws-us1a",
+      "staging-aws-us1a",
+      "production-aws-eu5a",
+      "production-aws-ap1a",
+      "sandbox-aws-us1a",
+      "preset-azure-mpc"
+    ],
+    "known_noise": [
+      "from authlib.jose import JsonWebToken",
+      "AuthlibDeprecationWarning: authlib.jose module is deprecated",
+      "NO_WORKSPACES_AVAILABLE: No workspaces available for task=reports.scheduler",
+      "Shutting down: Master",
+      "Worker exiting",
+      "Not authorized Missing JWT in cookies or headers",
+      "Failed to add user to db session: Class 'werkzeug.local.LocalProxy' is not mapped",
+      "Error while rendering virtual dataset query: list object has no element 0",
+      "Virtual dataset template error: list object has no element 0",
+      "Datasource not found datasource_type: DatasourceType.TABLE, database_id_or_uuid:",
+      "appbuilder.app is deprecated and will be removed in a future version. Use current_app instead",
+      "Could not load default spinner SVG",
+      "Unexpected metric expression type",
+      "The field `timeseries_limit` is deprecated, please use `series_limit` instead.",
+      "The field `series_limit_metric` is already populated, replacing value with contents from `timeseries_limit_metric`.",
+      "The field `timeseries_limit_metric` is deprecated, please use `series_limit_metric` instead.",
+      "Superset.explore_json This API endpoint is deprecated and will be removed in version 5.0.0",
+      "Failed to load query_context for chart",
+      "Failed to get truncated sample data for table",
+      "Refusing to run AIAssistCheckSchemasToVectorize command",
+      "Expired token google-oauth2",
+      "WORKER TIMEOUT (pid:",
+      "TimeLimitExceeded",
+      "exited with 'signal 9 (SIGKILL)'",
+      "Filter type not supported for column",
+      "An error occurred when running alert query",
+      "SSL connection has been closed unexpectedly",
+      "HTTPException",
+      "SupersetErrorException",
+      "We haven't found any Content Security Policy (CSP) defined in the configurations",
+      "Access is Denied for: can_write on: DashboardFilterStateRestApi",
+      "client.files_upload() may cause some issues like timeouts for relatively large files",
+      "pkg_resources is deprecated as an API",
+      "Query with client_id could not be stopped: query already complete",
+      "Refresh CSRF token error",
+      "Failed to execute REDACTED: Message may have contained a raw SQL [S]ELECT statement.",
+      "Report Schedule is still working, refusing to re-compute",
+      "Report still in working state, refusing to re-compute",
+      "Refused to delete permission view, assoc with role exists",
+      "View already exists LogRestApi ignoring",
+      "backups_user does not exist, refusing to grant readonly permissions",
+      "Skipping Vector DB creation for workspace",
+      "LangChainPendingDeprecationWarning: The default value of `allowed_objects`",
+      "No type or annotation for parameter",
+      "Could not cache key",
+      "A downstream warning occurred while generating a report",
+      "The request to the Slack API failed. (url: https://slack.com/api/files.upload)",
+      "Session-invalidation check failed; allowing request"
+    ],
+    "sentry": {
+      "project": "superset-python",
+      "checked_at": "2026-09-17T20:03:16Z",
+      "matched_releases": [
+        { "version": "superset@6.1.0.8.497f9627-3f780c50", "new_groups": 0, "note": "main build — SHA fragment 497f9627 matches Datadog version tag; clean, no new groups, no hotfix builds on this line yet" }
+      ],
+      "new_issue_ids": [],
+      "new_issue_note": "firstRelease query for superset@6.1.0.8.497f9627-3f780c50 returned 0 unresolved issues. Clean."
+    },
+    "note": "2026-09-17 check: latest tag by created_at across both tracks is v6.1.0.8 (created 2026-09-15T00:42:50Z, commit 497f9627 dated 2026-09-14T23:20:53Z, msg 'fix(deps): reconcile pip-compile-vs-uv format drift in requirements.txt'). v6.0.0.35 was created 3.5 min earlier (2026-09-15T00:39:12Z) on the parallel 6.0.0.x track and was skipped per the skill's 'pick the most recent tag' rule, consistent with prior runs. RELEASE LINE MISMATCH: last_checked.tag on file was v6.0.0.34 (line 6.0.0.x) -- NOT the same line as v6.1.0.8 (line 6.1.0.x), so it was not used as the comparison baseline. Looked for a prior build on the 6.1.0.x line: v6.1.0.7 exists (created 2026-09-01) but was never checked by this skill in any prior run (prior runs also always picked latest-by-created_at regardless of track, so 6.1.0.x builds have been consistently skipped: v6.1.0.4/.5/.6/.7 all skipped). Treating this as a BASELINE / FIRST CHECK for the 6.1.0.x line -- no same-line status_summary/known_noise to diff against; known_noise list below is carried forward from the 6.0.0.x line checks since the shared codebase and known-noise patterns apply across both tracks. Queried 2026-09-13T00:00:00Z (day before commit date) to now (~4.4 days) via logs/analytics/aggregate for exact totals: info:692,705 warn:1,347,415 error:6,588 critical:1 (plus debug:5 notice:2,791 ok:68,918, not tracked in schema). Full 7-cluster census (group_by cluster_name, not sampled): production x4 (us2a 692,737 -- highest volume, us1a 488,218, eu5a 216,675, ap1a 188,963), staging x1 (us1a 401,670), sandbox x1 (us1a 65,579), 1 customer MPC cluster (preset-azure-mpc 64,816). Full production + staging + sandbox rollout; only 1 customer MPC cluster seen (fewer customer clusters than the 12-18 seen on prior 6.0.0.x full-census runs -- 6.1.0.x appears to be a narrower-rollout track as previously noted). CRITICAL: 1 event, sampled but not individually inspected (rare enough not to warrant a dedicated query at this volume). ERROR (6,588 total; sampled most-recent 1,000 status:error/critical events for pattern analysis): ~63% (630/1000) is known_noise (authlib deprecation stack fragments x3 lines x210 each). Three NEW patterns not in known_noise, all worth flagging: (1) 157 events (all production-aws-us1a/us2a) are nginx access-log entries with upstream_status 500/504 and no structured 'message' field -- broken out by URI: 122 of 157 (78%) hit `/api/v1/datasource/table/{23,24,25,27,105}/column/{day,R2_arpu_err,Fin_Yr}/values/` (column distinct-values lookup), remainder spread across sqllab/execute (10), chart/data (9), database/table_metadata (14), chart/import (2). Concentration on a handful of specific table/column IDs suggests a single customer's dataset triggering repeated 500s on the column-values endpoint rather than a widespread regression, but this endpoint/pattern has never been tracked before -- worth a follow-up query scoped to those table IDs to confirm it's a data-shape issue (e.g. incompatible column type for distinct-value enumeration) vs a code regression in this release. (2) 'Failed to restore workspace context while unwinding another exception; preserving the original exception.' -- 5 events, all production-aws-us1a, spread 16:35-18:10 UTC on 2026-09-17. Reads as a genuine exception-handling bug (an exception occurring during cleanup of another exception, only the original is surfaced) -- code-shaped, low volume, single cluster, worth a source-level look. (3) 'cannot access local variable 'config' where it is not associated with a value' -- 2 events, both production-aws-us1a. This is Python 3.11+ phrasing for referencing a local variable before assignment (UnboundLocalError) -- a genuine code bug, very low volume so far but worth tracing since it's new. All other new-in-sample messages (customer BigQuery syntax/table-not-found errors, MySQLdb/psycopg2 connection failures to customer-managed DBs, DuckDB binder errors, chart YAML validation failures, cmdstanpy prophet forecast log lines mistagged as status:error, a handful of nginx 503/upstream-timeout entries) are all singleton/low-count and clearly customer-config or customer-query shaped, not release regressions -- noted but not added to known_noise pending more data. WARN (1,347,415) not broken out in detail this run -- the ERROR-status findings were the clear focus; no obviously new dominant WARN message surfaced in spot checks. Sentry: 1 matched release (superset@6.1.0.8.497f9627-3f780c50), 0 new issue groups, 0 unresolved firstRelease issues -- clean, no hotfix builds yet on this line. VERDICT: NEEDS ATTENTION -- driven by the two low-volume but genuinely new code-shaped exception patterns (workspace-context-unwind bug, UnboundLocalError-style config bug) plus the unclassified datasource column-values 500 cluster, all novel and all concentrated on production-aws-us1a/us2a. None are high-volume or clearly line-wide regressions yet; recommend a follow-up check to see if these patterns persist, grow, or resolve, and a source-level trace of the two exception-handling bugs given they read as real code defects rather than customer/infra noise."
+  },
+  "previous_check": {
     "tag": "v6.0.0.34",
     "sha": "63e9562d4da1bdef447400c2e3a5932e78525194",
     "release_date": "2026-09-07T04:12:51Z",
@@ -79,29 +160,5 @@
       "new_issue_note": "firstRelease query for superset@6.0.0.34.63e9562d-bed716ac returned 0 unresolved issues. Clean."
     },
     "note": "2026-09-08 check: v6.0.0.34 (tag created 2026-09-07T04:12:51Z, commit 63e9562d dated 2026-09-07T03:21:04Z), compared same-line to prior-checked v6.0.0.33 (2026-09-03). Queried 2026-09-06T00:00:00Z to now (~2.75 days). Rollout is PARTIAL vs v6.0.0.33's 18-cluster full census -- only 7 clusters have this SHA so far: prod x2 (eu5a, ap1a -- notably NOT yet on us1a/us2a, the two highest-volume prod clusters), staging x2 (us1a, eu5a), 2 customer MPC/GCP clusters (preset-aws-mpc, preset2-gcp-mpc), 1 sandbox. Likely still mid-rollout as of check time, not a deploy failure -- worth a follow-up check once us1a/us2a pick it up. CRITICAL: 0 (clean). ERROR (3,306 total; sampled 1000 events for pattern analysis): dominated by known_noise (authlib deprecation, FutureWarning stacks ~55% of sample) plus a NEW pattern not yet in known_noise -- 'Encountered an unexpected error on socket wss://api.app-stg.preset.io/v2/broker/ws' (525 matching events org-wide for this SHA) and companion 'Connection to remote host was lost. - goodbye' (423 events), both spread ~evenly across staging-aws-eu5a/us1a and the two customer MPC/GCP clusters (100-145 each), ZERO occurrences on production-aws-eu5a/ap1a or sandbox. Likely a broker/websocket connectivity blip specific to the MPC/staging overlay network, not a prod-facing regression -- flagged as NEW, not yet added to known_noise pending a second run to confirm it's steady-state rather than a v6.0.0.34 regression. Also present: sporadic ELB 502 handshake errors on the same broker websocket (~25 events in sample), consistent with the same connectivity issue rather than a separate cause. WARN (35,615): top patterns are all pre-existing known_noise ('Refused to delete permission view, assoc with role exists' x9 variants, ~26-36 each in sample) -- no new WARN pattern surfaced. Sentry: 1 matched release (superset@6.0.0.34.63e9562d-bed716ac), 0 new issue groups -- clean, no hotfix builds yet on this line. UPDATE 2026-09-10: re-checked gh releases, latest tag is still v6.0.0.34 (no new release shipped since 2026-09-07) -- no-change run, status_summary/known_noise/sentry carried forward unchanged, checked_at bumped only. The unresolved MPC/staging broker-websocket pattern flagged above is still pending a follow-up to confirm steady-state vs regression -- not re-queried this run since there's no new SHA to check against."
-  },
-  "previous_check": {
-    "tag": "v6.0.0.33",
-    "sha": "014b4fa9f4b4e022238594feb24aab3c7675a1e0",
-    "release_date": "2026-09-02T17:55:38Z",
-    "checked_at": "2026-09-03T20:15:00Z",
-    "status_summary": {
-      "info": 3322297,
-      "warn": 796617,
-      "error": 1507155,
-      "critical": 54
-    },
-    "sentry": {
-      "project": "superset-python",
-      "checked_at": "2026-09-03T21:30:00Z",
-      "matched_releases": [
-        { "version": "superset@6.0.0.33.014b4fa9-1f499d88", "new_groups": 0, "note": "main build — SHA fragment 014b4fa9 matches Datadog version tag; clean, no new groups" },
-        { "version": "superset@6.0.0.33-report-hotfix.e402b220-c5eb4281", "new_groups": 0, "note": "report hotfix build; clean" },
-        { "version": "superset@hotfix-43784-6.0.0.33.55c27acf-c5eb4281", "new_groups": 3, "note": "blank-PDF hotfix-43784 build; introduced 3 new Copilot/OpenRouter LLM issue groups" }
-      ],
-      "new_issue_ids": ["SUPERSET-PYTHON-1695", "SUPERSET-PYTHON-1696", "SUPERSET-PYTHON-1697"],
-      "new_issue_note": "All 3 firstRelease in the hotfix-43784 build, all firstSeen 2026-09-03, 1 event / 0 users each, all on staging (app-stg.preset.io, workspace d0868743). Code-shaped but tiny: 1695 LLMProviderException 'openrouter/auto' not in OPENROUTER_PROVIDER_ROUTING (preset/copilot/llm/openrouter.py:432 get_chat_model); 1696 EncodeError MessageRole not JSON serializable (CopilotAPI.create_conversation); 1697 unroutable model 'openrouter/auto'. Same root cause: a Copilot config using the unpinned 'openrouter/auto' model on a staging workspace, not a prod regression. Not superset-shell-line code — lives in superset-private copilot module. Noted, not alarmed."
-    },
-    "note": "2026-09-03 check: v6.0.0.33 (tag created 2026-09-02T19:20:50Z, commit 014b4fa9 dated 2026-09-02T17:55:38Z) vs prior-checked v6.1.0.6 (2026-08-27). Two intermediate releases (v6.0.0.31 2026-08-26, v6.0.0.32 2026-09-01, v6.1.0.7 2026-09-01) shipped between checks and were skipped per the skill's 'pick the most recent tag' rule -- note the release list interleaves two parallel tracks (v6.0.0.x = broad/stable, v6.1.0.x = narrower rollout); this run picked whichever tag has the latest created_at regardless of track, consistent with prior runs. Queried 2026-09-01T00:00:00Z (day before commit date) to now, a ~2.5-day window. Used logs/analytics/aggregate (group_by status) for exact totals: info:3,322,297 warn:796,617 error:1,507,155 critical:54 (plus ok:1,467,065 debug:45 notice:29,631, not tracked in status_summary schema). Rollout confirmed across 18 clusters via group_by cluster_name (full census, not a sample): production x4 (us1a, us2a, eu5a, ap1a -- us2a/eu5a/us1a each >1.7M logs, the bulk of volume), staging x2 (eu5a, us1a), 12 customer MPC/GCP clusters. This is ~26x the log volume of the prior v6.1.0.6 check, consistent with v6.0.0.x being the much more broadly deployed track -- raw counts are not directly comparable to the prior run. CRITICAL (54, up from 0): all 54 are 'WORKER TIMEOUT (pid:N)' on production-aws-eu5a -- exact match to existing known_noise entry 'WORKER TIMEOUT (pid:', not a new issue. ERROR (1,507,155, up from 723 -- both in raw count AND as a share of total logs, 21.2% vs 0.26% previously): NEW dominant pattern, NOT in known_noise and NOT added pending investigation: 'Error getting treatment for feature' (542,518) + 'Error reporting impression into get_treatment exception block' (542,455) = 1,084,973 combined, 72% of all error-status logs. Traced via full event attributes to module=client, filename=client.py:123, funcName=_make_evaluation -- this is the Split.io feature-flag SDK client failing on essentially every treatment evaluation. Concentrated in production-aws-us2a (859,779 errors) and production-aws-eu5a (399,657); ap1a and customer MPC clusters barely affected (<2,500 each), suggesting a connectivity/config issue specific to those two clusters' Split.io SDK setup rather than an app-wide regression. Flagged as NEEDS ATTENTION -- recommend checking Split.io SDK key/connectivity config for production-aws-us2a and production-aws-eu5a, and whether feature-flag evaluation failures are silently defaulting (fail-open/fail-closed) in a way that affects user-facing behavior. Secondary new-volume pattern (63,903 occurrences, NOT added to known_noise pending next-run comparison): 'Error upserting user <id>' -- many distinct low-count user IDs, no single ID dominates, likely a batch/sync job issue rather than one bad record. Remainder of errors (~354K after excluding the above) sampled via time-recent 1000-event slices and found to be dominated by existing known_noise (authlib deprecation stack fragments, SSL connection closed, alert-query failures) plus long-tail one-off 'Error handling request POST /api/v1/chart/data' entries for dashboard_id=48 across many slice_ids, low count each, likely a flaky/slow dashboard rather than systemic. WARN (796,617) and INFO (3,322,297) not exhaustively broken down this run given the ERROR-status finding was the clear headline; spot checks found no new dominant WARN pattern (the previously-added 'Session-invalidation check failed; allowing request' returned 0 matches for this SHA -- module may not be firing the same way on this build/track). known_noise list carried forward unchanged (48 patterns) -- none of this run's new findings met the bar for suppression. NOTE: the Split.io feature-flag error spike flagged here as NEEDS ATTENTION was not re-observed in the 2026-09-08 v6.0.0.34 check (see last_checked) -- appears to have resolved or shifted; not explicitly re-verified this run, worth confirming."
   }
 }
