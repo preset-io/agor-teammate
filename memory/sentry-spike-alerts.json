@@ -48,6 +48,12 @@
       "note": "TenantNotFoundException: ConnectTimeout to api.app.preset.io (internal control-plane), culprit DatasetRestApi.get_drill_info. New 2026-09-01T15:09Z, 0 users. Transient ~37min connectivity blip during multi_tenant workspace-config lookups, self-resolved (lastSeen 2026-09-01T15:46Z, no events on 09-02). Infra-noise, not code-fixable (existing backoff/retry already wraps the call) — flagged in case it correlates with a known api.app.preset.io deploy/outage. Low-volume siblings same window/root cause not separately tracked: SUPERSET-PYTHON-164E (multi_tenant.scheduler, 16 events), SUPERSET-PYTHON-164F (multi_tenant.poll_workspace_events, 12 events), SUPERSET-PYTHON-164D (multi_tenant.poll_workspace_updates, 9 events). Re-alert if events/24h grow >=2x this peak or it starts recurring.",
       "sentry_link": "https://preset-inc.sentry.io/issues/7704901866/"
     },
+    "SUPERSET-PYTHON-16YT": {
+      "first_alerted": "2026-09-17",
+      "peak_events_24h": 156,
+      "note": "UnboundLocalError: local variable 'folder_editors' referenced before assignment, culprit FolderRestApi.get_list (preset/folders/api.py:480). New 2026-09-15T14:07:42Z, still firing 2026-09-16T20:25:48Z, 0 users. 156 events/24h vs 10 prior 24h (15.6x day/day) — crosses New lens (>=100 events, firstSeen<=72h) and is:escalating tag independently. Not part of an org-wide jump (24h org-wide volume-delta 0.70x today, no jump). Code-shaped — looks like a straightforward uninitialized-variable bug on some code path in folder listing, not infra-noise. No open burndown PR touches folder_editors/FolderRestApi/get_list as of 2026-09-17. DMed Elizabeth 2026-09-17 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1789653713618239). Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7733560635/"
+    },
     "SUPERSET-PYTHON-16XY": {
       "first_alerted": "2026-09-15",
       "peak_events_24h": 1424,
