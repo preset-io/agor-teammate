@@ -48,17 +48,25 @@
       "note": "TenantNotFoundException: ConnectTimeout to api.app.preset.io (internal control-plane), culprit DatasetRestApi.get_drill_info. New 2026-09-01T15:09Z, 0 users. Transient ~37min connectivity blip during multi_tenant workspace-config lookups, self-resolved (lastSeen 2026-09-01T15:46Z, no events on 09-02). Infra-noise, not code-fixable (existing backoff/retry already wraps the call) — flagged in case it correlates with a known api.app.preset.io deploy/outage. Low-volume siblings same window/root cause not separately tracked: SUPERSET-PYTHON-164E (multi_tenant.scheduler, 16 events), SUPERSET-PYTHON-164F (multi_tenant.poll_workspace_events, 12 events), SUPERSET-PYTHON-164D (multi_tenant.poll_workspace_updates, 9 events). Re-alert if events/24h grow >=2x this peak or it starts recurring.",
       "sentry_link": "https://preset-inc.sentry.io/issues/7704901866/"
     },
+    "SUPERSET-PYTHON-176K": {
+      "first_alerted": "2026-09-18",
+      "peak_events_24h": 119,
+      "note": "DatabaseError: BigQuery Syntax error: Expected end of input but got keyword ESCAPE at [4:33], culprit DatasourceRestApi.get_column_values (column-value/typeahead search). New 2026-09-17T13:04:27Z, 119 events total, 0 users, single customer project `stickman-archer-79307733`. Crosses New lens (>=100 events, firstSeen<=72h) and appeared in is:escalating listing, but the burst already went quiet (lastSeen 2026-09-17T15:02Z, ~2h window) and issue-scoped volume-delta is flat (63 vs 56 prior 24h, 1.12x) — not actively growing. Plausibly code-shaped: looks like Superset's LIKE/typeahead query-building emits an ESCAPE clause BigQuery's dialect rejects in this position, not the usual customer-DB-config noise. Checked open PRs in apache/superset for get_column_values/ESCAPE — none touch it (PR #44284 is an unrelated Athena where_in percent-doubling fix). DMed Elizabeth 2026-09-18 for the 8am burndown to pick up, not urgent. Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7737898154/"
+    },
     "SUPERSET-PYTHON-16YT": {
       "first_alerted": "2026-09-17",
       "peak_events_24h": 156,
       "note": "UnboundLocalError: local variable 'folder_editors' referenced before assignment, culprit FolderRestApi.get_list (preset/folders/api.py:480). New 2026-09-15T14:07:42Z, still firing 2026-09-16T20:25:48Z, 0 users. 156 events/24h vs 10 prior 24h (15.6x day/day) — crosses New lens (>=100 events, firstSeen<=72h) and is:escalating tag independently. Not part of an org-wide jump (24h org-wide volume-delta 0.70x today, no jump). Code-shaped — looks like a straightforward uninitialized-variable bug on some code path in folder listing, not infra-noise. No open burndown PR touches folder_editors/FolderRestApi/get_list as of 2026-09-17. DMed Elizabeth 2026-09-17 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1789653713618239). Re-alert if events/24h grow >=2x this peak.",
-      "sentry_link": "https://preset-inc.sentry.io/issues/7733560635/"
+      "sentry_link": "https://preset-inc.sentry.io/issues/7733560635/",
+      "status_2026_09_18": "Fully quiet — lastSeen 2026-09-16T20:25:48Z, no events since. No re-alert."
     },
     "SUPERSET-PYTHON-16XY": {
       "first_alerted": "2026-09-15",
       "peak_events_24h": 1424,
       "note": "DatabaseError: 404 POST bigquery.googleapis.com Not found: Project marts, culprit DatasetRestApi.put (datetime_format_detector column-type detection). New 2026-09-15T08:51:44Z, still firing 14:01Z, 1 user, 1424 events/24h. Crosses New lens (>=100 events, firstSeen<=72h) and Escalating lens (is:escalating tag + >=500 events/24h) independently. Customer's BigQuery project 'marts' not found (renamed/deleted on their GCP side) — customer-DB-config infra-noise per skills/sentry-error-burndown.md skip-list, not app-code-fixable. No open burndown PR touches this issue. Not the sole driver of today's org-wide 2.03x 24h jump (19382 vs 9556) — that jump is fully explained by the already-tracked 2026-09-06 quota-exhaustion recovery ramp continuing to climb (accepted-error series 0,0,0,15,6675,11693,14170,13266 over 09-08..09-15 via stats_v2), same as the 09-11/09-12/09-13 'ramp, not news' calls — no separate org-wide alert. Cross-checked other top-24h issues (13JV, YE9, VVE, A9F, 10G1, A2F, 14VA, YCT, F2, VVF, VVG) via `sentry.py issue`: all confirmed true firstSeen months-to-a-year ago despite the 24h-stats-period search mislabeling them as firstSeen=today (same known display quirk noted in the 09-13 entry) — chronic cluster resuming, not new. DMed Elizabeth 2026-09-15 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1789481054922249). Re-alert if events/24h grow >=2x this peak.",
-      "sentry_link": "https://preset-inc.sentry.io/issues/7733027938/"
+      "sentry_link": "https://preset-inc.sentry.io/issues/7733027938/",
+      "status_2026_09_18": "Fully quiet — lastSeen 2026-09-15T14:43:31Z, no events since. No re-alert."
     },
     "SUPERSET-PYTHON-YD4": {
       "first_alerted": "2026-08-25",
