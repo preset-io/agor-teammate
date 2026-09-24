@@ -68,6 +68,12 @@
       "sentry_link": "https://preset-inc.sentry.io/issues/7733027938/",
       "status_2026_09_18": "Fully quiet — lastSeen 2026-09-15T14:43:31Z, no events since. No re-alert."
     },
+    "MANAGER-PYTHON-43T": {
+      "first_alerted": "2026-09-24",
+      "peak_events_24h": 129,
+      "note": "Failed to schedule workspace into any deployment as there is no remaining capacity available, culprit jobs.med.drain_deployments. New 2026-09-24T11:56:59Z, still firing 12:19:39Z, 0 users. 129 events, crosses New lens (>=100 events, firstSeen<=72h) and independently is:escalating. Cluster redhat-preprod-aws-mpc at 0% remaining_cap_pct — capacity-exhaustion on a preprod cluster, not app-code-fixable via a PR; needs a capacity bump or scheduling-limit change on that cluster (infra-noise, new category not previously in the skip-list). Not part of an org-wide jump (24h org-wide volume-delta 1.42x today, under the 1.5x threshold). No open burndown PR in preset-io/manager touches drain_deployments/capacity scheduling as of 2026-09-24. DMed Elizabeth 2026-09-24 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1790258519077449). Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7752533504/"
+    },
     "SUPERSET-PYTHON-YD4": {
       "first_alerted": "2026-08-25",
       "peak_events_24h": 86156,
