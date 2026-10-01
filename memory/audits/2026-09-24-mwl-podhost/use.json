@@ -1,0 +1,464 @@
+{
+ "superset.poll_event": {
+  "environment(tv)": [
+   "dash:Permissions API"
+  ],
+  "workspace(tv)": [
+   "dash:Permissions API"
+  ],
+  "event_type(tv)": [
+   "dash:Permissions API"
+  ],
+  "event_type(by)": [
+   "dash:Permissions API"
+  ]
+ },
+ "superset.ChartDataRestApi.data.warning": {
+  "environment(tv)": [
+   "dash:GAQ vs Sync"
+  ]
+ },
+ "superset.gunicorn.worker.concurrent_reqs": {
+  "environment(tv)": [
+   "dash:GAQ vs Sync",
+   "dash:Superset Connection Cnts VS. Connection Errors"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:MPC 502s and 504s (Default to wealthsimple)",
+   "dash:Pods performance"
+  ],
+  "kube_namespace(tv)": [
+   "dash:MPC 502s and 504s (Default to wealthsimple)"
+  ],
+  "deployment(by)": [
+   "dash:Pods performance"
+  ],
+  "deployment(tv)": [
+   "dash:Pods performance"
+  ],
+  "pod_name(by)": [
+   "dash:Superset Connection Cnts VS. Connection Errors"
+  ],
+  "kubernetes-cluster(tv)": [
+   "dash:Superset Connection Cnts VS. Connection Errors"
+  ],
+  "kube_release(tv)": [
+   "dash:Superset Connection Cnts VS. Connection Errors"
+  ],
+  "pod_name(tv)": [
+   "dash:Superset Connection Cnts VS. Connection Errors"
+  ]
+ },
+ "superset.DashboardRestApi.put.success": {
+  "environment(tv)": [
+   "dash:Audit Log Volume Analysis"
+  ]
+ },
+ "superset.DashboardRestApi.get.success": {
+  "environment(tv)": [
+   "dash:Audit Log Volume Analysis"
+  ],
+  "environment": [
+   "slo:Dashboard Get Success Rate"
+  ]
+ },
+ "superset.ChartRestApi.put.success": {
+  "environment(tv)": [
+   "dash:Audit Log Volume Analysis"
+  ]
+ },
+ "superset.ChartRestApi.get.success": {
+  "environment(tv)": [
+   "dash:Audit Log Volume Analysis"
+  ]
+ },
+ "superset.DatasetRestApi.get.success": {
+  "environment(tv)": [
+   "dash:Audit Log Volume Analysis"
+  ]
+ },
+ "superset.DashboardRestApi.get.time.avg": {
+  "workspace(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "version(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "env": [
+   "dash:Api Performance Trends"
+  ]
+ },
+ "superset.DashboardRestApi.get_list.time.avg": {
+  "workspace(tv)": [
+   "dash:Api Performance Trends",
+   "dash:Superset Health and API"
+  ],
+  "version(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "env": [
+   "dash:Api Performance Trends"
+  ],
+  "env(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "version(by)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.DatabaseRestApi.get_list.time.avg": {
+  "workspace(tv)": [
+   "dash:Api Performance Trends",
+   "dash:Superset Health and API"
+  ],
+  "version(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "env": [
+   "dash:Api Performance Trends"
+  ],
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "version(by)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.DashboardRestApi.get_charts.time.avg": {
+  "workspace(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "version(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "env": [
+   "dash:Api Performance Trends"
+  ]
+ },
+ "superset.DatasetRestApi.get_list.time.avg": {
+  "workspace(tv)": [
+   "dash:Api Performance Trends",
+   "dash:Superset Health and API"
+  ],
+  "version(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "env": [
+   "dash:Api Performance Trends"
+  ],
+  "env(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "version(by)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.ChartRestApi.get.time.avg": {
+  "workspace(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "version(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "env": [
+   "dash:Api Performance Trends"
+  ],
+  "env(tv)": [
+   "dash:Api Performance Trends"
+  ]
+ },
+ "superset.ChartRestApi.get_list.time.avg": {
+  "workspace(tv)": [
+   "dash:Api Performance Trends",
+   "dash:Superset Health and API"
+  ],
+  "version(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "env": [
+   "dash:Api Performance Trends"
+  ],
+  "env(tv)": [
+   "dash:Api Performance Trends"
+  ],
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "version(by)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.DashboardRestApi.get_list.time.count": {
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "workspace(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.ChartRestApi.get_list.success": {
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "workspace(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.ChartRestApi.related.success": {
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "workspace(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.DatasetRestApi.get_list.success": {
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "workspace(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.DatabaseRestApi.get_list.success": {
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "workspace(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "superset.sqllab.query.time_executing_query.avg": {
+  "environment(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "workspace(tv)": [
+   "dash:Superset Health and API"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Superset Health and API"
+  ]
+ },
+ "api_gateway.kong_memory_workers_lua_vms_bytes": {
+  "environment(tv)": [
+   "dash:Kong (API Gateway)"
+  ],
+  "kubernetes-cluster(tv)": [
+   "dash:Kong (API Gateway)"
+  ]
+ },
+ "superset.dashboard": {
+  "environment(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "environment(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "team_id(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "workspace(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "team_id(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "workspace(tv)": [
+   "dash:Preset Superset app metrics"
+  ]
+ },
+ "superset.loaded_from_cache": {
+  "workspace(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "team_id(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "environment(tv)": [
+   "dash:Preset Superset app metrics"
+  ]
+ },
+ "superset.sqllab.query.time_executing_query.max": {
+  "environment(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "environment(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "team_id(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "workspace(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "team_id(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "workspace(tv)": [
+   "dash:Preset Superset app metrics"
+  ]
+ },
+ "superset.sqllab.query.results_backend_write.avg": {
+  "environment(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "environment(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "team_id(tv)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "workspace(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "team_id(by)": [
+   "dash:Preset Superset app metrics"
+  ],
+  "workspace(tv)": [
+   "dash:Preset Superset app metrics"
+  ]
+ },
+ "superset.reports.execute": {
+  "host(tv)": [
+   "dash:Application oncall"
+  ],
+  "workspace(by)": [
+   "dash:Engineering SLOs"
+  ],
+  "workspace": [
+   "dash:Engineering SLOs"
+  ],
+  "environment(tv)": [
+   "dash:Alerts & Reports Operational Overview"
+  ],
+  "environment(by)": [
+   "dash:Alerts & Reports Operational Overview"
+  ]
+ },
+ "superset.gaq.api.request.count": {
+  "environment(tv)": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ],
+  "outcome(by)": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ],
+  "outcome": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ]
+ },
+ "superset.gaq.api.request.duration.95percentile": {
+  "environment(tv)": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ],
+  "route(by)": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ]
+ },
+ "superset.gaq.api.request.duration.avg": {
+  "environment(tv)": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ],
+  "route(by)": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ]
+ },
+ "superset.gunicorn.requests": {
+  "environment(tv)": [
+   "dash:Pods performance",
+   "dash:Preset Gunicorn"
+  ],
+  "pod_name(by)": [
+   "dash:Pods performance"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Pods performance"
+  ],
+  "kube_release(tv)": [
+   "dash:Pods performance"
+  ],
+  "component-group": [
+   "dash:Pods performance"
+  ],
+  "environment(by)": [
+   "dash:Preset Gunicorn"
+  ]
+ },
+ "superset.gunicorn.worker.current_workers": {
+  "environment(tv)": [
+   "dash:Pods performance"
+  ],
+  "pod_name(by)": [
+   "dash:Pods performance"
+  ],
+  "kube_cluster_name(tv)": [
+   "dash:Pods performance"
+  ],
+  "kube_release(tv)": [
+   "dash:Pods performance"
+  ],
+  "component-group": [
+   "dash:Pods performance"
+  ]
+ },
+ "superset.gunicorn.request.status.400": {
+  "environment(tv)": [
+   "dash:Preset Gunicorn"
+  ]
+ },
+ "superset.gunicorn.request.status.302": {
+  "environment(tv)": [
+   "dash:Preset Gunicorn"
+  ]
+ },
+ "superset.gunicorn.request.duration.avg": {
+  "environment(tv)": [
+   "dash:Preset Gunicorn"
+  ]
+ },
+ "superset.gunicorn.request.duration.95percentile": {
+  "environment(tv)": [
+   "dash:Preset Gunicorn"
+  ]
+ },
+ "superset.gunicorn.request.duration.max": {
+  "environment(tv)": [
+   "dash:Preset Gunicorn"
+  ],
+  "name(by)": [
+   "dash:Preset Gunicorn"
+  ]
+ }
+}

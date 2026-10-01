@@ -1,0 +1,223 @@
+{
+ "superset.poll_event": [
+  [
+   "sum",
+   "as_count",
+   "dash:Permissions API"
+  ]
+ ],
+ "superset.ChartDataRestApi.data.warning": [
+  [
+   "sum",
+   "as_count",
+   "dash:GAQ vs Sync"
+  ]
+ ],
+ "superset.DashboardRestApi.put.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Audit Log Volume Analysis"
+  ]
+ ],
+ "superset.DashboardRestApi.get.success": [
+  [
+   "sum",
+   "-",
+   "slo:Dashboard Get Success Rate"
+  ],
+  [
+   "sum",
+   "as_count",
+   "dash:Audit Log Volume Analysis"
+  ]
+ ],
+ "superset.ChartRestApi.put.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Audit Log Volume Analysis"
+  ]
+ ],
+ "superset.ChartRestApi.get.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Audit Log Volume Analysis"
+  ]
+ ],
+ "superset.DatasetRestApi.get.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Audit Log Volume Analysis"
+  ]
+ ],
+ "superset.DashboardRestApi.get.time.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Api Performance Trends"
+  ]
+ ],
+ "superset.DashboardRestApi.get_list.time.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Api Performance Trends"
+  ],
+  [
+   "avg",
+   "-",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.DatabaseRestApi.get_list.time.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Api Performance Trends"
+  ],
+  [
+   "avg",
+   "-",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.DashboardRestApi.get_charts.time.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Api Performance Trends"
+  ]
+ ],
+ "superset.DatasetRestApi.get_list.time.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Api Performance Trends"
+  ],
+  [
+   "avg",
+   "-",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.ChartRestApi.get.time.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Api Performance Trends"
+  ]
+ ],
+ "superset.ChartRestApi.get_list.time.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Api Performance Trends"
+  ],
+  [
+   "avg",
+   "-",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.DashboardRestApi.get_list.time.count": [
+  [
+   "sum",
+   "as_count",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.ChartRestApi.get_list.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.ChartRestApi.related.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.DatasetRestApi.get_list.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.DatabaseRestApi.get_list.success": [
+  [
+   "sum",
+   "as_count",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "superset.sqllab.query.time_executing_query.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Superset Health and API"
+  ]
+ ],
+ "api_gateway.kong_memory_workers_lua_vms_bytes": [
+  [
+   "avg",
+   "-",
+   "dash:Kong (API Gateway)"
+  ]
+ ],
+ "superset.dashboard": [
+  [
+   "avg",
+   "as_count",
+   "dash:Preset Superset app metrics"
+  ]
+ ],
+ "superset.loaded_from_cache": [
+  [
+   "avg",
+   "as_count",
+   "dash:Preset Superset app metrics"
+  ]
+ ],
+ "superset.sqllab.query.time_executing_query.max": [
+  [
+   "avg",
+   "-",
+   "dash:Preset Superset app metrics"
+  ]
+ ],
+ "superset.sqllab.query.results_backend_write.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Preset Superset app metrics"
+  ]
+ ],
+ "superset.gaq.api.request.count": [
+  [
+   "sum",
+   "as_count",
+   "dash:Global Async Queries (GAQ) Metrics"
+  ]
+ ],
+ "superset.gaq.api.request.duration.95percentile": [
+  [
+   "max",
+   "-",
+   "dash:Global Async Queries (GAQ) Metrics"
+  ]
+ ],
+ "superset.gaq.api.request.duration.avg": [
+  [
+   "avg",
+   "-",
+   "dash:Global Async Queries (GAQ) Metrics"
+  ]
+ ]
+}

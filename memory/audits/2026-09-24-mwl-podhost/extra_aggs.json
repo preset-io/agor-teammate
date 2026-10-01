@@ -1,0 +1,38 @@
+{
+ "superset.dashboard": {
+  "type": "rate",
+  "extra": [
+   [
+    "sum",
+    "avg"
+   ]
+  ],
+  "assets": [
+   "dash:Preset Superset app metrics"
+  ]
+ },
+ "superset.loaded_from_cache": {
+  "type": "rate",
+  "extra": [
+   [
+    "sum",
+    "avg"
+   ]
+  ],
+  "assets": [
+   "dash:Preset Superset app metrics"
+  ]
+ },
+ "superset.gaq.api.request.duration.95percentile": {
+  "type": "gauge",
+  "extra": [
+   [
+    "avg",
+    "max"
+   ]
+  ],
+  "assets": [
+   "dash:Global Async Queries (GAQ) Metrics"
+  ]
+ }
+}
