@@ -63,7 +63,8 @@
       "Could not cache key",
       "A downstream warning occurred while generating a report",
       "The request to the Slack API failed. (url: https://slack.com/api/files.upload)",
-      "Session-invalidation check failed; allowing request"
+      "Session-invalidation check failed; allowing request",
+      "Failed to unbind the workspace context while leaving a block; preserving the original exception."
     ],
     "sentry": {
       "project": "superset-python",
@@ -246,7 +247,7 @@
         "new_issue_ids": []
       },
       "baseline": "v6.1.0.8 (2026-09-17: error 6588 / crit 1 over 4.4d)",
-      "note": "Queried from 2026-09-24. Broker/ws disconnect pattern present (prod 1499 + 'goodbye' 1464, stg 348, 'Giving up _do_connect' 81) - same cross-env pattern as 6.0.0.36. NEW/CODE-SHAPED: 'Failed to unbind the workspace context while leaving a block; preserving the original exception.' 49 events, prod-only (us1a 20, eu5a 12, us2a 11, ap1a 6) with tracebacks - this is the same exception-handling bug flagged on v6.1.0.8 ('Failed to restore workspace context while unwinding', 5 events), reworded and ~10x more frequent; still unfixed. Also: 'No ExportStorage backend for cloud provider azure; dashboard exports disabled' x13 (preset-azure-mpc, config gap), config_server remote-config ConnectionRefused tracebacks x12 (startup). Sentry newGroups=0. Verdict: NEEDS ATTENTION (workspace-context unbind bug + broker/ws).",
+      "note": "Queried from 2026-09-24. Broker/ws disconnect pattern present (prod 1499 + 'goodbye' 1464, stg 348, 'Giving up _do_connect' 81) - same cross-env pattern as 6.0.0.36. NEW/CODE-SHAPED: 'Failed to unbind the workspace context while leaving a block; preserving the original exception.' 49 events, prod-only (us1a 20, eu5a 12, us2a 11, ap1a 6) with tracebacks - this is the same exception-handling bug flagged on v6.1.0.8 ('Failed to restore workspace context while unwinding', 5 events), reworded and ~10x more frequent; still unfixed. Also: 'No ExportStorage backend for cloud provider azure; dashboard exports disabled' x13 (preset-azure-mpc, config gap), config_server remote-config ConnectionRefused tracebacks x12 (startup). Sentry newGroups=0. Verdict: NEEDS ATTENTION (workspace-context unbind bug + broker/ws). | 2026-10-01 follow-up: the 'Failed to unbind the workspace context' errors are NOT a code bug. All 49 are celery cache_chart_thumbnail tasks (prod) that hit SoftTimeLimitExceeded in the Playwright screenshot; WorkspaceContextManager.__exit__ (preset/multi_tenant/base.py:252, added in #5022 / 6fe1b942) then calls session.close(), whose rollback fails with psycopg2 'SSL connection has been closed unexpectedly' (connection killed by the timeout). The handler deliberately swallows that and preserves the original exception, as designed. Same family as existing thumbnail TimeLimitExceeded noise; only the logger.exception level makes it show as error. Add to known_noise; optional fix = log at warning when exc_type is SoftTimeLimitExceeded/OperationalError.",
       "previous": {
         "tag": "v6.0.0.36",
         "sha": "d7b0f35cb5eb9f562c5f5aef5619c725ce8b14a7",
@@ -256,7 +257,8 @@
           "error": 136009,
           "critical": 5
         }
-      }
+      },
+      "status_note_verdict": "downgraded: unbind pattern is thumbnail-timeout noise, not a regression"
     },
     "calver": {
       "tag": "v2026.10.8",
