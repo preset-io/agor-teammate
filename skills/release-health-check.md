@@ -100,7 +100,7 @@ gh api "repos/preset-io/superset-shell/releases?per_page=10" \
   --jq '[.[] | {tag: .tag_name, created: .created_at}] | .[0:5]'
 ```
 
-Pick the most recent tag. If it matches `last_checked.tag` — **no new release**, skip to step 7 with a "no change" message.
+**Check the newest tag on EACH release line, not just the newest overall.** Three tracks ship in parallel: `v6.0.0.N`, `v6.1.0.N`, and continuous calver `v2026.MM.N` (note: `created_at` ordering interleaves them, and tags are annotated — a tag's own SHA is the tag *object*; dereference to the commit SHA, which is what Datadog `version:` uses). Use `gh api "repos/preset-io/superset-shell/tags?per_page=100"` / the releases list, group by line, take the highest build per line, and compare each against `lines.<line>.tag` in the state file. Run Steps 3–6 for every line whose tag changed; if none changed, skip to step 7 with a "no change" message.
 
 ### 3. Resolve the new tag to a commit SHA
 
@@ -310,5 +310,5 @@ Format the message as:
 
 ---
 
-**Last Updated:** 2026-09-17 (Step 8: `agor_gateway_emit_message` works directly for Soraya's channel — dropped the stale curl/token subsession workaround)
+**Last Updated:** 2026-10-01 (per-line checking: 6.0.0.x / 6.1.0.x / calver; state file has a `lines` map). Previously: 2026-09-17 (Step 8: `agor_gateway_emit_message` works directly for Soraya's channel — dropped the stale curl/token subsession workaround)
 **Created By:** Preset Architect
