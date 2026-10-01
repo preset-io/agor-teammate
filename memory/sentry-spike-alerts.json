@@ -74,6 +74,12 @@
       "note": "Failed to schedule workspace into any deployment as there is no remaining capacity available, culprit jobs.med.drain_deployments. New 2026-09-24T11:56:59Z, still firing 12:19:39Z, 0 users. 129 events, crosses New lens (>=100 events, firstSeen<=72h) and independently is:escalating. Cluster redhat-preprod-aws-mpc at 0% remaining_cap_pct — capacity-exhaustion on a preprod cluster, not app-code-fixable via a PR; needs a capacity bump or scheduling-limit change on that cluster (infra-noise, new category not previously in the skip-list). Not part of an org-wide jump (24h org-wide volume-delta 1.42x today, under the 1.5x threshold). No open burndown PR in preset-io/manager touches drain_deployments/capacity scheduling as of 2026-09-24. DMed Elizabeth 2026-09-24 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1790258519077449). Re-alert if events/24h grow >=2x this peak.",
       "sentry_link": "https://preset-inc.sentry.io/issues/7752533504/"
     },
+    "SUPERSET-PYTHON-17Z7": {
+      "first_alerted": "2026-10-01",
+      "peak_events_24h": 202,
+      "note": "ColumnNotFoundException: You don't have permission to access the data., culprit ChartDataRestApi.data. New 2026-09-29T16:13:29Z, still firing 2026-10-01T13:20:06Z, 0 users, 202 events (14d-scoped search count). Crosses New lens (>=100 events, firstSeen<=72h). Root cause (full stack via `sentry.py issue`): Snowflake OAuth2RedirectError — DatabaseError 250001 (08001) 'Invalid OAuth access token' connecting to customer host gdadclc-rhpreprod.snowflakecomputing.com, surfaced through superset/utils/oauth2.py::check_for_oauth2 -> ColumnNotFoundException in adhoc_column_to_sqla. Infra-noise per skills/sentry-error-burndown.md skip-list (customer-database config/token errors), not app-code-fixable — customer needs to refresh their Snowflake OAuth token. Concentrated in workspace fb60bbc9 (tag on latest event). Not part of an org-wide jump (24h volume-delta 0.96x today, flat). No open burndown PR across apache/superset, preset-io/manager, preset-io/superset-shell touches ChartDataRestApi.data/oauth2/Snowflake OAuth as of 2026-10-01 (checked via `gh search prs --author @me --state open`). DMed Elizabeth 2026-10-01 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1790863354033979). Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7761623545/"
+    },
     "SUPERSET-PYTHON-YD4": {
       "first_alerted": "2026-08-25",
       "peak_events_24h": 86156,
