@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "agor": {
+      "type": "http",
+      "url": "https://agor.sandbox.preset.zone/mcp",
+      "headers": { "X-API-Key": "${AGOR_SUPERSET_API_KEY}" }
+    }
+  }
+}
