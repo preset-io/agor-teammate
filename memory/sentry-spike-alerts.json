@@ -7,6 +7,18 @@
     }
   },
   "alerted": {
+    "SUPERSET-PYTHON-18JK": {
+      "first_alerted": "2026-10-07",
+      "peak_events_24h": 281,
+      "note": "\"Could not parse feature flag.\" — message-only capture (no exception/stacktrace), culprit empty. New 2026-10-07T00:11:59Z, still firing 03:25Z, 0 users. 281 events, crosses New lens (>=100 events, firstSeen<=72h) independently (not is:escalating). Breadcrumb shows a redis MGET on a SPLITIO.* key just before capture — consistent with the Split.io feature-flag SDK choking on a malformed/cached flag definition, not an app-code bug. No stacktrace in the event suggests it's a deliberate sentry_sdk.capture_message, i.e. already handled defensively rather than an uncaught error. Not part of an org-wide jump (24h volume-delta 1.09x today, under 1.5x). No open burndown PR (apache/superset, preset-io/manager) touches 'feature flag'/split/SPLITIO as of 2026-10-07. DMed Elizabeth 2026-10-07 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1791381737569859). Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7777742937/"
+    },
+    "SUPERSET-PYTHON-18J6": {
+      "first_alerted": "2026-10-07",
+      "peak_events_24h": 132,
+      "note": "OperationalError: (MySQLdb.OperationalError) (2026, 'TLS/SSL error: Hostname verification failed'), culprit ChartDataRestApi.data. New 2026-10-06T19:10:45Z, still firing 23:13:05Z, 0 users. 132 events, crosses New lens (>=100 events, firstSeen<=72h). Customer-owned MySQL connection, SSL cert/hostname mismatch on connect — customer-DB-config infra-noise per skills/sentry-error-burndown.md skip-list (SSL cert mismatches), not app-code-fixable. Not part of an org-wide jump (24h volume-delta 1.09x today, under 1.5x). No open burndown PR touches ChartDataRestApi.data/mysql TLS as of 2026-10-07. DMed Elizabeth 2026-10-07 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1791381737569859). Re-alert if events/24h grow >=2x this peak.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7777269157/"
+    },
     "SUPERSET-PYTHON-162Q": {
       "first_alerted": "2026-09-01",
       "peak_events_24h": 70505,
