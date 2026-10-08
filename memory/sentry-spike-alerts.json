@@ -7,6 +7,12 @@
     }
   },
   "alerted": {
+    "SUPERSET-PYTHON-18PQ": {
+      "first_alerted": "2026-10-08",
+      "peak_events_24h": 430,
+      "note": "\"Handshake status 504 Gateway Time-out\" (awselb), culprit empty. New 2026-10-08T11:05:15Z, 0 users. 430 events in 24h (prior 24h window 0 — brand new), crosses New lens (>=100 events, firstSeen<=72h) independently; also is:escalating. Breadcrumbs show repeated wss://api.app.preset.io/v2/broker/ws disconnects (\"Encountered an unexpected error on socket\" -> \"Connection to remote host was lost\" -> backoff/reconnect) immediately before each 504 handshake timeout. Infra-noise per skills/sentry-error-burndown.md skip-list (websocket/502 family), but this is the same broker/websocket disconnect pattern flagged NEEDS ATTENTION in project_broker_ws_disconnects_spread_to_prod_2026-09-24 (staging-only -> full prod+MPC, ~8x volume as of that check, still unresolved) — appears to be a new Sentry fingerprint for that ongoing escalation, worth surfacing same-day rather than waiting for the next release-health check. Org-wide 24h volume-delta flat (1.00x) — isolated issue, not a dashboard-wide jump. No open PR in apache/superset, preset-io/manager, or preset-io/superset-shell touches broker/websocket as of 2026-10-08. DMed Elizabeth 2026-10-08 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1791468284580819). Re-alert if events/24h grow >=2x this peak, or cross-reference against project_broker_ws_disconnects_spread_to_prod_2026-09-24 if that pattern gets a fresh follow-up check.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7780860410/"
+    },
     "SUPERSET-PYTHON-18JK": {
       "first_alerted": "2026-10-07",
       "peak_events_24h": 281,
