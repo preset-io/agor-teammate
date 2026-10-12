@@ -7,6 +7,12 @@
     }
   },
   "alerted": {
+    "SUPERSET-PYTHON-A9F": {
+      "first_alerted": "2026-10-12",
+      "peak_events_24h": 10573,
+      "note": "Lead fingerprint of the broker/websocket disconnect family (siblings SUPERSET-PYTHON-VVE/VVF/VVG/X9Y, all same wss://api.app.preset.io/v2/broker/ws disconnect->backoff->reconnect breadcrumb pattern, all chronic since 2023-06..2025-09). Top contributor to today's org-wide 1.89x 24h volume jump (19707 vs 10414). Individual 24h deltas: A9F 4295 (1.49x vs 2885 prior), VVE 4228 (1.26x vs 3362), VVF 1025 (2.75x vs 373), VVG 554 (1.51x vs 367), X9Y 471 (new-in-window vs 0, chronic since 2025-09-04). Combined 10573 events/24h. This is a fresh follow-up to project_broker_ws_disconnects_spread_to_prod_2026-09-24 (NEEDS ATTENTION, staging->full prod+MPC, ~6.9k combined events that day, unresolved) and the 2026-10-08 SUPERSET-PYTHON-18PQ fingerprint (now flat/quiet since) — today's single-24h total for this family already exceeds that entire multi-day escalation and keeps climbing day-over-day, not settling. Infra-shaped (client/server websocket connectivity to the broker service), no open PR across apache/superset, preset-io/manager, or preset-io/superset-shell touches broker/websocket reconnect logic as of 2026-10-12 — not pickable for the code burndown, needs infra/ops escalation to whoever owns the broker service. DMed Elizabeth 2026-10-12 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1791813936422599). Re-alert if combined family events/24h grow >=2x this peak (21146), or if any sibling individually crosses 500/24h with fresh growth.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/4265955085/"
+    },
     "SUPERSET-PYTHON-18PQ": {
       "first_alerted": "2026-10-08",
       "peak_events_24h": 430,
