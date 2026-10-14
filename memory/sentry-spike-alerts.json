@@ -7,6 +7,12 @@
     }
   },
   "alerted": {
+    "SUPERSET-PYTHON-194G": {
+      "first_alerted": "2026-10-14",
+      "peak_events_24h": 1701,
+      "note": "RDS connection-slot exhaustion on superset-db2.us2a.production.preset.zone (10.17.243.86): 'FATAL: remaining connection slots are reserved for non-replication superuser, rds_reserved, and rds_superuser connections'. Lead fingerprint of a 9-issue family all firstSeen 2026-10-14 13:11-13:12Z, lastSeen ~13:14-13:15Z (tight ~4min burst, already quiet by 14:03Z check) -- siblings SUPERSET-PYTHON-194S (464ev/15u), 194M (258ev/17u, SecurityManagerUnableToUpsertUser), 194R (170ev/10u), 194D (124ev/3u, CurrentUserRestApi.get_me), 194H (58ev/15u), 194T (50ev/4u, ChartDataRestApi.data), 194P (29ev/0u, CordRestApi.auth_token), 194E (24ev/5u, ChartDataRestApi.data). Combined ~1701 events, dozens of distinct users (max single-issue 27). 194G/194S/194M/194R/194D each independently cross the New lens (>=100 events, firstSeen<=72h). Not in acknowledged_baseline or prior alerted (grepped ledger + daily logs for 'superset-db2'/'connection slots'/'rds_reserved' -- no prior hits, genuinely novel). Org-wide 24h volume-delta only 1.32x (33369 vs 25374, under the 1.5x org-jump threshold) -- this didn't trip the org-wide lens, only the per-issue New lens. Classified infra-shaped (shared Postgres host hit max_connections, matches the psycopg2-drop skip-list category) but flagged anyway since it's Preset's own RDS host capacity, not the usual chronic customer-DB-timeout noise, and it's new. No open burndown PR touches this (gh pr list --author @me empty). DMed Elizabeth 2026-10-14 (permalink https://preset-io.slack.com/archives/D0BBR2PPFQ9/p1791986648065499). Re-alert if combined family events/24h grow >=2x this peak (3402), or if it recurs after appearing self-resolved.",
+      "sentry_link": "https://preset-inc.sentry.io/issues/7792071897/"
+    },
     "SUPERSET-PYTHON-A9F": {
       "first_alerted": "2026-10-12",
       "peak_events_24h": 10573,
