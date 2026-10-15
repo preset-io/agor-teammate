@@ -84,9 +84,9 @@ store the value.
   clearly authorized them.
 - Prefer reversible operations. Ask before destructive ones.
 - Never force-push `main` or touch another teammate's branch.
-- A running teammate's branch is personal state: never PR it or push it to a
-  public fork. See `BACKUP.md` only after useful work has established a reason
-  to discuss backup.
+- A running teammate's branch is personal state: never PR it, push it to the
+  public template, or push it to a fork. See `BACKUP.md` only after useful
+  work has established a reason to discuss backup.
 
 ## Reference files
 

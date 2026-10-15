@@ -16,7 +16,7 @@ This file explains the mental model. `AGENTS.md` has the short version.
 - Host moves
 - Whatever else can go wrong
 
-Backup is one command for teammate home/base files: `git push origin <your-branch>`. Knowledge docs are managed through Agor Knowledge tools, not by pushing this branch.
+Backup is one command for teammate home/base files: `git push backup <your-branch>`, only to a verified private repo (see "Public clone vs. private backup"). Knowledge docs are managed through Agor Knowledge tools, not by pushing this branch.
 
 ---
 
@@ -28,7 +28,9 @@ The likely failure mode as this framework spreads: a teammate cloned from the **
 - Keeps your accumulated state tied to (and discoverable through) the public repo
 - Increases the risk of accidentally PR'ing your personal state into the framework `main`
 
-**The right way:** the user creates a brand-new **private** repo in their own org (personal or corporate), and you switch your `origin` (or add a new remote) to point there. See "Public clone vs. private backup" below.
+**The right way:** the user creates a brand-new **private** repo in their own org (personal or corporate), and you add it as a `backup` remote. See "Public clone vs. private backup" below.
+
+**Never push to the public repo itself.** If a remote points at `preset-io/agor-teammate` (or the old `preset-io/agor-assistant`), remove it with `git remote remove <name>` and tell your human.
 
 **If a private repo isn't set up yet:** commit locally, don't push at all. **Better unbacked than wrong-backed.** And there's nothing of value to back up until you've actually produced value — primary goals first.
 
@@ -36,7 +38,7 @@ The likely failure mode as this framework spreads: a teammate cloned from the **
 
 ## Branch-per-teammate
 
-This repo hosts multiple teammates. Each lives on its own branch:
+Your private backup repo can host multiple teammates. Each lives on its own branch:
 
 ```
 main                       ← framework template (read-only for teammates)
@@ -46,13 +48,14 @@ private-hippa-teammate     ← another teammate
 your-branch                ← you
 ```
 
-You commit your accumulated state to **your branch**. You push **your branch** to the remote. That's the entire backup workflow.
+You commit your accumulated state to **your branch**. You push **your branch** to the verified private remote. That's the entire backup workflow.
 
 ---
 
 ## Hard rules
 
 - **Never PR your branch into anything.** Your branch holds your local teammate state — identity and boot instructions. It would contaminate the template and isn't useful to anyone else.
+- **Never push to the public repo.** Anything there is world-readable, including your human's `USER.md`.
 - **Never fork the public repo.** A fork creates noise and implies you intend to PR upstream, which you don't.
 - **Never push to `main`.** `main` is the framework template. Only framework-improvement PRs (like fixes to `AGENTS.md` or `ONBOARDING.md`) merge into `main`, and those come from contributors, not from running teammates.
 - **Don't touch other teammates' branches.** They're someone else's state.
@@ -62,7 +65,7 @@ The whole backup loop, every time:
 ```bash
 git add -A
 git commit -m "<what changed>"
-git push origin <your-branch>
+git push backup <your-branch>
 ```
 
 ---
@@ -85,21 +88,15 @@ You may have been cloned from the **public** repo: `https://github.com/preset-io
 
 If so, anything you push to your branch is **world-readable**. Your local teammate state and your human's `USER.md` are on the internet. Real memory should still be in Knowledge with appropriate RBAC, but teammate home/base files can be sensitive too.
 
-Once you've earned trust and produced value, **suggest a private repo** for backup:
-
-> "I'm currently backing myself up to a public repo. Want me to switch to a private one? I can use your personal GitHub org, a company org, or wherever makes sense for the kind of state I'm accumulating."
-
-Let the user decide:
+Until a private repo exists, commit locally and don't push. Once you've earned trust and produced value, **suggest a private repo** for backup, in an org the user picks:
 - **Personal org** — for personal/individual work
 - **Corporate org** — for work teammates (so the company owns the state)
-- **Stay public** — if there's nothing sensitive
 
-If they want to switch, the move is:
+If they want one, the move is:
 1. User creates a private empty repo somewhere
-2. Repoint origin: `git remote set-url origin <new-private-url>`
-3. Push your branch: `git push origin <your-branch>`
-
-Your branch on the old public remote can be left as-is or removed by the user — just stop pushing there.
+2. Verify it's private before the first push: `gh repo view <owner>/<repo> --json visibility -q .visibility` must print `PRIVATE`. If you can't verify, don't push.
+3. Add it: `git remote add backup <private-url>`
+4. Push your branch: `git push backup <your-branch>`
 
 ### Bonus: the `agor-teammate-private` convention
 
@@ -124,9 +121,9 @@ If you notice a framework improvement worth contributing back (a gap in `AGENTS.
 | Question | Answer |
 |---|---|
 | Where does my state live? | Core home/base files and workbench artifacts on disk; memory/docs in Agor Knowledge |
-| How do I back up? | Teammate home/base: `git push origin <your-branch>`; Knowledge: use Knowledge tools |
+| How do I back up? | Teammate home/base: `git push backup <your-branch>` to a verified private repo; Knowledge: use Knowledge tools |
 | Do I PR my branch? | **No.** Never. |
 | Do I fork the public repo? | **No.** Never. |
 | What's `main` for? | Framework template; not for personal state |
-| Public clone, private state? | Suggest private repo after primary goals have traction |
+| Can I push to the public repo? | **No.** Never. Commit locally until a private repo exists |
 | When do I back up? | On-demand, or via `HEARTBEAT.md` |

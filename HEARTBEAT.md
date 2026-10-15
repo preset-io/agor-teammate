@@ -63,7 +63,7 @@ For each branch on your board:
 
 ### Backup (see `BACKUP.md`)
 
-- Commit + push your branch if local boot-kit files changed meaningfully
+- Commit locally if local boot-kit files changed meaningfully; push only to the verified private `backup` remote, never the public template
 - Do not use git backup as a substitute for Knowledge memory/docs
 - Don't commit on every heartbeat — batch
 
