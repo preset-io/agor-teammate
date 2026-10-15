@@ -1,5 +1,91 @@
 {
   "last_checked": {
+    "tag": "v2026.10.152",
+    "sha": "3db5888d3d524363a921c26c9a24f989ec2d3fef",
+    "release_date": "2026-10-15T18:45:23Z",
+    "checked_at": "2026-10-15T20:00:00Z",
+    "status_summary": {
+      "info": 16237,
+      "warn": 624,
+      "error": 2,
+      "critical": 0
+    },
+    "clusters_seen": [
+      "sandbox-aws-us1a",
+      "staging-aws-us1a",
+      "sandbox-aws-eu5a"
+    ],
+    "sentry": {
+      "matched_releases": [
+        {
+          "version": "superset@master.3db5888d-72bfc413",
+          "new_groups": 0
+        }
+      ],
+      "new_issue_ids": []
+    },
+    "note": "Queried from 2026-10-15T17:00Z (~2h, non-prod only). Error 2 = reports.scheduler TenantNotFoundException / 403 FORBIDDEN from app-sdx (seen on earlier calver builds). Baseline v2026.10.55 (different window). Sentry newGroups=0. Verdict CLEAN.",
+    "baseline": "v2026.10.55",
+    "known_noise": [
+      "from authlib.jose import JsonWebToken",
+      "AuthlibDeprecationWarning: authlib.jose module is deprecated",
+      "NO_WORKSPACES_AVAILABLE: No workspaces available for task=reports.scheduler",
+      "Shutting down: Master",
+      "Worker exiting",
+      "Not authorized Missing JWT in cookies or headers",
+      "Failed to add user to db session: Class 'werkzeug.local.LocalProxy' is not mapped",
+      "Error while rendering virtual dataset query: list object has no element 0",
+      "Virtual dataset template error: list object has no element 0",
+      "Datasource not found datasource_type: DatasourceType.TABLE, database_id_or_uuid:",
+      "appbuilder.app is deprecated and will be removed in a future version. Use current_app instead",
+      "Could not load default spinner SVG",
+      "Unexpected metric expression type",
+      "The field `timeseries_limit` is deprecated, please use `series_limit` instead.",
+      "The field `series_limit_metric` is already populated, replacing value with contents from `timeseries_limit_metric`.",
+      "The field `timeseries_limit_metric` is deprecated, please use `series_limit_metric` instead.",
+      "Superset.explore_json This API endpoint is deprecated and will be removed in version 5.0.0",
+      "Failed to load query_context for chart",
+      "Failed to get truncated sample data for table",
+      "Refusing to run AIAssistCheckSchemasToVectorize command",
+      "Expired token google-oauth2",
+      "WORKER TIMEOUT (pid:",
+      "TimeLimitExceeded",
+      "exited with 'signal 9 (SIGKILL)'",
+      "Filter type not supported for column",
+      "An error occurred when running alert query",
+      "SSL connection has been closed unexpectedly",
+      "HTTPException",
+      "SupersetErrorException",
+      "We haven't found any Content Security Policy (CSP) defined in the configurations",
+      "Access is Denied for: can_write on: DashboardFilterStateRestApi",
+      "client.files_upload() may cause some issues like timeouts for relatively large files",
+      "pkg_resources is deprecated as an API",
+      "Query with client_id could not be stopped: query already complete",
+      "Refresh CSRF token error",
+      "Failed to execute REDACTED: Message may have contained a raw SQL [S]ELECT statement.",
+      "Report Schedule is still working, refusing to re-compute",
+      "Report still in working state, refusing to re-compute",
+      "Refused to delete permission view, assoc with role exists",
+      "View already exists LogRestApi ignoring",
+      "backups_user does not exist, refusing to grant readonly permissions",
+      "Skipping Vector DB creation for workspace",
+      "LangChainPendingDeprecationWarning: The default value of `allowed_objects`",
+      "No type or annotation for parameter",
+      "Could not cache key",
+      "A downstream warning occurred while generating a report",
+      "The request to the Slack API failed. (url: https://slack.com/api/files.upload)",
+      "Session-invalidation check failed; allowing request",
+      "Failed to unbind the workspace context while leaving a block; preserving the original exception.",
+      "SQLALCHEMY_ENCRYPTED_FIELD_ENGINE is set to the legacy 'aes' engine",
+      "Error submitting packet: [Errno 111] Connection refused, dropping the packet",
+      "UserWarning: Field name \"schema\" in \"SavedQueryInfo\" shadows",
+      "Error upserting user",
+      "Working state timeout after",
+      "Could not connect to gateway",
+      "Error reading SSH protocol"
+    ]
+  },
+  "previous_check": {
     "tag": "v2026.10.55",
     "sha": "ac2664139dea57ee8ea0259c97227399df2889ed",
     "release_date": "2026-10-08T16:15:41Z",
@@ -81,183 +167,105 @@
       "UserWarning: Field name \"schema\" in \"SavedQueryInfo\" shadows"
     ]
   },
-  "previous_check": {
-    "tag": "v2026.10.8",
-    "sha": "01d8fd8a6742021c22b3550aa591fec71fbf1469",
-    "release_date": "2026-10-01T14:55:27Z",
-    "checked_at": "2026-10-01T18:30:00Z",
-    "status_summary": {
-      "info": 49458,
-      "warn": 6491,
-      "error": 73,
-      "critical": 0
-    },
-    "clusters_seen": [
-      "sandbox-aws-eu5a",
-      "sandbox-aws-us1a",
-      "staging-aws-us1a"
-    ],
-    "known_noise": [
-      "from authlib.jose import JsonWebToken",
-      "AuthlibDeprecationWarning: authlib.jose module is deprecated",
-      "NO_WORKSPACES_AVAILABLE: No workspaces available for task=reports.scheduler",
-      "Shutting down: Master",
-      "Worker exiting",
-      "Not authorized Missing JWT in cookies or headers",
-      "Failed to add user to db session: Class 'werkzeug.local.LocalProxy' is not mapped",
-      "Error while rendering virtual dataset query: list object has no element 0",
-      "Virtual dataset template error: list object has no element 0",
-      "Datasource not found datasource_type: DatasourceType.TABLE, database_id_or_uuid:",
-      "appbuilder.app is deprecated and will be removed in a future version. Use current_app instead",
-      "Could not load default spinner SVG",
-      "Unexpected metric expression type",
-      "The field `timeseries_limit` is deprecated, please use `series_limit` instead.",
-      "The field `series_limit_metric` is already populated, replacing value with contents from `timeseries_limit_metric`.",
-      "The field `timeseries_limit_metric` is deprecated, please use `series_limit_metric` instead.",
-      "Superset.explore_json This API endpoint is deprecated and will be removed in version 5.0.0",
-      "Failed to load query_context for chart",
-      "Failed to get truncated sample data for table",
-      "Refusing to run AIAssistCheckSchemasToVectorize command",
-      "Expired token google-oauth2",
-      "WORKER TIMEOUT (pid:",
-      "TimeLimitExceeded",
-      "exited with 'signal 9 (SIGKILL)'",
-      "Filter type not supported for column",
-      "An error occurred when running alert query",
-      "SSL connection has been closed unexpectedly",
-      "HTTPException",
-      "SupersetErrorException",
-      "We haven't found any Content Security Policy (CSP) defined in the configurations",
-      "Access is Denied for: can_write on: DashboardFilterStateRestApi",
-      "client.files_upload() may cause some issues like timeouts for relatively large files",
-      "pkg_resources is deprecated as an API",
-      "Query with client_id could not be stopped: query already complete",
-      "Refresh CSRF token error",
-      "Failed to execute REDACTED: Message may have contained a raw SQL [S]ELECT statement.",
-      "Report Schedule is still working, refusing to re-compute",
-      "Report still in working state, refusing to re-compute",
-      "Refused to delete permission view, assoc with role exists",
-      "View already exists LogRestApi ignoring",
-      "backups_user does not exist, refusing to grant readonly permissions",
-      "Skipping Vector DB creation for workspace",
-      "LangChainPendingDeprecationWarning: The default value of `allowed_objects`",
-      "No type or annotation for parameter",
-      "Could not cache key",
-      "A downstream warning occurred while generating a report",
-      "The request to the Slack API failed. (url: https://slack.com/api/files.upload)",
-      "Session-invalidation check failed; allowing request",
-      "Failed to unbind the workspace context while leaving a block; preserving the original exception."
-    ],
-    "sentry": {
-      "project": "superset-python",
-      "checked_at": "2026-10-01T18:30:00Z",
-      "matched_releases": [
-        {
-          "version": "superset@master.01d8fd8a-b98e19f6",
-          "new_groups": 0,
-          "note": "main build; SHA fragment matches Datadog version"
-        }
-      ],
-      "new_issue_ids": [],
-      "new_issue_note": "newGroups=0. Org-wide firstSeen:-1d groups (SUPERSET-PYTHON-188H/J/K/M/N/P/Q) are MCP customer-SQL / customer-DB / import-validation errors, 1-2 events, 0 users - infra/customer noise, not tied to this release."
-    },
-    "note": "2026-10-01 check: release scheme changed to continuous calver v2026.MM.N (~8 builds today, v2026.10.1..10.8, plus v6.0.0.37 on 2026-09-30 never checked). No prior checked build on this line -> BASELINE / first check (last_checked v6.0.0.36 is line 6.0.0.x, not compared). Latest v2026.10.8 -> commit 01d8fd8a ('Auto-generated commit for cd/2026-10-01-b98e19f (#5351)', 2026-10-01T14:18:17Z). Queried from 2026-10-01T14:00Z (only ~4h of data): info 49458, warn 6491, error 73, notice 37, ok 211. Clusters: sandbox-aws-us1a, sandbox-aws-eu5a, staging-aws-us1a only - NOT in production yet (rolling CD). NEW patterns (not in known_noise): (1) 'SUPERSET_VERSION_HISTORY_RETENTION_DAYS is deprecated; use VERSION_HISTORY_RETENTION_DAYS. Legacy nonpositive values disable pruning.' - 50-67 error-level events, ~70% of errors; config-rename deprecation logged at error level, startup noise per pod, needs config rename. (2) reports.scheduler 403 FORBIDDEN / TenantNotFoundException from api.app-sdx.preset.io workspace config (1 event each) (3) 'Manager token-status unavailable for workspace ... allowing request (fail-open)' x1 (4) '[MCP Tool] ERROR: search_tools ... has an output schema but did not return structured content' x1 - likely code bug in MCP tool (5) 'Guest user cannot modify chart payload' x1 (guest-token, expected). Warn dominated by known-ish 'Refused to delete permission view' (known_noise), NO_WORKSPACES_AVAILABLE '(all filtered)' variant, and docstring-parse 'No type or annotation for parameter' (known_noise). Sentry: 0 new groups for matched release. Verdict NEEDS ATTENTION (minor): new error-level deprecation line + MCP search_tools schema error; low volume, non-prod only so far."
-  },
   "lines": {
     "6.0.0.x": {
-      "tag": "v6.0.0.37",
-      "sha": "081bf92064eb92c2f792bd478d2824e03167a1d0",
-      "release_date": "2026-09-30T17:10:44Z",
-      "checked_at": "2026-10-01T19:00:00Z",
+      "tag": "v6.0.0.39",
+      "sha": "ea164659cffad199a7adca3dcbf2af77e4d5172a",
+      "release_date": "2026-10-14T17:16:44Z",
+      "checked_at": "2026-10-15T20:00:00Z",
       "status_summary": {
-        "info": 1393431,
-        "warn": 164055,
-        "error": 23672,
-        "critical": 1
+        "info": 4104137,
+        "warn": 627012,
+        "error": 49087,
+        "critical": 39
       },
       "clusters_seen": [
+        "production-aws-us2a",
+        "production-aws-us1a",
+        "production-aws-eu5a",
+        "production-aws-ap1a",
+        "staging-aws-us1a",
+        "staging-aws-eu5a",
         "ippen-aws-mpc",
-        "koa-aws-mpc",
         "preset-aws-mpc",
         "preset2-gcp-mpc",
-        "production-aws-ap1a",
-        "production-aws-eu5a",
-        "production-aws-us1a",
-        "production-aws-us2a",
-        "staging-aws-eu5a",
-        "staging-aws-us1a"
+        "flywire-aws-mpc",
+        "koa-aws-mpc",
+        "komgo-aws-mpc",
+        "cargosense-gcp-mpc",
+        "beam-gcp-mpc",
+        "zeta-aws-mpc"
       ],
       "sentry": {
         "matched_releases": [
           {
-            "version": "superset@6.0.0.37.081bf920-ee4dfd89",
+            "version": "superset@6.0.0.39.ea164659-e39cbdb2",
             "new_groups": 0
           }
         ],
         "new_issue_ids": []
       },
-      "note": "Queried from 2026-09-29. Baseline v6.0.0.36 (error 136009 over 4.3d, ~0.98% ratio); v6.0.0.37 error ratio ~1.0% (23672/2.19M) - flat. Broker/ws disconnect pattern persists (wss://api.app.preset.io/v2/broker/ws 345, stg 293, 'Connection to remote host was lost' 474) but at much lower volume than v6.0.0.36 (3981/2700). Rest is known noise (authlib, WORKER TIMEOUT, TimeLimitExceeded, google python-version FutureWarning x179 - new but benign, nginx upstream refused/closed few). 1 critical = WORKER TIMEOUT (known noise). Sentry newGroups=0. Verdict: CLEAN apart from ongoing broker/ws pattern."
+      "note": "Queried from 2026-10-13T12:00Z. Baseline v6.0.0.37. Error ~1.2% of volume. Top errors sampled (5000): authlib deprecation (known), pandas FutureWarning lines logged as error (df_groupby.agg, pd.read_csv; benign), nginx upstream timed out, chart/data 500 (known), SoftTimeLimitExceeded slack.cache_channels. NEW: 'Error upserting user 388375' x60 (single user id, repeated), 'Working state timeout after N s - execution_id' x43. Sentry newGroups=0. Verdict CLEAN apart from the two new low-volume patterns.",
+      "baseline": "v6.0.0.37"
     },
     "6.1.0.x": {
-      "tag": "v6.1.0.11",
-      "sha": "2306d68cb520fbf069e179aae5ccf2859e8272ca",
-      "release_date": "2026-10-06T22:00:50Z",
-      "checked_at": "2026-10-08T20:01:13Z",
+      "tag": "v6.1.0.12",
+      "sha": "daeae4f4e16b924fa652765cfec53a43f2602831",
+      "release_date": "2026-10-14T17:17:30Z",
+      "checked_at": "2026-10-15T20:00:00Z",
       "status_summary": {
-        "info": 898406,
-        "warn": 134682,
-        "error": 4743,
+        "info": 570395,
+        "warn": 85266,
+        "error": 4853,
         "critical": 0
       },
       "clusters_seen": [
-        "hmetrix-gcp-mpc",
-        "production-aws-ap1a",
+        "production-aws-us2a",
         "production-aws-eu5a",
         "production-aws-us1a",
-        "production-aws-us2a",
-        "redhat-preprod-aws-mpc",
-        "staging-aws-eu5a",
-        "staging-aws-us1a"
+        "production-aws-ap1a",
+        "staging-aws-us1a",
+        "flywire-aws-mpc"
       ],
       "sentry": {
         "matched_releases": [
           {
-            "version": "superset@6.1.0.11.2306d68c-31e3c9a1",
+            "version": "superset@6.1.0.12.daeae4f4-90b0a1a9",
             "new_groups": 0
           }
         ],
         "new_issue_ids": []
       },
-      "baseline": "v6.1.0.9 (error 13754 over ~7d)",
-      "note": "Queried from 2026-10-05 (~3d). Error 4743 (~0.5% of volume), lower than 6.1.0.9 ratio. Top errors: broker/ws disconnects (prod 253+goodbye 251, stg 36, 'Giving up _do_connect' 60, ELB 502 handshake 44) - ongoing pattern; 'Error handling request POST /api/v1/chart/data' 56 (known DB-conn 500 path); nginx upstream timed out ~63; SIGKILL/TimeLimitExceeded/thumbnail ~58 (known); workspace-context unbind 15 (known, not a bug); permission-view duplicate key ~9 at startup; pyodbc customer login failure 4. No new patterns. Sentry newGroups=0. Verdict NEEDS ATTENTION (minor): ongoing broker/ws pattern only."
+      "note": "Queried from 2026-10-13T12:00Z. Baseline v6.1.0.11. Top errors: broker/ws disconnects (548 + goodbye 518, ongoing pattern). NEW: 'Could not connect to gateway ... Error reading SSH protocol' (paramiko SSHException, 88 incidents; customer SSH tunnel, infra-shaped). Sentry newGroups=0. Verdict NEEDS ATTENTION (minor): ongoing broker/ws pattern.",
+      "baseline": "v6.1.0.11"
     },
     "calver": {
-      "tag": "v2026.10.55",
-      "sha": "ac2664139dea57ee8ea0259c97227399df2889ed",
-      "release_date": "2026-10-08T16:15:41Z",
-      "checked_at": "2026-10-08T20:01:13Z",
+      "tag": "v2026.10.152",
+      "sha": "3db5888d3d524363a921c26c9a24f989ec2d3fef",
+      "release_date": "2026-10-15T18:45:23Z",
+      "checked_at": "2026-10-15T20:00:00Z",
       "status_summary": {
-        "info": 56965,
-        "warn": 4547,
-        "error": 30,
+        "info": 16237,
+        "warn": 624,
+        "error": 2,
         "critical": 0
       },
       "clusters_seen": [
-        "sandbox-aws-eu5a",
         "sandbox-aws-us1a",
-        "staging-aws-us1a"
+        "staging-aws-us1a",
+        "sandbox-aws-eu5a"
       ],
       "sentry": {
         "matched_releases": [
           {
-            "version": "superset@master.ac266413-100f5124",
+            "version": "superset@master.3db5888d-72bfc413",
             "new_groups": 0
           }
         ],
         "new_issue_ids": []
       },
-      "baseline": "v2026.10.8 (2026-10-01, different build window)",
-      "note": "Queried from 2026-10-08T12:00Z (~hours of data, non-prod only, not yet in production). Error 30 (broker/ws stg 15, ELB 502 handshake 8, goodbye 7). Warn new-but-benign: SQLALCHEMY_ENCRYPTED_FIELD_ENGINE legacy 'aes' engine warning x45 (config hardening notice), statsd 'Error submitting packet: Connection refused' x108, MCP SavedQueryInfo 'schema' field-shadow UserWarning x17. Tags v2026.10.56-60 exist without releases (not checked). Sentry newGroups=0. Verdict CLEAN."
+      "note": "Queried from 2026-10-15T17:00Z (~2h, non-prod only). Error 2 = reports.scheduler TenantNotFoundException / 403 FORBIDDEN from app-sdx (seen on earlier calver builds). Baseline v2026.10.55 (different window). Sentry newGroups=0. Verdict CLEAN.",
+      "baseline": "v2026.10.55"
     }
   },
   "_readme": "Latest build per release line (6.0.0.x, 6.1.0.x, calver v2026.MM.N) lives under 'lines'; last_checked = most recently checked of any line. Diff each line only against its own previous check."
